@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mara Vance — Photographer | Light, Shadow & Stillness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-2:#101013;
+    --panel:#161619;
+    --ink:#f4f2ee;
+    --muted:#a09c95;
+    --faint:#6c6862;
+    --line:rgba(255,255,255,.09);
+    --accent:#d8b27a;
+    --accent-soft:#e8cfa6;
+    --maxw:1320px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-weight:300;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.08;letter-spacing:.01em}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  ::selection{background:var(--accent);color:#0a0a0c}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .eyebrow{font-family:'Inter',sans-serif;font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);font-weight:500}
+
+  /* NAV */
+  header.nav{position:fixed;inset:0 0 auto 0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,10,12,.55);border-bottom:1px solid transparent;transition:.3s}
+  header.nav.scrolled{background:rgba(10,10,12,.85);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:var(--maxw);margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.04em;display:flex;align-items:center;gap:.55rem}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+  .nav-links{display:flex;gap:2.2rem;align-items:center;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
+  .nav-links a{color:var(--muted);transition:.25s;position:relative;padding:4px 0}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--accent);transition:.3s}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{border:1px solid var(--line);padding:9px 20px;border-radius:40px;color:var(--ink)!important;transition:.25s}
+  .nav-cta:hover{background:var(--accent);color:#0a0a0c!important;border-color:var(--accent)}
+  .nav-cta::after{display:none}
+  .burger{display:none;background:none;border:none;cursor:pointer;width:34px;height:34px;flex-direction:column;justify-content:center;gap:5px}
+  .burger span{display:block;height:1.5px;background:var(--ink);transition:.3s}
+
+  /* HERO */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0}
+  .hero-bg .scene{position:absolute;inset:0}
+  .scene-a{background:
+     radial-gradient(120% 90% at 70% 8%, rgba(216,178,122,.32), transparent 55%),
+     radial-gradient(80% 70% at 18% 88%, rgba(64,42,72,.55), transparent 60%),
+     linear-gradient(180deg,#1a1410 0%, #0c0a10 48%, #07060a 100%);}
+  .scene-a::after{content:"";position:absolute;inset:0;
+     background:
+       radial-gradient(closest-side at 72% 30%, rgba(255,224,178,.85), rgba(255,224,178,0) 70%),
+       linear-gradient(105deg, transparent 40%, rgba(216,178,122,.08) 50%, transparent 60%);
+     mix-blend-mode:screen;opacity:.9}
+  .hero-grain{position:absolute;inset:0;z-index:1;opacity:.05;
+     background-image:radial-gradient(rgba(255,255,255,.6) .5px, transparent .6px);background-size:3px 3px}
+  .hero-vignette{position:absolute;inset:0;z-index:1;background:radial-gradient(120% 80% at 50% 50%, transparent 40%, rgba(0,0,0,.7) 100%)}
+  .hero-content{position:relative;z-index:2;width:100%;padding-bottom:8vh}
+  .hero-content .eyebrow{margin-bottom:1.4rem;animation:rise .9s .1s both}
+  .hero h1{font-size:clamp(3.4rem,11vw,9.5rem);letter-spacing:-.01em;margin-bottom:1.4rem}
+  .hero h1 .ital{font-style:italic;color:var(--accent-soft)}
+  .hero h1 span{display:block;animation:rise 1s both}
+  .hero h1 span:nth-child(2){animation-delay:.12s}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:2.4rem;align-items:flex-end;justify-content:space-between;border-top:1px solid var(--line);padding-top:1.6rem;animation:rise 1s .3s both}
+  .hero-meta p{max-width:34ch;color:var(--muted);font-size:1rem}
+  .scroll-hint{display:flex;align-items:center;gap:.7rem;color:var(--faint);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase}
+  .scroll-hint .bar{width:1px;height:48px;background:linear-gradient(var(--accent),transparent);position:relative;overflow:hidden}
+  .scroll-hint .bar::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--accent);animation:drop 2.2s infinite}
+  @keyframes drop{0%{top:-50%}100%{top:100%}}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  /* SECTION FRAME */
+  section{position:relative}
+  .sec-pad{padding:7rem 0}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1.5rem;margin-bottom:3rem}
+  .sec-head h2{font-size:clamp(2.2rem,5vw,3.6rem)}
+  .sec-head h2 .ital{font-style:italic;color:var(--accent-soft)}
+
+  /* FILTERS */
+  .filters{display:flex;gap:.6rem;flex-wrap:wrap}
+  .filters button{background:none;border:1px solid var(--line);color:var(--muted);padding:8px 18px;border-radius:40px;font-family:'Inter';font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:.25s}
+  .filters button:hover{color:var(--ink);border-color:var(--faint)}
+  .filters button.active{background:var(--accent);color:#0a0a0c;border-color:var(--accent)}
+
+  /* GALLERY */
+  .gallery{columns:3;column-gap:18px}
+  .shot{position:relative;break-inside:avoid;margin-bottom:18px;border-radius:6px;overflow:hidden;cursor:pointer;transition:.5s;will-change:transform}
+  .shot:hover{transform:translateY(-4px)}
+  .shot .art{width:100%;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .5s;filter:saturate(.92) brightness(.94)}
+  .shot:hover .art{transform:scale(1.06);filter:saturate(1.05) brightness(1)}
+  .shot .cap{position:absolute;inset:auto 0 0 0;padding:1.6rem 1.3rem 1.2rem;background:linear-gradient(transparent,rgba(0,0,0,.82));opacity:0;transform:translateY(12px);transition:.45s}
+  .shot:hover .cap{opacity:1;transform:none}
+  .shot .cap h3{font-size:1.5rem}
+  .shot .cap .tag{font-family:'Inter';font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:.3rem;display:block}
+  .shot .num{position:absolute;top:14px;left:16px;font-family:'Inter';font-size:.66rem;letter-spacing:.2em;color:rgba(255,255,255,.65);opacity:0;transition:.4s}
+  .shot:hover .num{opacity:1}
+  .shot.hide{display:none}
+
+  /* ABOUT */
+  .about-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:5rem;align-items:center}
+  .portrait{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/5;
+    background:
+      radial-gradient(90% 70% at 35% 20%, rgba(216,178,122,.45), transparent 60%),
+      radial-gradient(70% 60% at 75% 90%, rgba(80,52,96,.6), transparent 60%),
+      linear-gradient(160deg,#241a16,#0d0b10);}
+  .portrait::before{content:"";position:absolute;inset:0;
+     background:radial-gradient(closest-side at 50% 38%, rgba(245,210,160,.9), rgba(245,210,160,0) 62%);mix-blend-mode:screen}
+  .portrait::after{content:"";position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:42%;height:52%;border-radius:50% 50% 48% 52%/60% 60% 40% 40%;
+     background:linear-gradient(160deg,rgba(20,16,20,.9),rgba(8,6,10,.95));box-shadow:0 30px 60px rgba(0,0,0,.5)}
+  .portrait .frame{position:absolute;inset:14px;border:1px solid rgba(255,255,255,.18);border-radius:4px;z-index:2}
+  .about-text h2{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:1.6rem}
+  .about-text h2 .ital{font-style:italic;color:var(--accent-soft)}
+  .about-text p{color:var(--muted);margin-bottom:1.2rem;max-width:52ch;font-size:1.04rem}
+  .about-text p strong{color:var(--ink);font-weight:400}
+  .stats{display:flex;gap:3rem;margin-top:2.4rem;flex-wrap:wrap}
+  .stats .s span{font-family:'Cormorant Garamond';font-size:2.6rem;color:var(--accent-soft);display:block;line-height:1}
+  .stats .s small{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+
+  /* MARQUEE STRIP */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:1.6rem 0}
+  .strip-track{display:flex;gap:3rem;white-space:nowrap;animation:scroll 28s linear infinite;width:max-content}
+  .strip-track span{font-family:'Cormorant Garamond';font-style:italic;font-size:1.8rem;color:var(--faint);display:flex;align-items:center;gap:3rem}
+  .strip-track span::after{content:"✦";color:var(--accent);font-style:normal;font-size:1rem}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* BOOKING CTA */
+  .booking{position:relative;border-radius:14px;overflow:hidden;padding:6rem 5rem;text-align:center;
+    background:
+      radial-gradient(120% 140% at 50% 0%, rgba(216,178,122,.22), transparent 55%),
+      linear-gradient(160deg,#181311,#0b0a0e);
+    border:1px solid var(--line)}
+  .booking::before{content:"";position:absolute;inset:0;opacity:.05;background-image:radial-gradient(rgba(255,255,255,.7) .5px,transparent .6px);background-size:3px 3px}
+  .booking h2{font-size:clamp(2.4rem,6vw,5rem);margin:1.2rem 0 1.4rem;position:relative}
+  .booking h2 .ital{font-style:italic;color:var(--accent-soft)}
+  .booking p{color:var(--muted);max-width:46ch;margin:0 auto 2.4rem;position:relative}
+  .btn{display:inline-flex;align-items:center;gap:.7rem;background:var(--accent);color:#0a0a0c;padding:15px 34px;border-radius:44px;font-family:'Inter';font-size:.86rem;letter-spacing:.08em;font-weight:500;transition:.3s;position:relative}
+  .btn:hover{background:var(--accent-soft);transform:translateY(-2px);box-shadow:0 16px 40px rgba(216,178,122,.25)}
+  .btn svg{width:16px;height:16px}
+  .btn-ghost{background:none;border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:rgba(255,255,255,.05);border-color:var(--faint);box-shadow:none}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:4.5rem 0 2.5rem}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;margin-bottom:3.5rem}
+  .foot-grid h4{font-size:1.7rem;margin-bottom:1rem}
+  .foot-grid p{color:var(--muted);max-width:36ch}
+  .foot-col h5{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-bottom:1.1rem;font-family:'Inter';font-weight:500}
+  .foot-col a{display:block;color:var(--muted);padding:.32rem 0;transition:.25s;font-size:.95rem}
+  .foot-col a:hover{color:var(--accent)}
+  .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;align-items:center;border-top:1px solid var(--line);padding-top:2rem;color:var(--faint);font-size:.82rem}
+
+  @media(max-width:980px){
+    .gallery{columns:2}
+    .about-wrap{grid-template-columns:1fr;gap:2.5rem}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .booking{padding:4rem 1.5rem}
+  }
+  @media(max-width:680px){
+    .nav-links{position:fixed;inset:0 0 0 auto;width:78%;max-width:320px;background:var(--bg-2);flex-direction:column;justify-content:center;gap:1.6rem;padding:2rem;transform:translateX(100%);transition:.35s;border-left:1px solid var(--line);font-size:1rem}
+    .nav-links.open{transform:none}
+    .burger{display:flex}
+    .gallery{columns:1}
+    .sec-pad{padding:4.5rem 0}
+    .stats{gap:2rem}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="dot"></span>Mara Vance</a>
+    <nav class="nav-links" id="menu" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#strip">Process</a>
+      <a class="nav-cta" href="#book">Book a session</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"><div class="scene scene-a"></div></div>
+    <div class="hero-grain"></div>
+    <div class="hero-vignette"></div>
+    <div class="hero-content wrap">
+      <p class="eyebrow">Photographer · Lisbon &amp; Worldwide</p>
+      <h1><span>Catching light</span><span>in the <span class="ital">in-between.</span></span></h1>
+      <div class="hero-meta">
+        <p>Portrait, landscape and street photography made with available light and a slow, patient eye.</p>
+        <a class="scroll-hint" href="#work"><span class="bar"></span>Scroll to view</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" class="sec-pad">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Selected Work — 2021/2026</p>
+          <h2>A <span class="ital">collected</span> archive</h2>
+        </div>
+        <div class="filters" id="filters" role="group" aria-label="Filter gallery by category">
+          <button class="active" data-f="all">All</button>
+          <button data-f="portrait">Portrait</button>
+          <button data-f="landscape">Landscape</button>
+          <button data-f="street">Street</button>
+        </div>
+      </div>
+
+      <div class="gallery" id="gallery">
+        <!-- shots: each .art is a CSS-art scene -->
+        <article class="shot" data-cat="landscape">
+          <span class="num">01 — ƒ/8 · 1/250</span>
+          <div class="art" style="aspect-ratio:3/4;background:radial-gradient(110% 60% at 50% 18%,#f3c98a,#e08b5d 30%,#7a3a55 62%,#241433 100%);"></div>
+          <div class="cap"><span class="tag">Landscape</span><h3>Dunes at last light</h3></div>
+        </article>
+        <article class="shot" data-cat="portrait">
+          <span class="num">02 — ƒ/1.8 · 1/640</span>
+          <div class="art" style="aspect-ratio:1/1;background:radial-gradient(80% 80% at 60% 30%,#e9c7a0,#9a6a55 40%,#2a1c1c 100%);position:relative;">
+            <span style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:46%;height:60%;border-radius:50% 50% 46% 54%/58% 58% 42% 42%;background:linear-gradient(160deg,rgba(30,20,18,.85),rgba(8,5,5,.95));box-shadow:0 20px 40px rgba(0,0,0,.5)"></span>
+          </div>
+          <div class="cap"><span class="tag">Portrait</span><h3>Selene, in study light</h3></div>
+        </article>
+        <article class="shot" data-cat="street">
+          <span class="num">03 — ƒ/5.6 · 1/125</span>
+          <div class="art" style="aspect-ratio:3/4;background:linear-gradient(180deg,#1b2430,#0f1620 55%,#070a0f);position:relative;">
+            <span style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 38px,rgba(255,196,120,.07) 38px 40px)"></span>
+            <span style="position:absolute;left:30%;bottom:0;width:18px;height:46%;background:linear-gradient(#ffd28a,#a96c2e);filter:blur(1px);opacity:.8"></span>
+          </div>
+          <div class="cap"><span class="tag">Street</span><h3>Rain on Rua Augusta</h3></div>
+        </article>
+        <article class="shot" data-cat="landscape">
+          <span class="num">04 — ƒ/11 · 1/60</span>
+          <div class="art" style="aspect-ratio:4/3;background:linear-gradient(180deg,#0b2230,#16465a 45%,#3a7d83 70%,#bfe1d6);position:relative;">
+            <span style="position:absolute;left:0;right:0;top:62%;height:2px;background:rgba(255,255,255,.4)"></span>
+            <span style="position:absolute;left:62%;top:18%;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,#fff7e0,#f6d68f);opacity:.85;filter:blur(.5px)"></span>
+          </div>
+          <div class="cap"><span class="tag">Landscape</span><h3>Fjord, blue hour</h3></div>
+        </article>
+        <article class="shot" data-cat="portrait">
+          <span class="num">05 — ƒ/2.0 · 1/400</span>
+          <div class="art" style="aspect-ratio:3/4;background:radial-gradient(70% 70% at 40% 28%,#d8a7c4,#6e3a5e 48%,#1f1226 100%);position:relative;">
+            <span style="position:absolute;left:48%;top:44%;transform:translate(-50%,-50%);width:44%;height:56%;border-radius:50% 50% 48% 52%/56% 56% 44% 44%;background:linear-gradient(160deg,rgba(36,22,32,.85),rgba(10,6,12,.95))"></span>
+          </div>
+          <div class="cap"><span class="tag">Portrait</span><h3>Magenta hour</h3></div>
+        </article>
+        <article class="shot" data-cat="street">
+          <span class="num">06 — ƒ/4 · 1/200</span>
+          <div class="art" style="aspect-ratio:1/1;background:linear-gradient(150deg,#2a1d16,#13100e 60%);position:relative;">
+            <span style="position:absolute;inset:0;background:radial-gradient(40% 60% at 70% 75%,rgba(255,176,92,.5),transparent 60%)"></span>
+            <span style="position:absolute;left:20%;top:18%;width:55%;height:1px;background:rgba(255,210,150,.5);transform:rotate(-18deg)"></span>
+          </div>
+          <div class="cap"><span class="tag">Street</span><h3>Neon café, midnight</h3></div>
+        </article>
+        <article class="shot" data-cat="landscape">
+          <span class="num">07 — ƒ/16 · 1/30</span>
+          <div class="art" style="aspect-ratio:3/4;background:linear-gradient(180deg,#3a1e2e,#7a3a3a 35%,#d98a55 60%,#f3c98a 100%);position:relative;">
+            <span style="position:absolute;left:0;right:0;bottom:0;height:38%;background:linear-gradient(transparent,rgba(20,10,18,.8))"></span>
+          </div>
+          <div class="cap"><span class="tag">Landscape</span><h3>Volcano, ash dawn</h3></div>
+        </article>
+        <article class="shot" data-cat="portrait">
+          <span class="num">08 — ƒ/1.4 · 1/800</span>
+          <div class="art" style="aspect-ratio:4/3;background:radial-gradient(70% 90% at 30% 40%,#f0d9b9,#a07a5a 45%,#2c211a 100%);position:relative;">
+            <span style="position:absolute;left:34%;top:46%;transform:translate(-50%,-50%);width:34%;height:62%;border-radius:50% 50% 48% 52%/58% 58% 42% 42%;background:linear-gradient(160deg,rgba(40,28,20,.82),rgba(12,8,6,.95))"></span>
+          </div>
+          <div class="cap"><span class="tag">Portrait</span><h3>Studio, no.7</h3></div>
+        </article>
+        <article class="shot" data-cat="street">
+          <span class="num">09 — ƒ/6.3 · 1/160</span>
+          <div class="art" style="aspect-ratio:3/4;background:linear-gradient(180deg,#cdd6dc,#8a9aa6 45%,#3c4a55 100%);position:relative;">
+            <span style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 30px,rgba(0,0,0,.06) 30px 32px)"></span>
+            <span style="position:absolute;left:46%;top:30%;width:8%;height:55%;background:rgba(20,30,40,.5)"></span>
+          </div>
+          <div class="cap"><span class="tag">Street</span><h3>Stairwell, Porto</h3></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS / STRIP -->
+  <section id="strip" class="strip">
+    <div class="strip-track">
+      <span>Natural light only</span><span>Patience over perfection</span><span>Grain &amp; honesty</span><span>Stories, not poses</span>
+      <span>Natural light only</span><span>Patience over perfection</span><span>Grain &amp; honesty</span><span>Stories, not poses</span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="sec-pad">
+    <div class="wrap">
+      <div class="about-wrap">
+        <div class="portrait"><span class="frame"></span></div>
+        <div class="about-text">
+          <p class="eyebrow">About</p>
+          <h2>I photograph the <span class="ital">quiet moments</span> between the loud ones.</h2>
+          <p>For over a decade I've followed light across coastlines, studios and back-alley markets — chasing the soft, fleeting instant a scene becomes a feeling. <strong>No flash, no fuss.</strong> Just film grain, available light, and the time it takes to wait for the frame to arrive.</p>
+          <p>My work has appeared in editorial spreads and private collections across Europe, but the sessions I love most are the unhurried ones — a portrait that takes an afternoon, a landscape that takes a sunrise.</p>
+          <div class="stats">
+            <div class="s"><span>12</span><small>Years shooting</small></div>
+            <div class="s"><span>240+</span><small>Sessions delivered</small></div>
+            <div class="s"><span>9</span><small>Countries roamed</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section id="book" class="sec-pad">
+    <div class="wrap">
+      <div class="booking">
+        <p class="eyebrow" style="position:relative">Now booking — Autumn 2026</p>
+        <h2>Let's make something <span class="ital">unrepeatable.</span></h2>
+        <p>Portrait sittings, editorial commissions and on-location work. Tell me about your light and I'll bring the patience.</p>
+        <div style="display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;position:relative">
+          <a class="btn" href="#book">Request a session
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost" href="#work">View full portfolio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Mara Vance</h4>
+        <p>Available-light portrait, landscape &amp; street photography. Based in Lisbon, working wherever the light is good.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Explore</h5>
+        <a href="#work">Portfolio</a>
+        <a href="#about">About</a>
+        <a href="#strip">Process</a>
+        <a href="#book">Booking</a>
+      </div>
+      <div class="foot-col">
+        <h5>Connect</h5>
+        <a href="#book">hello@maravance.studio</a>
+        <a href="#book">Instagram</a>
+        <a href="#book">Behance</a>
+        <a href="#book">Print shop</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Mara Vance Photography — All frames reserved.</span>
+      <span>Lisbon · 38.7°N</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // nav scroll state
+  var nav=document.getElementById('nav');
+  addEventListener('scroll',function(){nav.classList.toggle('scrolled',scrollY>30)});
+  // burger
+  var burger=document.getElementById('burger'),menu=document.getElementById('menu');
+  burger.addEventListener('click',function(){
+    var open=menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
+  });
+  menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')})});
+  // gallery filter
+  var filters=document.getElementById('filters'),shots=document.querySelectorAll('#gallery .shot');
+  filters.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    filters.querySelectorAll('button').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    var f=b.dataset.f;
+    shots.forEach(function(s){s.classList.toggle('hide',f!=='all'&&s.dataset.cat!==f)});
+  });
+</script>
+</body>
+</html>

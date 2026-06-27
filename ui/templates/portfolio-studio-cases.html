@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORM&amp;FIELD — Design studio for ambitious brands</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0d10;
+    --bg-2:#121419;
+    --surface:#16181f;
+    --ink:#f3f1ea;
+    --muted:#9ba0ac;
+    --faint:#666b78;
+    --line:#23262f;
+    --accent:#d8ff3e;
+    --accent-2:#ff6a3d;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+  /* Header */
+  header.site{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(12,13,16,.7);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;height:72px;gap:18px}
+  .brand{font-weight:700;font-size:18px;letter-spacing:.02em;display:flex;align-items:center;gap:9px}
+  .mark{width:26px;height:26px;border-radius:50%;background:var(--accent);display:inline-block;position:relative}
+  .mark::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg)}
+  .nav-links{margin-left:auto;display:flex;gap:28px;font-size:15px}
+  .nav-links a{color:var(--muted)}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{padding:10px 18px;border:1px solid var(--line);border-radius:999px;font-size:14px;font-weight:500}
+  .nav-cta:hover{background:var(--accent);color:#0c0d10;border-color:var(--accent)}
+  .menu-toggle{display:none;background:transparent;border:1px solid var(--line);border-radius:8px;width:42px;height:42px;cursor:pointer}
+  .menu-toggle span{display:block;width:18px;height:1.6px;background:var(--ink);margin:4px auto}
+  .mobile-nav{display:none}
+
+  /* Hero */
+  .hero{padding:160px 0 90px;position:relative}
+  .hero-glow{position:absolute;top:40px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(216,255,62,.14),transparent 65%);pointer-events:none;filter:blur(8px)}
+  .avail{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13.5px;color:var(--muted);margin-bottom:30px}
+  .pulse{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(216,255,62,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(216,255,62,.5)}70%{box-shadow:0 0 0 9px rgba(216,255,62,0)}100%{box-shadow:0 0 0 0 rgba(216,255,62,0)}}
+  .hero h1{font-size:clamp(40px,7.5vw,92px);line-height:.98;letter-spacing:-.03em;font-weight:600;max-width:13ch}
+  .hero h1 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent)}
+  .hero-sub{display:flex;flex-wrap:wrap;gap:40px;margin-top:38px;align-items:flex-end;justify-content:space-between}
+  .hero-sub p{color:var(--muted);font-size:18px;max-width:420px}
+  .hero-meta{display:flex;gap:40px}
+  .hero-meta div b{display:block;font-size:30px;font-weight:600;letter-spacing:-.02em}
+  .hero-meta div span{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+
+  /* Section heads */
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:40px;border-top:1px solid var(--line);padding-top:26px}
+  .sec-head .idx{font-size:13px;color:var(--accent);letter-spacing:.15em;text-transform:uppercase}
+  .sec-head h2{font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;font-weight:600}
+  .sec-head p{color:var(--muted);max-width:300px;font-size:15px}
+
+  /* Cases */
+  .cases{padding:30px 0 90px}
+  .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  .case{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s ease,border-color .2s ease}
+  .case:hover{transform:translateY(-4px);border-color:#34384a}
+  .case.big{grid-column:span 2}
+  .cover{height:280px;position:relative;overflow:hidden}
+  .case.big .cover{height:340px}
+  .cover svg{position:absolute;inset:0;width:100%;height:100%}
+  .case-body{padding:24px 26px 28px}
+  .case-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .client{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .yr{font-size:13px;color:var(--faint)}
+  .case-body h3{font-size:26px;line-height:1.15;letter-spacing:-.02em;font-weight:600;margin-bottom:14px}
+  .case.big .case-body h3{font-size:34px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .chip{font-size:12.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+  .metric-row{display:flex;gap:34px;border-top:1px solid var(--line);padding-top:18px}
+  .metric b{display:block;font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--accent)}
+  .metric span{font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+
+  /* Services */
+  .services{padding:60px 0;background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .svc{background:var(--bg-2);padding:34px 28px;min-height:200px;display:flex;flex-direction:column}
+  .svc:hover{background:var(--surface)}
+  .svc .num{font-family:'Instrument Serif',serif;font-size:34px;color:var(--accent);line-height:1}
+  .svc h4{font-size:20px;margin:18px 0 10px;font-weight:600}
+  .svc p{color:var(--muted);font-size:14.5px}
+  .svc ul{margin-top:auto;list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding-top:16px}
+  .svc ul li{font-size:12px;color:var(--faint);border:1px solid var(--line);padding:3px 9px;border-radius:6px}
+
+  /* Awards marquee */
+  .awards{padding:46px 0;overflow:hidden}
+  .marquee{display:flex;gap:48px;white-space:nowrap;animation:scroll 32s linear infinite;width:max-content}
+  .awards:hover .marquee{animation-play-state:paused}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .award{display:flex;align-items:center;gap:14px;font-family:'Instrument Serif',serif;font-size:30px;color:var(--muted)}
+  .award .star{color:var(--accent);font-family:'Space Grotesk',sans-serif;font-size:18px}
+  .award small{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+
+  /* Contact */
+  .contact{padding:90px 0 100px;text-align:center;position:relative}
+  .contact .glow2{position:absolute;bottom:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(circle,rgba(255,106,61,.12),transparent 60%);pointer-events:none}
+  .contact small{font-size:13px;color:var(--accent);letter-spacing:.18em;text-transform:uppercase}
+  .contact h2{font-size:clamp(34px,6vw,72px);letter-spacing:-.03em;font-weight:600;margin:18px auto;max-width:14ch;line-height:1.02}
+  .contact h2 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+  .mailbtn{display:inline-flex;align-items:center;gap:12px;background:var(--accent);color:#0c0d10;padding:16px 30px;border-radius:999px;font-weight:600;font-size:18px;margin-top:14px}
+  .mailbtn:hover{background:#c6f01f}
+  .contact-meta{display:flex;flex-wrap:wrap;gap:38px;justify-content:center;margin-top:48px;color:var(--muted);font-size:14.5px}
+  .contact-meta a:hover{color:var(--accent)}
+
+  footer.site{border-top:1px solid var(--line);padding:30px 0}
+  .foot{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;color:var(--faint);font-size:13.5px}
+
+  @media(max-width:860px){
+    .nav-links{display:none}
+    .menu-toggle{display:block;margin-left:auto}
+    .mobile-nav.open{display:flex;flex-direction:column;gap:4px;padding:14px 0}
+    .mobile-nav.open a{padding:9px 0;color:var(--muted)}
+    .case-grid{grid-template-columns:1fr}
+    .case.big{grid-column:span 1}
+    .svc-grid{grid-template-columns:1fr}
+    .hero{padding:128px 0 70px}
+  }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#"><span class="mark"></span>FORM&amp;FIELD</a>
+      <div class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <a href="#awards">Recognition</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="#contact" class="nav-cta">Start a project</a>
+      <button class="menu-toggle" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#work">Work</a><a href="#services">Services</a><a href="#awards">Recognition</a><a href="#contact">Contact</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <span class="avail"><span class="pulse"></span> Booking projects for Q4 2026</span>
+    <h1>We build brands that <em>refuse</em> to blend in.</h1>
+    <div class="hero-sub">
+      <p>FORM&amp;FIELD is a six-person design studio shaping identities, products, and stories for companies that have something real to say.</p>
+      <div class="hero-meta">
+        <div><b>11</b><span>Years</span></div>
+        <div><b>74</b><span>Projects</span></div>
+        <div><b>9</b><span>Awards</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cases" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="idx">001 — Selected work</span>
+      <h2>Case studies</h2>
+      <p>A few engagements we're proud of, with the numbers that mattered to the people who hired us.</p>
+    </div>
+
+    <div class="case-grid">
+
+      <article class="case big">
+        <div class="cover">
+          <svg viewBox="0 0 1140 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2540"/><stop offset="1" stop-color="#06080f"/></linearGradient></defs>
+            <rect width="1140" height="340" fill="url(#g1)"/>
+            <circle cx="820" cy="170" r="150" fill="none" stroke="#d8ff3e" stroke-width="1.4" opacity=".5"/>
+            <circle cx="820" cy="170" r="98" fill="none" stroke="#ff6a3d" stroke-width="1.4" opacity=".6"/>
+            <circle cx="820" cy="170" r="50" fill="#d8ff3e" opacity=".9"/>
+            <g stroke="#d8ff3e" stroke-width="1" opacity=".25"><path d="M0 280 H1140"/><path d="M0 230 H1140"/><path d="M0 180 H1140"/></g>
+            <text x="60" y="150" font-family="Instrument Serif, serif" font-size="120" fill="#f3f1ea" opacity=".12">Helio</text>
+          </svg>
+        </div>
+        <div class="case-body">
+          <div class="case-top"><span class="client">Helio Energy</span><span class="yr">2026</span></div>
+          <h3>A solar brand that finally feels like the future</h3>
+          <div class="chips"><span class="chip">Brand identity</span><span class="chip">Web design</span><span class="chip">Motion</span><span class="chip">Art direction</span></div>
+          <div class="metric-row">
+            <div class="metric"><b>+212%</b><span>Demo requests</span></div>
+            <div class="metric"><b>3.1×</b><span>Press pickups</span></div>
+            <div class="metric"><b>$48M</b><span>Series B raised</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="cover">
+          <svg viewBox="0 0 560 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a1f3d"/><stop offset="1" stop-color="#0c0710"/></linearGradient></defs>
+            <rect width="560" height="280" fill="url(#g2)"/>
+            <path d="M0 200 Q140 120 280 180 T560 150" fill="none" stroke="#ff6a3d" stroke-width="2" opacity=".8"/>
+            <path d="M0 230 Q140 160 280 215 T560 190" fill="none" stroke="#d8ff3e" stroke-width="2" opacity=".6"/>
+            <rect x="70" y="60" width="80" height="80" rx="16" fill="#ff6a3d" opacity=".85" transform="rotate(12 110 100)"/>
+          </svg>
+        </div>
+        <div class="case-body">
+          <div class="case-top"><span class="client">Maru Skincare</span><span class="yr">2025</span></div>
+          <h3>Packaging that doubled shelf turnover</h3>
+          <div class="chips"><span class="chip">Packaging</span><span class="chip">Identity</span></div>
+          <div class="metric-row">
+            <div class="metric"><b>2.0×</b><span>Shelf turnover</span></div>
+            <div class="metric"><b>+38%</b><span>Repeat buyers</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="cover">
+          <svg viewBox="0 0 560 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#13343a"/><stop offset="1" stop-color="#060f10"/></linearGradient></defs>
+            <rect width="560" height="280" fill="url(#g3)"/>
+            <g fill="none" stroke="#d8ff3e" stroke-width="1.4" opacity=".55">
+              <rect x="120" y="70" width="140" height="140" rx="8"/>
+              <rect x="180" y="110" width="140" height="140" rx="8"/>
+              <rect x="240" y="150" width="140" height="140" rx="8"/>
+            </g>
+            <circle cx="430" cy="80" r="34" fill="#d8ff3e" opacity=".9"/>
+          </svg>
+        </div>
+        <div class="case-body">
+          <div class="case-top"><span class="client">Ledgerwell</span><span class="yr">2025</span></div>
+          <h3>A fintech design system, end to end</h3>
+          <div class="chips"><span class="chip">Product design</span><span class="chip">Design system</span></div>
+          <div class="metric-row">
+            <div class="metric"><b>-41%</b><span>Support tickets</span></div>
+            <div class="metric"><b>4.8★</b><span>App rating</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="cover">
+          <svg viewBox="0 0 560 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><radialGradient id="g4" cx="30%" cy="30%"><stop offset="0" stop-color="#4a3410"/><stop offset="1" stop-color="#0c0905"/></radialGradient></defs>
+            <rect width="560" height="280" fill="url(#g4)"/>
+            <g stroke="#ff6a3d" stroke-width="2" opacity=".7" fill="none">
+              <path d="M40 240 L160 100 L260 200 L360 70 L520 220"/>
+            </g>
+            <circle cx="160" cy="100" r="7" fill="#d8ff3e"/><circle cx="360" cy="70" r="7" fill="#d8ff3e"/>
+            <text x="50" y="80" font-family="Instrument Serif, serif" font-size="64" fill="#f3f1ea" opacity=".12">Orbit</text>
+          </svg>
+        </div>
+        <div class="case-body">
+          <div class="case-top"><span class="client">Orbit Studio</span><span class="yr">2024</span></div>
+          <h3>Rebrand for a music label going global</h3>
+          <div class="chips"><span class="chip">Brand</span><span class="chip">Campaign</span></div>
+          <div class="metric-row">
+            <div class="metric"><b>+5.4M</b><span>Reach</span></div>
+            <div class="metric"><b>+27%</b><span>Streams</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="cover">
+          <svg viewBox="0 0 560 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="g5" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1f2b1a"/><stop offset="1" stop-color="#070b06"/></linearGradient></defs>
+            <rect width="560" height="280" fill="url(#g5)"/>
+            <circle cx="280" cy="140" r="90" fill="none" stroke="#d8ff3e" stroke-width="1.4" opacity=".6"/>
+            <path d="M280 50 A90 90 0 0 1 370 140 L280 140 Z" fill="#d8ff3e" opacity=".85"/>
+            <path d="M280 140 L370 140 A90 90 0 0 1 230 222 Z" fill="#ff6a3d" opacity=".7"/>
+          </svg>
+        </div>
+        <div class="case-body">
+          <div class="case-top"><span class="client">Northwind Co-op</span><span class="yr">2024</span></div>
+          <h3>Naming and identity for a food collective</h3>
+          <div class="chips"><span class="chip">Naming</span><span class="chip">Identity</span><span class="chip">Signage</span></div>
+          <div class="metric-row">
+            <div class="metric"><b>14</b><span>Storefronts</span></div>
+            <div class="metric"><b>+62%</b><span>Membership</span></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="idx">002 — What we do</span>
+      <h2>Services</h2>
+      <p>We work in tight, senior teams. No account managers, no handoff theatre.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc">
+        <span class="num">01</span>
+        <h4>Brand &amp; identity</h4>
+        <p>Strategy, naming, and the visual language that carries it — built to hold up across every surface you'll ever ship.</p>
+        <ul><li>Positioning</li><li>Logo systems</li><li>Guidelines</li></ul>
+      </div>
+      <div class="svc">
+        <span class="num">02</span>
+        <h4>Digital product</h4>
+        <p>From first wireframe to a living design system, designed with the engineers who'll build it in the room.</p>
+        <ul><li>UX</li><li>UI</li><li>Design systems</li></ul>
+      </div>
+      <div class="svc">
+        <span class="num">03</span>
+        <h4>Motion &amp; campaign</h4>
+        <p>Launch films, art direction, and the moments that make a brand feel alive when it finally meets the world.</p>
+        <ul><li>Motion</li><li>Art direction</li><li>Launch</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="awards" id="awards">
+  <div class="marquee">
+    <span class="award"><span class="star">✦</span> Awwwards SOTD <small>×3</small></span>
+    <span class="award"><span class="star">✦</span> D&amp;AD Pencil <small>2025</small></span>
+    <span class="award"><span class="star">✦</span> Type Directors Club <small>2024</small></span>
+    <span class="award"><span class="star">✦</span> CSS Design Awards <small>×2</small></span>
+    <span class="award"><span class="star">✦</span> Communication Arts <small>2026</small></span>
+    <span class="award"><span class="star">✦</span> Awwwards SOTD <small>×3</small></span>
+    <span class="award"><span class="star">✦</span> D&amp;AD Pencil <small>2025</small></span>
+    <span class="award"><span class="star">✦</span> Type Directors Club <small>2024</small></span>
+    <span class="award"><span class="star">✦</span> CSS Design Awards <small>×2</small></span>
+    <span class="award"><span class="star">✦</span> Communication Arts <small>2026</small></span>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="glow2"></div>
+  <div class="wrap">
+    <small>003 — Let's talk</small>
+    <h2>Have a brief, or just a <em>hunch?</em></h2>
+    <a href="mailto:studio@formandfield.co" class="mailbtn">
+      studio@formandfield.co
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="contact-meta">
+      <span>Lisbon · Berlin</span>
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Read the journal</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot">
+    <span class="brand" style="font-size:15px"><span class="mark"></span>FORM&amp;FIELD</span>
+    <span>© 2026 FORM&amp;FIELD Studio — All rights reserved</span>
+    <span>Crafted in the open</span>
+  </div>
+</footer>
+
+<script>
+  const menuBtn=document.getElementById('menuBtn');
+  const mobileNav=document.getElementById('mobileNav');
+  menuBtn.addEventListener('click',()=>{
+    const open=mobileNav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded',open);
+  });
+</script>
+</body>
+</html>

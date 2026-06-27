@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aria Lounge Chair — Nordable Modern Furniture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#fbfaf8;
+    --surface:#ffffff;
+    --soft:#f3f1ec;
+    --ink:#1d1c1a;
+    --muted:#6b6a66;
+    --line:#e8e5de;
+    --accent:#ff5a3c;       /* vibrant coral */
+    --accent-soft:#ffe7e1;
+    --accent-dark:#e23f23;
+    --star:#ffb020;
+    --green:#1f9d6b;
+    --r:18px;
+    --sans:"Inter",system-ui,sans-serif;
+    --serif:"Fraunces",Georgia,serif;
+    --shadow:0 18px 50px -22px rgba(29,28,26,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+  button{font-family:inherit}
+
+  /* ---- Nav ---- */
+  header.nav{position:sticky;top:0;z-index:60;background:rgba(251,250,248,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#ff8a5c);display:grid;place-items:center;color:#fff}
+  .nav-links{display:flex;gap:30px;list-style:none}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--muted)}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .pill-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px;transition:transform .2s,background .2s}
+  .pill-btn:hover{transform:translateY(-1px)}
+  .icon-circle{width:42px;height:42px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;position:relative}
+  .icon-circle .dot{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center}
+  .menu-toggle{display:none}
+
+  /* ---- Breadcrumb ---- */
+  .crumb{padding:22px 0 6px;font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .crumb a:hover{color:var(--accent)}
+  .crumb .sep{opacity:.5}
+  .crumb .cur{color:var(--ink);font-weight:500}
+
+  /* ---- PDP layout ---- */
+  .pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;padding:18px 0 70px;align-items:start}
+
+  /* gallery */
+  .gallery{position:sticky;top:90px}
+  .stage{position:relative;background:var(--soft);border-radius:26px;overflow:hidden;aspect-ratio:1/1;border:1px solid var(--line)}
+  .stage .slide{position:absolute;inset:0;opacity:0;transition:opacity .4s ease;display:grid;place-items:center}
+  .stage .slide.active{opacity:1}
+  .stage svg{width:100%;height:100%}
+  .tag-float{position:absolute;top:18px;left:18px;z-index:5;background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;display:flex;align-items:center;gap:7px}
+  .tag-float .pip{width:7px;height:7px;border-radius:50%;background:#7CFFB0}
+  .save-float{position:absolute;top:16px;right:16px;z-index:5;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);border:none;cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.3)}
+  .save-float svg path{transition:fill .2s,stroke .2s}
+  .save-float[aria-pressed="true"] svg path{fill:var(--accent);stroke:var(--accent)}
+  .thumbs{display:flex;gap:12px;margin-top:14px}
+  .thumb{flex:1;aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:var(--soft);border:2px solid transparent;cursor:pointer;padding:0;transition:border-color .2s,transform .2s}
+  .thumb:hover{transform:translateY(-2px)}
+  .thumb.active{border-color:var(--accent)}
+  .thumb svg{width:100%;height:100%}
+
+  /* info */
+  .vendor{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.02em;text-transform:uppercase}
+  .info h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,3.6vw,46px);line-height:1.05;margin:8px 0 12px;letter-spacing:-.01em}
+  .rating-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .stars{display:flex;gap:2px;color:var(--star)}
+  .stars svg{width:18px;height:18px}
+  .rating-row .score{font-weight:600}
+  .rating-row .reviews{color:var(--muted);font-size:14px}
+  .rating-row .reviews a{color:var(--accent);font-weight:600}
+  .instock{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--green);background:#e6f6ee;padding:4px 11px;border-radius:999px}
+
+  .price-row{display:flex;align-items:baseline;gap:12px;margin:18px 0 6px}
+  .price-now{font-size:34px;font-weight:700;letter-spacing:-.02em}
+  .price-was{font-size:19px;color:var(--muted);text-decoration:line-through}
+  .price-off{background:var(--accent-soft);color:var(--accent-dark);font-weight:700;font-size:13px;padding:4px 10px;border-radius:8px}
+  .finance{font-size:13px;color:var(--muted);margin-bottom:22px}
+  .finance b{color:var(--ink)}
+
+  .lede{color:var(--muted);max-width:52ch;margin-bottom:26px}
+
+  .opt-label{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;margin-bottom:10px}
+  .opt-label .val{color:var(--muted);font-weight:500}
+  .swatches{display:flex;gap:12px;margin-bottom:24px}
+  .swatch{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);cursor:pointer;position:relative;padding:0;transition:transform .15s}
+  .swatch:hover{transform:scale(1.06)}
+  .swatch span{position:absolute;inset:4px;border-radius:50%}
+  .swatch[aria-pressed="true"]{border-color:var(--ink)}
+  .swatch[aria-pressed="true"]::after{content:"";position:absolute;inset:-6px;border:2px solid var(--accent);border-radius:50%}
+
+  .sizes{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+  .size{min-width:58px;padding:11px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;font-size:14px;cursor:pointer;transition:.18s}
+  .size:hover{border-color:var(--ink)}
+  .size[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .size.out{opacity:.4;text-decoration:line-through;cursor:not-allowed}
+
+  .buy-block{display:flex;gap:12px;align-items:stretch;margin-bottom:14px;flex-wrap:wrap}
+  .qty{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+  .qty button{width:46px;height:54px;border:none;background:none;font-size:20px;cursor:pointer;color:var(--ink)}
+  .qty button:hover{background:var(--soft)}
+  .qty input{width:46px;text-align:center;border:none;font-weight:700;font-size:16px;background:none}
+  .qty input:focus{outline:none}
+  .btn-cart{flex:1;min-width:160px;background:var(--ink);color:#fff;border:none;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .2s,background .2s}
+  .btn-cart:hover{transform:translateY(-2px);background:#000}
+  .btn-buy{width:100%;background:var(--accent);color:#fff;border:none;border-radius:14px;padding:16px;font-weight:700;font-size:16px;cursor:pointer;transition:transform .2s,background .2s;box-shadow:0 12px 30px -12px var(--accent)}
+  .btn-buy:hover{transform:translateY(-2px);background:var(--accent-dark)}
+
+  .assurances{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+  .assure{display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)}
+  .assure b{color:var(--ink);font-size:14px}
+  .assure svg{width:24px;height:24px;color:var(--accent)}
+
+  /* accordion */
+  .accordion{border-top:1px solid var(--line);margin-top:8px}
+  .acc-item{border-bottom:1px solid var(--line)}
+  .acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;background:none;border:none;cursor:pointer;padding:20px 2px;font-weight:600;font-size:16px;text-align:left}
+  .acc-head .plus{width:24px;height:24px;position:relative;flex-shrink:0}
+  .acc-head .plus::before,.acc-head .plus::after{content:"";position:absolute;background:var(--ink);border-radius:2px;transition:transform .3s}
+  .acc-head .plus::before{top:11px;left:4px;right:4px;height:2px}
+  .acc-head .plus::after{left:11px;top:4px;bottom:4px;width:2px}
+  .acc-item.open .plus::after{transform:scaleY(0)}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .acc-body .inner{padding:0 2px 22px;color:var(--muted);max-width:60ch}
+  .acc-body ul{margin:8px 0 0 18px}
+  .acc-body li{margin-bottom:6px}
+
+  /* ---- Reviews summary ---- */
+  .section{padding:60px 0;border-top:1px solid var(--line)}
+  .section h2{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3vw,38px);margin-bottom:8px;letter-spacing:-.01em}
+  .section .sub{color:var(--muted);margin-bottom:32px}
+  .rev-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:start}
+  .rev-score{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:30px;text-align:center}
+  .rev-score .big{font-size:64px;font-weight:700;font-family:var(--serif);line-height:1}
+  .rev-score .stars{justify-content:center;margin:10px 0 6px}
+  .rev-score .count{color:var(--muted);font-size:14px}
+  .bars{margin-top:22px;text-align:left}
+  .bar-row{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:8px;color:var(--muted)}
+  .bar-row .track{flex:1;height:8px;background:var(--soft);border-radius:999px;overflow:hidden}
+  .bar-row .fill{height:100%;background:var(--star);border-radius:999px}
+  .rev-list{display:flex;flex-direction:column;gap:18px}
+  .review{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+  .review-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px}
+  .review .who{font-weight:600;font-size:15px}
+  .review .when{color:var(--muted);font-size:12px}
+  .review .verified{margin-left:auto;font-size:12px;font-weight:600;color:var(--green);background:#e6f6ee;padding:3px 9px;border-radius:999px}
+  .review .stars svg{width:14px;height:14px}
+  .review p{color:var(--ink);font-size:14px;margin-top:8px}
+
+  /* ---- You may also like ---- */
+  .yml-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .pcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s}
+  .pcard:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .pcard .pmedia{aspect-ratio:1/1;background:var(--soft);position:relative}
+  .pcard .pmedia svg{width:100%;height:100%}
+  .pcard .pbadge{position:absolute;top:12px;left:12px;background:var(--accent-soft);color:var(--accent-dark);font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px}
+  .pcard .pbody{padding:16px}
+  .pcard .pbody h3{font-size:15px;font-weight:600;margin-bottom:6px}
+  .pcard .pmeta{display:flex;justify-content:space-between;align-items:center}
+  .pcard .pmeta .pp{font-weight:700;font-size:16px}
+  .pcard .pmeta .pr{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:3px}
+  .pcard .pmeta .pr svg{width:13px;height:13px;color:var(--star)}
+
+  /* ---- Footer ---- */
+  footer{background:var(--ink);color:#cfccc6;padding:60px 0 30px;margin-top:30px}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:44px}
+  .foot-logo{color:#fff;font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .foot-logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#ff8a5c);display:grid;place-items:center}
+  .foot-grid p{font-size:14px;max-width:34ch}
+  .foot-col h4{color:#fff;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+  .foot-col a{display:block;font-size:14px;padding:5px 0}
+  .foot-col a:hover{color:#fff}
+  .foot-bottom{border-top:1px solid #34322e;padding-top:24px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px}
+
+  @media(max-width:900px){
+    .pdp{grid-template-columns:1fr;gap:32px}
+    .gallery{position:static}
+    .rev-grid{grid-template-columns:1fr}
+    .yml-grid{grid-template-columns:repeat(2,1fr)}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:680px){
+    .nav-links{display:none}
+    .menu-toggle{display:grid}
+    .assurances{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+    .pill-btn .ptxt{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <button class="icon-circle menu-toggle" aria-label="Menu" onclick="document.querySelector('.mnav').classList.toggle('show')">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+    <a href="#" class="logo"><span class="mark"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13V6l5-3 5 3v7" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>Nordable</a>
+    <nav aria-label="Primary"><ul class="nav-links">
+      <li><a href="#">Living</a></li><li><a href="#">Bedroom</a></li><li><a href="#">Lighting</a></li><li><a href="#">Decor</a></li><li><a href="#">Sale</a></li>
+    </ul></nav>
+    <div class="nav-right">
+      <button class="icon-circle" aria-label="Search"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M12.5 12.5L16 16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <button class="icon-circle" aria-label="Cart, 3 items"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 3h2l1.5 9h8L15 6H5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="15" r="1.2" fill="currentColor"/><circle cx="13" cy="15" r="1.2" fill="currentColor"/></svg><span class="dot">3</span></button>
+      <button class="pill-btn"><span class="ptxt">Sign in</span></button>
+    </div>
+  </div>
+  <nav class="mnav" aria-label="Mobile"></nav>
+</header>
+<style>.mnav{display:none}.mnav.show{display:block;border-bottom:1px solid var(--line);background:var(--bg);padding:6px 24px 16px}.mnav.show a{display:block;padding:11px 0;font-weight:500;border-bottom:1px solid var(--line)}</style>
+<script>document.querySelector('.mnav').innerHTML=['Living','Bedroom','Lighting','Decor','Sale'].map(t=>`<a href="#">${t}</a>`).join('');</script>
+
+<div class="wrap">
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="#">Home</a><span class="sep">/</span><a href="#">Living</a><span class="sep">/</span><a href="#">Lounge Chairs</a><span class="sep">/</span><span class="cur">Aria Lounge Chair</span>
+  </nav>
+</div>
+
+<main class="wrap">
+  <div class="pdp">
+    <!-- GALLERY -->
+    <section class="gallery" aria-label="Product gallery">
+      <div class="stage">
+        <span class="tag-float"><span class="pip"></span> Bestseller</span>
+        <button class="save-float" aria-label="Save to wishlist" aria-pressed="false" onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true')">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17S3 12.5 3 7.5A3.8 3.8 0 0 1 10 5.8 3.8 3.8 0 0 1 17 7.5C17 12.5 10 17 10 17Z" stroke="#1d1c1a" stroke-width="1.5"/></svg>
+        </button>
+        <div class="slide active" data-i="0"></div>
+        <div class="slide" data-i="1"></div>
+        <div class="slide" data-i="2"></div>
+        <div class="slide" data-i="3"></div>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+    </section>
+
+    <!-- INFO -->
+    <section class="info" aria-label="Product details">
+      <div class="vendor">Nordable Studio</div>
+      <h1>Aria Lounge Chair</h1>
+      <div class="rating-row">
+        <span class="stars" id="hStars" aria-hidden="true"></span>
+        <span class="score">4.8</span>
+        <span class="reviews">· <a href="#reviews">214 reviews</a></span>
+        <span class="instock">● In stock</span>
+      </div>
+
+      <div class="price-row">
+        <span class="price-now">$649</span>
+        <span class="price-was">$820</span>
+        <span class="price-off">Save 21%</span>
+      </div>
+      <p class="finance">or 4 interest-free payments of <b>$162.25</b> with Klarna</p>
+
+      <p class="lede">A sculptural, deeply comfortable lounge chair with a solid oak frame, high-resilience foam and a removable boucle cover. Designed to be the quiet anchor of any room.</p>
+
+      <div class="opt-label">Color <span class="val" id="colorVal">Warm Sand</span></div>
+      <div class="swatches" id="swatches" role="group" aria-label="Choose a color"></div>
+
+      <div class="opt-label">Configuration <span class="val">Size guide</span></div>
+      <div class="sizes" role="group" aria-label="Choose a configuration">
+        <button class="size" aria-pressed="false">Armless</button>
+        <button class="size" aria-pressed="true">Standard</button>
+        <button class="size" aria-pressed="false">Wide</button>
+        <button class="size out" disabled aria-disabled="true">Swivel</button>
+      </div>
+
+      <div class="buy-block">
+        <div class="qty" aria-label="Quantity">
+          <button aria-label="Decrease quantity" onclick="chQty(-1)">−</button>
+          <input id="qty" type="text" value="1" inputmode="numeric" aria-label="Quantity" readonly />
+          <button aria-label="Increase quantity" onclick="chQty(1)">+</button>
+        </div>
+        <button class="btn-cart" onclick="addCart(this)">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 3h2l1.5 9h8L15 6H5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Add to cart
+        </button>
+      </div>
+      <button class="btn-buy">Buy now — fast checkout</button>
+
+      <div class="assurances">
+        <div class="assure"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 7v7l9 4 9-4V7" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><b>Free delivery</b>On orders over $250</div>
+        <div class="assure"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 3v5c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><b>10-yr warranty</b>Frame &amp; structure</div>
+        <div class="assure"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 9-9" stroke="currentColor" stroke-width="1.6"/><path d="M3 4v4h4" stroke="currentColor" stroke-width="1.6"/></svg><b>100-day trial</b>Easy returns</div>
+      </div>
+
+      <!-- ACCORDION -->
+      <div class="accordion">
+        <div class="acc-item open">
+          <button class="acc-head" aria-expanded="true" onclick="toggleAcc(this)">Details &amp; materials <span class="plus"></span></button>
+          <div class="acc-body" style="max-height:300px"><div class="inner">
+            Solid FSC-certified oak frame with a CertiPUR-US high-resilience foam seat. Removable, machine-washable boucle cover.
+            <ul><li>Dimensions: 78 × 82 × 90 cm (W×D×H)</li><li>Seat height: 42 cm</li><li>Weight: 16 kg · holds up to 150 kg</li><li>Assembly: 4 legs, ~10 minutes</li></ul>
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">Shipping &amp; returns <span class="plus"></span></button>
+          <div class="acc-body"><div class="inner">
+            Free carbon-neutral delivery in 3–5 business days on orders over $250. We ship flat-packed in 100% recyclable packaging. Not the one? Return within 100 days for a full refund — we'll arrange free pickup.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">Care &amp; warranty <span class="plus"></span></button>
+          <div class="acc-body"><div class="inner">
+            Spot-clean the boucle or remove and machine-wash cold. Treat the oak frame yearly with the included wax. Backed by our 10-year structural warranty.
+          </div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews">
+  <div class="wrap">
+    <h2>What customers say</h2>
+    <p class="sub">214 verified reviews · 96% would recommend</p>
+    <div class="rev-grid">
+      <div class="rev-score">
+        <div class="big">4.8</div>
+        <div class="stars" aria-hidden="true" id="bigStars"></div>
+        <div class="count">Based on 214 reviews</div>
+        <div class="bars">
+          <div class="bar-row">5★ <div class="track"><div class="fill" style="width:82%"></div></div> 82%</div>
+          <div class="bar-row">4★ <div class="track"><div class="fill" style="width:12%"></div></div> 12%</div>
+          <div class="bar-row">3★ <div class="track"><div class="fill" style="width:4%"></div></div> 4%</div>
+          <div class="bar-row">2★ <div class="track"><div class="fill" style="width:1%"></div></div> 1%</div>
+          <div class="bar-row">1★ <div class="track"><div class="fill" style="width:1%"></div></div> 1%</div>
+        </div>
+      </div>
+      <div class="rev-list">
+        <article class="review">
+          <div class="review-top"><span class="avatar" style="background:#ff7a59">M</span><div><div class="who">Maya R.</div><div class="when">2 weeks ago</div></div><span class="verified">Verified</span></div>
+          <div class="stars" aria-label="5 out of 5" id="r1"></div>
+          <p>"Genuinely the comfiest chair I've ever owned, and it looks like a sculpture. The boucle cover came off easily for a wash. Worth every penny."</p>
+        </article>
+        <article class="review">
+          <div class="review-top"><span class="avatar" style="background:#3b82f6">J</span><div><div class="who">Jonas P.</div><div class="when">1 month ago</div></div><span class="verified">Verified</span></div>
+          <div class="stars" aria-label="5 out of 5" id="r2"></div>
+          <p>"Assembly took ten minutes, delivery was on time and the oak frame is clearly high quality. Slightly firmer than expected but I've come to love it."</p>
+        </article>
+        <article class="review">
+          <div class="review-top"><span class="avatar" style="background:#10b981">T</span><div><div class="who">Talia K.</div><div class="when">1 month ago</div></div><span class="verified">Verified</span></div>
+          <div class="stars" aria-label="4 out of 5" id="r3"></div>
+          <p>"Beautiful chair and great customer service when I swapped the color. Took off one star only because the Warm Sand is a touch lighter than the photos."</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YOU MAY ALSO LIKE -->
+<section class="section">
+  <div class="wrap">
+    <h2>You may also like</h2>
+    <p class="sub">Pairs beautifully with the Aria</p>
+    <div class="yml-grid" id="yml"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo"><span class="mark"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13V6l5-3 5 3v7" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>Nordable</div>
+        <p>Considered furniture for modern living. Designed in Copenhagen, made to last.</p>
+      </div>
+      <div class="foot-col"><h4>Shop</h4><a href="#">Living</a><a href="#">Bedroom</a><a href="#">Lighting</a><a href="#">Decor</a></div>
+      <div class="foot-col"><h4>Support</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Warranty</a><a href="#">Contact</a></div>
+      <div class="foot-col"><h4>Company</h4><a href="#">About</a><a href="#">Sustainability</a><a href="#">Careers</a><a href="#">Stores</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Nordable. All rights reserved.</span><span>Privacy · Terms · Cookies</span></div>
+  </div>
+</footer>
+
+<script>
+  // ---------- star helper ----------
+  const STAR='<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg>';
+  const starsFull=(n)=>STAR.repeat(n);
+  document.getElementById('hStars').innerHTML=starsFull(5);
+  document.getElementById('bigStars').innerHTML=starsFull(5);
+  document.getElementById('r1').innerHTML=starsFull(5);
+  document.getElementById('r2').innerHTML=starsFull(5);
+  document.getElementById('r3').innerHTML=starsFull(4);
+
+  // ---------- gallery art (4 angles) ----------
+  function chairSVG(seat, frame, bg, variant){
+    const base = `<defs><linearGradient id="bg${variant}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient><linearGradient id="se${variant}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${seat[0]}"/><stop offset="1" stop-color="${seat[1]}"/></linearGradient></defs><rect width="600" height="600" fill="url(#bg${variant})"/><ellipse cx="300" cy="470" rx="180" ry="34" fill="rgba(0,0,0,.07)"/>`;
+    const shapes = {
+      0:`<path d="M180 250q120-46 240 0v120q-120 26-240 0Z" fill="url(#se${variant})"/><path d="M180 250q120-60 240 0q12 8 8 22q-126-46-256 0q-4-14 8-22Z" fill="${seat[1]}"/><rect x="186" y="360" width="22" height="120" rx="8" fill="${frame}"/><rect x="392" y="360" width="22" height="120" rx="8" fill="${frame}"/><path d="M200 360q100 26 200 0v34q-100 22-200 0Z" fill="${seat[0]}"/>`,
+      1:`<path d="M210 240q90-40 180 0l16 130q-106 28-212 0Z" fill="url(#se${variant})"/><ellipse cx="300" cy="250" rx="96" ry="34" fill="${seat[1]}"/><rect x="216" y="360" width="20" height="118" rx="8" fill="${frame}"/><rect x="364" y="360" width="20" height="118" rx="8" fill="${frame}"/><path d="M214 360q86 24 172 0v30q-86 22-172 0Z" fill="${seat[0]}"/>`,
+      2:`<path d="M230 230q70 0 90 30v140q-50 18-100 0V250q-2-16 10-20Z" fill="url(#se${variant})"/><path d="M320 260q40-10 56 16v110q-30 16-56 4Z" fill="${seat[1]}"/><rect x="240" y="380" width="20" height="100" rx="8" fill="${frame}"/><rect x="330" y="384" width="18" height="96" rx="8" fill="${frame}"/>`,
+      3:`<rect x="220" y="250" width="160" height="120" rx="44" fill="url(#se${variant})"/><rect x="234" y="232" width="132" height="40" rx="20" fill="${seat[1]}"/><rect x="232" y="360" width="20" height="118" rx="8" fill="${frame}"/><rect x="348" y="360" width="20" height="118" rx="8" fill="${frame}"/><circle cx="300" cy="310" r="6" fill="rgba(255,255,255,.5)"/>`
+    };
+    return `<svg viewBox="0 0 600 600" role="img" aria-label="Aria lounge chair, view ${variant+1}">${base}${shapes[variant]}</svg>`;
+  }
+
+  // color variants
+  const colors=[
+    {name:"Warm Sand", swatch:"#d8c3a5", seat:["#e3d0b4","#c9ad86"], frame:"#9c7b50"},
+    {name:"Slate Blue", swatch:"#6f86a3", seat:["#8fa3bd","#5e7592"], frame:"#3d4a5c"},
+    {name:"Forest", swatch:"#4f7359", seat:["#6f9479","#46624f"], frame:"#33493a"},
+    {name:"Charcoal", swatch:"#3a3a3c", seat:["#5a5a5d","#363638"], frame:"#222224"}
+  ];
+  let activeColor=0;
+  const bg=["#f3f1ec","#e9e6df"];
+
+  function renderGallery(){
+    const c=colors[activeColor];
+    document.querySelectorAll('.stage .slide').forEach((s,i)=>{ s.innerHTML=chairSVG(c.seat,c.frame,bg,i); });
+    document.getElementById('thumbs').innerHTML=[0,1,2,3].map(i=>
+      `<button class="thumb ${i===0?'active':''}" aria-label="View ${i+1}" onclick="setSlide(${i})">${chairSVG(c.seat,c.frame,bg,i)}</button>`).join('');
+    setSlide(currentSlide);
+  }
+  let currentSlide=0;
+  function setSlide(i){
+    currentSlide=i;
+    document.querySelectorAll('.stage .slide').forEach(s=>s.classList.toggle('active', +s.dataset.i===i));
+    document.querySelectorAll('.thumb').forEach((t,ti)=>t.classList.toggle('active', ti===i));
+  }
+
+  // swatches
+  document.getElementById('swatches').innerHTML=colors.map((c,i)=>
+    `<button class="swatch" aria-pressed="${i===0}" aria-label="${c.name}" onclick="pickColor(${i})"><span style="background:${c.swatch}"></span></button>`).join('');
+  function pickColor(i){
+    activeColor=i;
+    document.querySelectorAll('.swatch').forEach((s,si)=>s.setAttribute('aria-pressed', si===i));
+    document.getElementById('colorVal').textContent=colors[i].name;
+    renderGallery();
+  }
+
+  // sizes
+  document.querySelectorAll('.size:not(.out)').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.size:not(.out)').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+  }));
+
+  // qty
+  function chQty(d){const el=document.getElementById('qty');let v=Math.max(1,(+el.value||1)+d);el.value=v;}
+
+  // cart feedback
+  function addCart(btn){const t=btn.innerHTML;btn.innerHTML='✓ Added to cart';btn.style.background='#1f9d6b';setTimeout(()=>{btn.innerHTML=t;btn.style.background='';},1400);}
+
+  // accordion
+  function toggleAcc(btn){
+    const item=btn.closest('.acc-item');const body=item.querySelector('.acc-body');const open=item.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open);
+    body.style.maxHeight=open?body.querySelector('.inner').scrollHeight+'px':'0';
+  }
+
+  // you may also like
+  const yml=[
+    {name:"Loop Floor Lamp", price:"$189", rating:"4.7", badge:"New", art:"lamp"},
+    {name:"Pebble Side Table", price:"$240", rating:"4.9", badge:null, art:"table"},
+    {name:"Drift Wool Rug", price:"$320", rating:"4.6", badge:"-15%", art:"rug"},
+    {name:"Halo Cushion Set", price:"$78", rating:"4.8", badge:null, art:"cushion"}
+  ];
+  const ymlArt={
+    lamp:'<defs><linearGradient id="ya1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f1ec"/><stop offset="1" stop-color="#e6e2da"/></linearGradient></defs><rect width="400" height="400" fill="url(#ya1)"/><path d="M150 110q50-20 100 0l-14 50h-72Z" fill="#ffb020"/><rect x="195" y="160" width="10" height="180" fill="#9c7b50"/><ellipse cx="200" cy="345" rx="50" ry="12" fill="#9c7b50"/>',
+    table:'<defs><linearGradient id="ya2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef0ec"/><stop offset="1" stop-color="#dfe2db"/></linearGradient></defs><rect width="400" height="400" fill="url(#ya2)"/><ellipse cx="200" cy="170" rx="90" ry="26" fill="#c9ad86"/><rect x="180" y="180" width="14" height="150" fill="#9c7b50"/><rect x="206" y="180" width="14" height="150" fill="#9c7b50"/>',
+    rug:'<defs><linearGradient id="ya3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1ece4"/><stop offset="1" stop-color="#e3dccf"/></linearGradient></defs><rect width="400" height="400" fill="url(#ya3)"/><rect x="90" y="130" width="220" height="150" rx="12" fill="#c7b69a"/><path d="M110 160h180M110 200h180M110 240h180" stroke="#a3906f" stroke-width="3"/>',
+    cushion:'<defs><linearGradient id="ya4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7e1"/><stop offset="1" stop-color="#ffd0c4"/></linearGradient></defs><rect width="400" height="400" fill="#f3f1ec"/><rect x="110" y="150" width="120" height="120" rx="22" fill="url(#ya4)"/><rect x="170" y="180" width="120" height="120" rx="22" fill="#ff8a5c"/>'
+  };
+  const ystar='<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 1l1.7 3.6 3.9.6-2.8 2.7.7 3.9L7 9.6l-3.5 1.8.7-3.9L1.4 5.2l3.9-.6L7 1z"/></svg>';
+  document.getElementById('yml').innerHTML=yml.map(p=>`
+    <article class="pcard">
+      <div class="pmedia">${p.badge?`<span class="pbadge">${p.badge}</span>`:''}<svg viewBox="0 0 400 400" role="img" aria-label="${p.name}">${ymlArt[p.art]}</svg></div>
+      <div class="pbody"><h3>${p.name}</h3><div class="pmeta"><span class="pp">${p.price}</span><span class="pr">${ystar}${p.rating}</span></div></div>
+    </article>`).join('');
+
+  renderGallery();
+</script>
+</body>
+</html>

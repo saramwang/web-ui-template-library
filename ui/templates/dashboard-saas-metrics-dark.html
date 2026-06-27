@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit · SaaS Product Metrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d14; --surface:#0f1117; --surface-2:#161925; --raise:#1c2030;
+    --ink:#e9ebf2; --muted:#9197a8; --faint:#626a7e; --line:#1e2230; --line-2:#2a3042;
+    --violet:#8b5cf6; --violet-2:#a78bfa; --violet-soft:rgba(139,92,246,.14);
+    --green:#34d399; --green-soft:rgba(52,211,153,.13);
+    --red:#f5536b; --red-soft:rgba(245,83,107,.13); --amber:#fbbf24;
+    --cyan:#22d3ee; --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+  .mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--violet-2);outline-offset:2px;border-radius:6px}
+  .app{display:grid;grid-template-columns:244px 1fr;min-height:100vh}
+
+  .sidebar{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:40}
+  .brand{display:flex;align-items:center;gap:11px;padding:20px 22px}
+  .brand .logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#8b5cf6,#22d3ee);display:grid;place-items:center;flex:none;box-shadow:0 0 22px rgba(139,92,246,.35)}
+  .brand b{font-size:16px;font-weight:800;letter-spacing:-.02em}
+  .brand span{display:block;font-size:11px;color:var(--faint);font-weight:500}
+  .nav{padding:8px 12px;flex:1;overflow-y:auto}
+  .nav-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.11em;color:var(--faint);font-weight:700;padding:16px 12px 7px}
+  .nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--muted);font-weight:500;margin-bottom:2px;transition:.15s;font-size:13.5px}
+  .nav a svg{width:18px;height:18px;flex:none}
+  .nav a:hover{background:var(--surface-2);color:var(--ink)}
+  .nav a.active{background:var(--violet-soft);color:var(--violet-2);font-weight:600}
+  .nav a .tag{margin-left:auto;font-size:10px;font-weight:700;color:var(--green);background:var(--green-soft);padding:2px 7px;border-radius:6px}
+  .side-foot{padding:14px}
+  .plan{background:linear-gradient(160deg,var(--surface-2),#1a1530);border:1px solid var(--line-2);border-radius:14px;padding:15px}
+  .plan .l{font-size:11px;color:var(--violet-2);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .plan .v{font-size:13px;color:var(--muted);margin:6px 0 11px}
+  .plan button{width:100%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border:0;color:#fff;font-family:inherit;font-weight:600;font-size:12.5px;padding:9px;border-radius:9px;cursor:pointer}
+
+  .main{display:flex;flex-direction:column;min-width:0}
+  .topbar{height:66px;background:rgba(11,13,20,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 26px;position:sticky;top:0;z-index:30}
+  .menu-btn{display:none;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;width:38px;height:38px;cursor:pointer;color:var(--ink)}
+  .topbar h1{font-size:16px;font-weight:700;letter-spacing:-.02em}
+  .topbar h1 small{display:block;font-size:11.5px;color:var(--faint);font-weight:500}
+  .seg{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px;margin-left:auto}
+  .seg button{background:none;border:0;color:var(--muted);font-family:inherit;font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:7px;cursor:pointer}
+  .seg button.on{background:var(--violet-soft);color:var(--violet-2)}
+  .icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;cursor:pointer;color:var(--muted);position:relative}
+  .icon-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  .icon-btn .dot{position:absolute;top:9px;right:10px;width:7px;height:7px;background:var(--violet);border-radius:50%;border:2px solid var(--surface-2)}
+  .user{display:flex;align-items:center;gap:9px;padding:4px 11px 4px 4px;border-radius:30px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer}
+  .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
+  .user .who{font-size:12.5px;font-weight:600;line-height:1.15}
+  .user .who small{color:var(--faint);font-weight:500;font-size:11px}
+
+  .content{padding:24px 26px 44px;display:flex;flex-direction:column;gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+  .card-h{display:flex;align-items:center;gap:12px;padding:18px 20px 0}
+  .card-h h3{font-size:14.5px;font-weight:700}
+  .card-h .sub{font-size:12px;color:var(--faint)}
+  .card-h .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+  .pill.up{color:var(--green);background:var(--green-soft)}
+  .pill.dn{color:var(--red);background:var(--red-soft)}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+  .hero-mrr{background:linear-gradient(150deg,#1a1438,#10131c 60%);border:1px solid var(--line-2);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+  .hero-mrr::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.35),transparent 70%);pointer-events:none}
+  .hero-mrr .lab{font-size:12px;color:var(--violet-2);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .hero-mrr .big{font-size:46px;font-weight:800;letter-spacing:-.03em;margin:8px 0 4px}
+  .hero-mrr .meta{display:flex;gap:16px;align-items:center;color:var(--muted);font-size:13px}
+  .hero-mrr .arr{margin-top:20px;display:flex;gap:24px;flex-wrap:wrap}
+  .hero-mrr .arr div .k{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em}
+  .hero-mrr .arr div .vv{font-size:19px;font-weight:700;margin-top:3px}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .kpi .top{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:600}
+  .kpi .top .ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+  .kpi .num{font-size:25px;font-weight:800;letter-spacing:-.02em;margin:9px 0 2px}
+  .kpi .spark{margin-top:6px}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid-3{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+
+  /* cohort heatmap */
+  .cohort{padding:18px 20px 22px;overflow-x:auto}
+  .ctable{border-collapse:separate;border-spacing:5px;width:100%;min-width:520px}
+  .ctable th{font-size:10.5px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding-bottom:4px;text-align:center}
+  .ctable td.lab{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap;text-align:left;padding-right:8px}
+  .ctable td.sz{font-size:11.5px;color:var(--faint);text-align:right;padding-right:10px}
+  .cell{height:34px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#0b0d14}
+
+  /* funnel */
+  .funnel{padding:8px 20px 22px;display:flex;flex-direction:column;gap:10px}
+  .fstep{display:grid;grid-template-columns:120px 1fr 70px;align-items:center;gap:12px}
+  .fstep .fn{font-size:12.5px;color:var(--muted);font-weight:600}
+  .fbar{height:30px;border-radius:8px;background:var(--surface-2);overflow:hidden}
+  .fbar span{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#8b5cf6,#22d3ee);display:flex;align-items:center;padding-left:10px;font-size:11.5px;font-weight:700;color:#fff}
+  .fstep .fv{font-size:12.5px;font-weight:700;text-align:right}
+  .fstep .fv small{display:block;color:var(--faint);font-weight:500;font-size:10.5px}
+
+  /* table */
+  .tbl-wrap{padding:6px 8px 12px;overflow-x:auto}
+  table.data{width:100%;border-collapse:collapse;min-width:640px}
+  table.data th{text-align:left;font-size:11px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:11px 14px;border-bottom:1px solid var(--line)}
+  table.data td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px}
+  table.data tr:last-child td{border-bottom:0}
+  table.data tr:hover td{background:var(--surface-2)}
+  .cust{display:flex;align-items:center;gap:10px}
+  .cust .av{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:11px;flex:none}
+  .cust b{font-weight:600;font-size:13px}
+  .cust small{display:block;color:var(--faint);font-size:11px}
+  .badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px}
+  .b-pro{color:var(--violet-2);background:var(--violet-soft)}
+  .b-ent{color:var(--cyan);background:rgba(34,211,238,.13)}
+  .b-team{color:var(--amber);background:rgba(251,191,36,.13)}
+  .stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+  .stat .d{width:7px;height:7px;border-radius:50%}
+  .st-active .d{background:var(--green)} .st-active{color:var(--green)}
+  .st-risk .d{background:var(--amber)} .st-risk{color:var(--amber)}
+  .st-churn .d{background:var(--red)} .st-churn{color:var(--red)}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);padding:0 20px 16px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+
+  @media(max-width:1080px){.hero,.grid-2,.grid-3{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:860px){
+    .app{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:0;top:0;width:262px;transform:translateX(-100%);transition:.25s;box-shadow:0 0 60px rgba(0,0,0,.6)}
+    .sidebar.open{transform:none}
+    .menu-btn{display:grid;place-items:center}
+    .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35;display:none}
+    .scrim.on{display:block}
+    .seg{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" fill="#fff"/><ellipse cx="12" cy="12" rx="10" ry="4.4" stroke="#fff" stroke-width="1.7" opacity=".85"/><ellipse cx="12" cy="12" rx="10" ry="4.4" stroke="#fff" stroke-width="1.7" transform="rotate(60 12 12)" opacity=".55"/></svg></div>
+      <div><b>Orbit</b><span>Product Analytics</span></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Overview</div>
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13h8V3H3v10zm10 8h8V3h-8v18zM3 21h8v-6H3v6z"/></svg>Dashboard</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v5h-5"/></svg>Revenue<span class="tag">+8%</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="3.5"/><path d="M2 21a7 7 0 0114 0M17 11l2 2 4-4"/></svg>Customers</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v6H4zM4 14h16v6H4z"/></svg>Subscriptions</a>
+      <div class="nav-label">Product</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12A10 10 0 1112 2v10z"/></svg>Cohorts</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12h4l3 8 4-16 3 8h6"/></svg>Engagement</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7"/><rect x="13" y="7" width="3" height="11"/></svg>Funnels</a>
+      <div class="nav-label">Account</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.13-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.3-1.3L14 2h-4l-.27 2.5a7 7 0 00-2.3 1.3l-2.3-1-2 3.4 2 1.5A7 7 0 005 12c0 .44.05.87.13 1.3l-2 1.5 2 3.4 2.3-1a7 7 0 002.3 1.3L10 22h4l.27-2.5a7 7 0 002.3-1.3l2.3 1 2-3.4-2-1.5c.08-.43.13-.86.13-1.3z"/></svg>Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="plan">
+        <div class="l">Growth Plan</div>
+        <div class="v">14,200 of 25,000 MTU used this cycle.</div>
+        <button>Upgrade workspace</button>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <h1>Product Metrics<small>June 2026 · all plans</small></h1>
+      <div class="seg" role="tablist">
+        <button>7D</button><button>30D</button><button class="on">90D</button><button>1Y</button>
+      </div>
+      <button class="icon-btn" aria-label="Notifications"><span class="dot"></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9zM10 21a2 2 0 004 0"/></svg></button>
+      <div class="user"><div class="avatar" style="background:linear-gradient(135deg,#8b5cf6,#22d3ee)">LM</div><div class="who">Lena Marsh<small>Head of Growth</small></div></div>
+    </header>
+
+    <div class="content">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-mrr">
+          <div class="lab">Monthly Recurring Revenue</div>
+          <div class="big mono">$248,930</div>
+          <div class="meta"><span class="pill up">▲ 8.4%</span><span>vs. $229,640 last month</span></div>
+          <div class="arr">
+            <div><div class="k">ARR</div><div class="vv mono">$2.99M</div></div>
+            <div><div class="k">Net New MRR</div><div class="vv mono" style="color:var(--green)">+$19,290</div></div>
+            <div><div class="k">Net Revenue Retention</div><div class="vv mono">114%</div></div>
+            <div><div class="k">ARPA</div><div class="vv mono">$182</div></div>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="top"><span class="ic" style="background:var(--green-soft);color:var(--green)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3.5"/><path d="M2 21a7 7 0 0114 0"/></svg></span>Active Users</div>
+            <div class="num mono">14,208</div>
+            <div class="pill up">▲ 6.1%</div>
+            <svg class="spark" width="100%" height="34" viewBox="0 0 200 34" preserveAspectRatio="none"><polyline points="0,28 25,24 50,26 75,18 100,20 125,12 150,14 175,8 200,6" fill="none" stroke="#34d399" stroke-width="2.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="kpi">
+            <div class="top"><span class="ic" style="background:var(--red-soft);color:var(--red)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 17l4 4M3 3l18 18M9 5a7 7 0 016 9"/></svg></span>Churn Rate</div>
+            <div class="num mono">2.3%</div>
+            <div class="pill up">▼ 0.4pp</div>
+            <svg class="spark" width="100%" height="34" viewBox="0 0 200 34" preserveAspectRatio="none"><polyline points="0,10 25,14 50,12 75,16 100,15 125,20 150,18 175,22 200,24" fill="none" stroke="#f5536b" stroke-width="2.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="kpi">
+            <div class="top"><span class="ic" style="background:var(--violet-soft);color:var(--violet-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7 7 .5-5.5 4.5L18 21l-6-4-6 4 1.5-7L2 9.5 9 9z"/></svg></span>Trials Started</div>
+            <div class="num mono">1,042</div>
+            <div class="pill up">▲ 11.2%</div>
+            <svg class="spark" width="100%" height="34" viewBox="0 0 200 34" preserveAspectRatio="none"><polyline points="0,26 25,22 50,24 75,16 100,18 125,14 150,16 175,9 200,7" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="kpi">
+            <div class="top"><span class="ic" style="background:rgba(34,211,238,.13);color:var(--cyan)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Trial → Paid</div>
+            <div class="num mono">38.6%</div>
+            <div class="pill up">▲ 2.1pp</div>
+            <svg class="spark" width="100%" height="34" viewBox="0 0 200 34" preserveAspectRatio="none"><polyline points="0,24 25,20 50,22 75,18 100,14 125,16 150,10 175,12 200,6" fill="none" stroke="#22d3ee" stroke-width="2.4" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- GROWTH + CHURN CHARTS -->
+      <section class="grid-2">
+        <div class="card">
+          <div class="card-h"><h3>MRR Growth</h3><span class="sub">New vs. expansion vs. churned</span><span class="right"><span class="pill up">+$19.3k net</span></span></div>
+          <svg width="100%" height="240" viewBox="0 0 560 240" preserveAspectRatio="none" style="display:block">
+            <defs>
+              <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b5cf6" stop-opacity=".34"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient>
+            </defs>
+            <g stroke="#1e2230" stroke-width="1"><line x1="40" y1="40" x2="540" y2="40"/><line x1="40" y1="90" x2="540" y2="90"/><line x1="40" y1="140" x2="540" y2="140"/><line x1="40" y1="190" x2="540" y2="190"/></g>
+            <g fill="#626a7e" font-size="10" font-family="JetBrains Mono">
+              <text x="8" y="44">250k</text><text x="8" y="94">200k</text><text x="8" y="144">150k</text><text x="8" y="194">100k</text>
+              <text x="48" y="214">Jan</text><text x="128" y="214">Feb</text><text x="208" y="214">Mar</text><text x="288" y="214">Apr</text><text x="368" y="214">May</text><text x="448" y="214">Jun</text>
+            </g>
+            <path d="M50,170 C110,162 130,150 190,142 C250,134 270,120 330,108 C390,96 410,80 470,66 C500,60 520,56 540,52 L540,190 L50,190 Z" fill="url(#gA)"/>
+            <path d="M50,170 C110,162 130,150 190,142 C250,134 270,120 330,108 C390,96 410,80 470,66 C500,60 520,56 540,52" fill="none" stroke="#a78bfa" stroke-width="2.6"/>
+            <g fill="#a78bfa"><circle cx="190" cy="142" r="3.2"/><circle cx="330" cy="108" r="3.2"/><circle cx="470" cy="66" r="3.2"/></g>
+          </svg>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Gross vs. Net Churn</h3><span class="sub">Monthly, % of MRR</span><span class="right"><span class="pill dn">−0.4pp</span></span></div>
+          <svg width="100%" height="240" viewBox="0 0 560 240" preserveAspectRatio="none" style="display:block">
+            <g stroke="#1e2230" stroke-width="1"><line x1="40" y1="40" x2="540" y2="40"/><line x1="40" y1="90" x2="540" y2="90"/><line x1="40" y1="140" x2="540" y2="140"/><line x1="40" y1="190" x2="540" y2="190"/></g>
+            <g fill="#626a7e" font-size="10" font-family="JetBrains Mono">
+              <text x="14" y="44">5%</text><text x="14" y="94">4%</text><text x="14" y="144">3%</text><text x="14" y="194">2%</text>
+              <text x="48" y="214">Jan</text><text x="128" y="214">Feb</text><text x="208" y="214">Mar</text><text x="288" y="214">Apr</text><text x="368" y="214">May</text><text x="448" y="214">Jun</text>
+            </g>
+            <polyline points="50,90 130,98 210,86 290,104 370,96 450,118 530,132" fill="none" stroke="#f5536b" stroke-width="2.6" stroke-linecap="round"/>
+            <polyline points="50,142 130,148 210,140 290,154 370,150 450,166 530,176" fill="none" stroke="#22d3ee" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="5 5"/>
+            <g font-size="10" font-family="Inter" font-weight="600"><circle cx="180" cy="30" r="4" fill="#f5536b"/><text x="190" y="34" fill="#9197a8">Gross</text><circle cx="250" cy="30" r="4" fill="#22d3ee"/><text x="260" y="34" fill="#9197a8">Net</text></g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- COHORT + FUNNEL -->
+      <section class="grid-3">
+        <div class="card">
+          <div class="card-h"><h3>Cohort Retention</h3><span class="sub">% retained by signup month</span></div>
+          <div class="cohort">
+            <table class="ctable">
+              <thead><tr><th style="text-align:left">Cohort</th><th>Users</th><th>M0</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th></tr></thead>
+              <tbody id="cohortBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Activation Funnel</h3><span class="sub">Last 30 days</span></div>
+          <div class="funnel">
+            <div class="fstep"><span class="fn">Signed up</span><div class="fbar"><span style="width:100%">100%</span></div><span class="fv mono">8,420<small>users</small></span></div>
+            <div class="fstep"><span class="fn">Verified email</span><div class="fbar"><span style="width:82%">82%</span></div><span class="fv mono">6,904<small>−18%</small></span></div>
+            <div class="fstep"><span class="fn">Created project</span><div class="fbar"><span style="width:61%">61%</span></div><span class="fv mono">5,136<small>−26%</small></span></div>
+            <div class="fstep"><span class="fn">Invited team</span><div class="fbar"><span style="width:43%">43%</span></div><span class="fv mono">3,620<small>−30%</small></span></div>
+            <div class="fstep"><span class="fn">Converted</span><div class="fbar"><span style="width:31%">31%</span></div><span class="fv mono">2,610<small>−28%</small></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUBSCRIPTION TABLE -->
+      <section class="card">
+        <div class="card-h"><h3>Top Subscriptions</h3><span class="sub">By account MRR</span><span class="right"><span class="pill up">142 accounts</span></span></div>
+        <div class="tbl-wrap">
+          <table class="data">
+            <thead><tr><th>Account</th><th>Plan</th><th>Seats</th><th>MRR</th><th>Health</th><th>Renews</th></tr></thead>
+            <tbody>
+              <tr><td><div class="cust"><div class="av" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">NV</div><div><b>Northvale Labs</b><small>northvale.io</small></div></div></td><td><span class="badge b-ent">Enterprise</span></td><td class="mono">240</td><td class="mono">$8,400</td><td><span class="stat st-active"><span class="d"></span>Active</span></td><td class="mono" style="color:var(--muted)">Aug 02</td></tr>
+              <tr><td><div class="cust"><div class="av" style="background:linear-gradient(135deg,#22d3ee,#0891b2)">QM</div><div><b>Quanta Media</b><small>quanta.co</small></div></div></td><td><span class="badge b-ent">Enterprise</span></td><td class="mono">180</td><td class="mono">$6,120</td><td><span class="stat st-active"><span class="d"></span>Active</span></td><td class="mono" style="color:var(--muted)">Jul 19</td></tr>
+              <tr><td><div class="cust"><div class="av" style="background:linear-gradient(135deg,#fbbf24,#d97706)">HK</div><div><b>Hexkit Studio</b><small>hexkit.dev</small></div></div></td><td><span class="badge b-team">Team</span></td><td class="mono">62</td><td class="mono">$2,170</td><td><span class="stat st-risk"><span class="d"></span>At risk</span></td><td class="mono" style="color:var(--muted)">Jul 04</td></tr>
+              <tr><td><div class="cust"><div class="av" style="background:linear-gradient(135deg,#34d399,#059669)">BR</div><div><b>Brightloop</b><small>brightloop.app</small></div></div></td><td><span class="badge b-pro">Pro</span></td><td class="mono">28</td><td class="mono">$980</td><td><span class="stat st-active"><span class="d"></span>Active</span></td><td class="mono" style="color:var(--muted)">Aug 11</td></tr>
+              <tr><td><div class="cust"><div class="av" style="background:linear-gradient(135deg,#f5536b,#be123c)">VO</div><div><b>Vortex Ops</b><small>vortexops.com</small></div></div></td><td><span class="badge b-team">Team</span></td><td class="mono">44</td><td class="mono">$1,540</td><td><span class="stat st-churn"><span class="d"></span>Churning</span></td><td class="mono" style="color:var(--muted)">Jun 30</td></tr>
+              <tr><td><div class="cust"><div class="av" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">SF</div><div><b>Solaris Fields</b><small>solaris.farm</small></div></div></td><td><span class="badge b-pro">Pro</span></td><td class="mono">16</td><td class="mono">$560</td><td><span class="stat st-active"><span class="d"></span>Active</span></td><td class="mono" style="color:var(--muted)">Aug 22</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+  const mb=document.getElementById('menuBtn'),sb=document.getElementById('sidebar'),sc=document.getElementById('scrim');
+  function tog(){sb.classList.toggle('open');sc.classList.toggle('on');}
+  mb.addEventListener('click',tog);sc.addEventListener('click',tog);
+  document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
+  // cohort heatmap
+  const rows=[
+    {c:'Jan 2026',u:'1,820',r:[100,68,54,46,41,38]},
+    {c:'Feb 2026',u:'2,140',r:[100,71,58,49,44,null]},
+    {c:'Mar 2026',u:'2,460',r:[100,74,61,52,null,null]},
+    {c:'Apr 2026',u:'2,910',r:[100,77,64,null,null,null]},
+    {c:'May 2026',u:'3,180',r:[100,80,null,null,null,null]},
+    {c:'Jun 2026',u:'3,540',r:[100,null,null,null,null,null]},
+  ];
+  function color(v){ if(v==null) return 'background:#161925;color:#3a4155'; const t=(v-30)/70; const r=Math.round(99+(34-99)*t),g=Math.round(60+(211-60)*t),b=Math.round(120+(153-120)*t)+Math.round((246-120)*(1-t)*.3); return `background:rgb(${r},${g},${Math.min(255,b)});color:${v>62?'#0b0d14':'#e9ebf2'}`;}
+  document.getElementById('cohortBody').innerHTML=rows.map(o=>`<tr><td class="lab">${o.c}</td><td class="sz mono">${o.u}</td>${o.r.map(v=>`<td><div class="cell" style="${color(v)}">${v==null?'·':v+'%'}</div></td>`).join('')}</tr>`).join('');
+</script>
+</body>
+</html>

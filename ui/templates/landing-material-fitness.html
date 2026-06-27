@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse — Workouts that move with you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600;8..144,700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* MD3 dynamic tonal palette — vibrant teal/green primary */
+    --primary:#006b5d;
+    --on-primary:#ffffff;
+    --primary-container:#7af8df;
+    --on-primary-container:#00201b;
+    --secondary:#4a635d;
+    --secondary-container:#cce8e0;
+    --tertiary:#456179;
+    --tertiary-container:#cce5ff;
+    --surface:#f5fbf7;
+    --surface-2:#eef5f1;
+    --surface-3:#e6efea;
+    --surface-bright:#ffffff;
+    --on-surface:#171d1b;
+    --on-surface-variant:#3f4946;
+    --outline:#6f7975;
+    --outline-variant:#cdd6d2;
+    --accent-warm:#ff7a4d;
+    --accent-pink:#ff5a93;
+    --radius-xl:28px;
+    --radius-l:20px;
+    --radius-m:16px;
+    --e1:0 1px 3px rgba(0,40,34,.12),0 1px 2px rgba(0,40,34,.08);
+    --e2:0 3px 8px rgba(0,40,34,.13),0 2px 4px rgba(0,40,34,.08);
+    --e3:0 8px 24px rgba(0,80,68,.16),0 4px 10px rgba(0,40,34,.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Roboto Flex','Roboto',system-ui,sans-serif;background:var(--surface);color:var(--on-surface);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  :focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:14px}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:60;background:rgba(245,251,247,.85);backdrop-filter:blur(14px)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:21px}
+  .brand .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--primary),#00b39a);display:grid;place-items:center;box-shadow:var(--e1)}
+  .nav-links{display:flex;align-items:center;gap:2px}
+  .nav-links a{padding:10px 16px;border-radius:999px;font-weight:500;font-size:15px;color:var(--on-surface-variant);transition:.16s}
+  .nav-links a:hover{background:var(--surface-3);color:var(--on-surface)}
+  .btn{font-family:inherit;font-weight:600;font-size:15px;cursor:pointer;border:none;border-radius:999px;padding:12px 24px;transition:.18s;display:inline-flex;align-items:center;gap:9px}
+  .btn-filled{background:var(--primary);color:var(--on-primary);box-shadow:var(--e1)}
+  .btn-filled:hover{box-shadow:var(--e2);background:#00564a}
+  .btn-tonal{background:var(--primary-container);color:var(--on-primary-container)}
+  .btn-tonal:hover{box-shadow:var(--e1)}
+  .btn-outlined{background:transparent;color:var(--primary);border:1.5px solid var(--outline-variant)}
+  .btn-outlined:hover{background:var(--surface-3);border-color:var(--primary)}
+  .menu-btn{display:none;width:46px;height:46px;border-radius:999px;border:none;background:var(--surface-3);cursor:pointer}
+  .menu-btn span{display:block;width:20px;height:2px;background:var(--on-surface);margin:4px auto;border-radius:2px}
+
+  /* HERO */
+  .hero{padding:50px 0 30px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--secondary-container);color:#0c2b25;padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;margin-bottom:22px}
+  .hero h1{font-size:clamp(40px,6.4vw,66px);font-weight:700;letter-spacing:-.02em}
+  .hero h1 .col{color:var(--primary)}
+  .hero p.lead{font-size:20px;color:var(--on-surface-variant);max-width:34ch;margin:20px 0 30px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-stats{display:flex;gap:30px;margin-top:34px;flex-wrap:wrap}
+  .hero-stats .s b{display:block;font-size:30px;font-weight:700;color:var(--primary)}
+  .hero-stats .s span{font-size:14px;color:var(--on-surface-variant)}
+
+  /* PHONE MOCKUP */
+  .phone{width:300px;height:610px;border-radius:46px;background:#0c1413;padding:12px;box-shadow:var(--e3);position:relative;margin:0 auto}
+  .phone .notch{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:96px;height:26px;background:#0c1413;border-radius:999px;z-index:5}
+  .screen{width:100%;height:100%;border-radius:36px;overflow:hidden;background:linear-gradient(180deg,#e3fbf3,#f5fbf7);display:flex;flex-direction:column;position:relative}
+  .scr-top{padding:34px 22px 14px;background:linear-gradient(150deg,var(--primary),#00a78f);color:#fff;border-radius:0 0 26px 26px}
+  .scr-top .hi{font-size:13px;opacity:.9}
+  .scr-top h4{font-size:22px;color:#fff;margin-top:2px}
+  .rings{display:grid;place-items:center;margin:14px 0 6px}
+  .ring-label{display:flex;justify-content:space-around;width:100%;margin-top:8px;font-size:11px}
+  .ring-label .rl{text-align:center;opacity:.95}
+  .ring-label .rl b{display:block;font-size:15px}
+  .scr-body{padding:16px 18px;display:grid;gap:12px;flex:1}
+  .scard{background:var(--surface-bright);border-radius:18px;padding:14px;box-shadow:var(--e1);display:flex;align-items:center;gap:12px}
+  .scard .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto}
+  .scard .meta b{font-size:14px;display:block}
+  .scard .meta span{font-size:12px;color:var(--on-surface-variant)}
+  .scard .val{margin-left:auto;font-weight:700;color:var(--primary)}
+  .bars{display:flex;align-items:flex-end;gap:6px;height:46px;margin-left:auto}
+  .bars i{width:7px;border-radius:4px;background:var(--primary-container)}
+  .nav-pill{margin:auto 14px 16px;background:var(--surface-3);border-radius:999px;height:54px;display:flex;align-items:center;justify-content:space-around}
+  .nav-pill .nb{width:34px;height:34px;border-radius:999px;display:grid;place-items:center}
+  .nav-pill .nb.on{background:var(--primary-container)}
+
+  /* SECTIONS */
+  section{padding:54px 0}
+  .sec-head{text-align:center;max-width:44ch;margin:0 auto 40px}
+  .sec-head .chip{margin-bottom:14px}
+  .sec-head h2{font-size:clamp(30px,4.4vw,44px)}
+  .sec-head p{color:var(--on-surface-variant);font-size:18px;margin-top:12px}
+
+  /* FEATURES */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feat{background:var(--surface-bright);border-radius:var(--radius-xl);padding:30px;box-shadow:var(--e1);transition:.2s}
+  .feat:hover{box-shadow:var(--e3);transform:translateY(-4px)}
+  .feat .fic{width:60px;height:60px;border-radius:20px;display:grid;place-items:center;margin-bottom:18px}
+  .feat h3{font-size:21px;margin-bottom:8px}
+  .feat p{color:var(--on-surface-variant)}
+  .t-prim{background:var(--primary-container);color:var(--on-primary-container)}
+  .t-sec{background:var(--secondary-container);color:#0c2b25}
+  .t-ter{background:var(--tertiary-container);color:#0b2a40}
+  .t-warm{background:#ffe0d4;color:#7a2b0e}
+  .t-pink{background:#ffd9e4;color:#7a1638}
+  .t-lime{background:#dcf5c4;color:#2e4a00}
+
+  /* SCREENS ROW */
+  .screens-row{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+  .mini-phone{width:200px;height:410px;border-radius:34px;background:#0c1413;padding:9px;box-shadow:var(--e2)}
+  .mini-screen{width:100%;height:100%;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;color:#fff;padding:20px 16px}
+  .mp1{background:linear-gradient(160deg,#006b5d,#00b39a)}
+  .mp2{background:linear-gradient(160deg,#ff7a4d,#ff5a93)}
+  .mp3{background:linear-gradient(160deg,#456179,#7aa7d4)}
+  .mini-screen h5{font-size:17px;color:#fff;margin-bottom:4px}
+  .mini-screen small{opacity:.85;font-size:12px}
+  .mblock{background:rgba(255,255,255,.16);border-radius:14px;margin-top:12px;padding:12px}
+  .mblock .l{height:8px;border-radius:5px;background:rgba(255,255,255,.4);margin:6px 0}
+  .mbig{font-size:38px;font-weight:700;margin:12px 0 2px}
+
+  /* STATS BAND */
+  .stats-band{background:linear-gradient(150deg,var(--primary),#00564a);border-radius:36px;padding:48px 36px;color:#fff}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+  .stats-grid .st b{font-size:clamp(34px,5vw,52px);font-weight:700;display:block;line-height:1}
+  .stats-grid .st span{opacity:.9;font-size:15px;margin-top:8px;display:block}
+
+  /* DOWNLOAD CTA */
+  .dl{padding:60px 0}
+  .dl-box{background:var(--surface-bright);border-radius:36px;padding:50px 40px;box-shadow:var(--e2);display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;overflow:hidden}
+  .dl-box h2{font-size:clamp(28px,4vw,42px)}
+  .dl-box p{color:var(--on-surface-variant);font-size:18px;margin:14px 0 26px;max-width:38ch}
+  .stores{display:flex;gap:14px;flex-wrap:wrap}
+  .store{display:flex;align-items:center;gap:12px;background:#10201d;color:#fff;border-radius:16px;padding:12px 20px;transition:.18s}
+  .store:hover{transform:translateY(-2px);box-shadow:var(--e2)}
+  .store small{display:block;font-size:11px;opacity:.8}
+  .store b{font-size:16px}
+  .dl-art{display:grid;place-items:center}
+  .qr{width:160px;height:160px;background:var(--surface-bright);border-radius:24px;box-shadow:var(--e2);padding:18px;display:grid;place-items:center}
+
+  /* FOOTER */
+  footer{padding:50px 0 34px;background:var(--surface-2);border-radius:36px 36px 0 0;margin-top:20px}
+  .foot-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:30px}
+  footer h4{font-size:15px;margin-bottom:14px}
+  footer .col a{display:block;color:var(--on-surface-variant);font-size:14.5px;padding:5px 0}
+  footer .col a:hover{color:var(--primary)}
+  footer .desc{color:var(--on-surface-variant);font-size:14.5px;margin-top:12px;max-width:28ch}
+  .foot-bottom{margin-top:36px;padding-top:24px;border-top:1px solid var(--outline-variant);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--on-surface-variant);font-size:14px}
+
+  @media(max-width:920px){
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .hero p.lead{margin-left:auto;margin-right:auto}.hero-cta,.hero-stats{justify-content:center}
+    .phone{margin-top:24px}
+    .feat-grid{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr 1fr}
+    .dl-box{grid-template-columns:1fr;text-align:center}.stores,.dl-art{justify-content:center}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:680px){
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:72px;left:16px;right:16px;flex-direction:column;background:var(--surface-bright);border-radius:24px;padding:14px;box-shadow:var(--e3);align-items:stretch;text-align:center}
+    .menu-btn{display:block}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#" aria-label="Pulse home">
+      <span class="logo" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 12h3l2-5 4 10 2-7 2 2h5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      Pulse
+    </a>
+    <nav class="nav-links" id="navlinks" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#screens">App tour</a>
+      <a href="#stats">Results</a>
+      <a href="#download">Download</a>
+      <a class="btn btn-tonal" href="#download" style="margin-left:6px">Get the app</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="chip">🏃 Adaptive coaching · iOS &amp; Android</span>
+      <h1>Workouts that <span class="col">move with you</span></h1>
+      <p class="lead">Pulse builds a plan around your body, your goals and your calendar — then adjusts every single day so you actually stick with it.</p>
+      <div class="hero-cta">
+        <a class="btn btn-filled" href="#download">Start free</a>
+        <a class="btn btn-outlined" href="#screens">See the app</a>
+      </div>
+      <div class="hero-stats">
+        <div class="s"><b>4.9★</b><span>App Store rating</span></div>
+        <div class="s"><b>3.4M</b><span>Workouts logged weekly</span></div>
+        <div class="s"><b>120+</b><span>Coached programs</span></div>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <div class="phone">
+        <span class="notch" aria-hidden="true"></span>
+        <div class="screen">
+          <div class="scr-top">
+            <div class="hi">Good morning, Maya</div>
+            <h4>Today's move</h4>
+            <div class="rings">
+              <svg width="150" height="150" viewBox="0 0 150 150" aria-label="Daily activity rings: move 78%, exercise 64%, stand 90%" role="img">
+                <g fill="none" stroke-linecap="round">
+                  <circle cx="75" cy="75" r="62" stroke="rgba(255,255,255,.22)" stroke-width="11"/>
+                  <circle cx="75" cy="75" r="62" stroke="#ffd9e4" stroke-width="11" stroke-dasharray="389" stroke-dashoffset="86" transform="rotate(-90 75 75)"/>
+                  <circle cx="75" cy="75" r="47" stroke="rgba(255,255,255,.22)" stroke-width="11"/>
+                  <circle cx="75" cy="75" r="47" stroke="#bff5e6" stroke-width="11" stroke-dasharray="295" stroke-dashoffset="106" transform="rotate(-90 75 75)"/>
+                  <circle cx="75" cy="75" r="32" stroke="rgba(255,255,255,.22)" stroke-width="11"/>
+                  <circle cx="75" cy="75" r="32" stroke="#ffe0d4" stroke-width="11" stroke-dasharray="201" stroke-dashoffset="20" transform="rotate(-90 75 75)"/>
+                </g>
+                <text x="75" y="72" text-anchor="middle" fill="#fff" font-size="26" font-weight="700">540</text>
+                <text x="75" y="90" text-anchor="middle" fill="#fff" font-size="11" opacity=".85">kcal</text>
+              </svg>
+            </div>
+            <div class="ring-label">
+              <div class="rl"><b>78%</b>Move</div>
+              <div class="rl"><b>64%</b>Exercise</div>
+              <div class="rl"><b>90%</b>Stand</div>
+            </div>
+          </div>
+          <div class="scr-body">
+            <div class="scard">
+              <span class="ic t-warm" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5C19 16.6 12 21 12 21z" fill="#ff7a4d"/></svg></span>
+              <span class="meta"><b>Heart rate</b><span>Avg 138 bpm</span></span>
+              <span class="val">↑</span>
+            </div>
+            <div class="scard">
+              <span class="ic t-prim" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 14h4l3-9 3 14 2-5h4" stroke="#006b5d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="meta"><b>This week</b><span>5 of 6 sessions</span></span>
+              <div class="bars" aria-hidden="true"><i style="height:40%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:90%"></i><i style="height:30%"></i><i style="height:75%"></i></div>
+            </div>
+            <div class="scard">
+              <span class="ic t-ter" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#456179" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#456179" stroke-width="2" stroke-linecap="round"/></svg></span>
+              <span class="meta"><b>Next workout</b><span>Upper body · 32 min</span></span>
+              <span class="val">▶</span>
+            </div>
+          </div>
+          <div class="nav-pill" aria-hidden="true">
+            <span class="nb on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="#006b5d"/></svg></span>
+            <span class="nb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#3f4946" stroke-width="2"/></svg></span>
+            <span class="nb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#3f4946" stroke-width="2"/></svg></span>
+            <span class="nb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="#3f4946" stroke-width="2"/><path d="M5 20a7 7 0 0 1 14 0" stroke="#3f4946" stroke-width="2" stroke-linecap="round"/></svg></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="chip">✨ Built for real life</span>
+      <h2>A coach in your pocket, not a chore</h2>
+      <p>Smart enough to challenge you, kind enough to meet you where you are.</p>
+    </div>
+    <div class="feat-grid">
+      <article class="feat">
+        <div class="fic t-prim" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 9 9" stroke="#006b5d" stroke-width="2.2" stroke-linecap="round"/><path d="M12 3v9l6 3" stroke="#006b5d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Adaptive plans</h3>
+        <p>Slept badly or crushed it yesterday? Pulse rebalances today's session automatically.</p>
+      </article>
+      <article class="feat">
+        <div class="fic t-warm" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5C19 16.6 12 21 12 21z" fill="#ff7a4d"/></svg></div>
+        <h3>Live heart zones</h3>
+        <p>Pair any watch and train in the right zone with gentle haptic cues — no guessing.</p>
+      </article>
+      <article class="feat">
+        <div class="fic t-ter" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 4 7-9" stroke="#456179" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Progress you can feel</h3>
+        <p>Clean charts show strength, pace and consistency trending up — week after week.</p>
+      </article>
+      <article class="feat">
+        <div class="fic t-pink" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.4" stroke="#ff5a93" stroke-width="2"/><circle cx="16" cy="9" r="2.6" stroke="#ff5a93" stroke-width="2"/><path d="M3 19a6 6 0 0 1 12 0M15 19a5 5 0 0 1 6-4.7" stroke="#ff5a93" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Train with friends</h3>
+        <p>Share streaks, join challenges and cheer each other on inside private clubs.</p>
+      </article>
+      <article class="feat">
+        <div class="fic t-lime" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z" fill="#7cb305"/></svg></div>
+        <h3>Form video library</h3>
+        <p>1,400+ exercises with slow-mo demos and cues so every rep counts.</p>
+      </article>
+      <article class="feat">
+        <div class="fic t-sec" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 8l5-5 5 5M7 16l5 5 5-5" stroke="#4a635d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Recovery &amp; mobility</h3>
+        <p>Built-in stretch flows and rest-day guidance keep you moving without burning out.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="chip">📱 App tour</span>
+      <h2>Beautiful where it matters</h2>
+      <p>Every screen is designed to get you in, get you moving, and get out of the way.</p>
+    </div>
+    <div class="screens-row">
+      <div class="mini-phone">
+        <div class="mini-screen mp1">
+          <h5>Today</h5><small>Your daily plan</small>
+          <div class="mbig">540 kcal</div>
+          <div class="mblock"><div class="l" style="width:80%"></div><div class="l" style="width:55%"></div></div>
+          <div class="mblock"><div class="l" style="width:65%"></div><div class="l" style="width:40%"></div></div>
+        </div>
+      </div>
+      <div class="mini-phone">
+        <div class="mini-screen mp2">
+          <h5>Live workout</h5><small>Upper body · 32 min</small>
+          <div class="mbig">138 bpm</div>
+          <div class="mblock"><div class="l" style="width:90%"></div><div class="l" style="width:70%"></div><div class="l" style="width:50%"></div></div>
+          <div class="mblock" style="text-align:center;font-weight:700">Set 3 of 4</div>
+        </div>
+      </div>
+      <div class="mini-phone">
+        <div class="mini-screen mp3">
+          <h5>Progress</h5><small>Last 12 weeks</small>
+          <div class="mbig">+18%</div>
+          <div class="mblock"><div class="l" style="width:40%"></div><div class="l" style="width:75%"></div><div class="l" style="width:95%"></div></div>
+          <div class="mblock"><div class="l" style="width:60%"></div><div class="l" style="width:85%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="wrap">
+    <div class="stats-band">
+      <div class="stats-grid">
+        <div class="st"><b>92%</b><span>Stick past week 4</span></div>
+        <div class="st"><b>3.4M</b><span>Workouts every week</span></div>
+        <div class="st"><b>1.2M</b><span>Active members</span></div>
+        <div class="st"><b>4.9★</b><span>From 84k reviews</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="dl">
+  <div class="wrap">
+    <div class="dl-box">
+      <div>
+        <h2>Your first workout is on us</h2>
+        <p>Download Pulse, answer a few questions, and start a plan that fits your life in under two minutes.</p>
+        <div class="stores">
+          <a class="store" href="#" aria-label="Download on the App Store">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M16.4 12.6c0-2 1.6-3 1.7-3.1-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.5 2 1-.1 1.3-.6 2.5-.6s1.5.6 2.6.6c1 0 1.7-1 2.4-2 .7-1.1 1-2.2 1-2.3-.1 0-1.9-.7-1.9-3zM14.7 6.3c.6-.7 1-1.6.8-2.6-.9.1-1.9.6-2.5 1.3-.5.6-1 1.6-.8 2.5 1 .1 1.9-.5 2.5-1.2z"/></svg>
+            <span><small>Download on the</small><b>App Store</b></span>
+          </a>
+          <a class="store" href="#" aria-label="Get it on Google Play">
+            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 3.5v17l9.5-8.5L4 3.5z" fill="#00e0a0"/><path d="M4 3.5l9.5 8.5 2.7-2.4L6 3.3 4 3.5z" fill="#ff5a93"/><path d="M4 20.5l9.5-8.5 2.7 2.4L6 20.7l-2 -.2z" fill="#ff7a4d"/><path d="M13.5 12l3.9-3.5 3 1.7c1.1.7 1.1 2 0 2.6l-3 1.7L13.5 12z" fill="#ffd24d"/></svg>
+            <span><small>Get it on</small><b>Google Play</b></span>
+          </a>
+        </div>
+      </div>
+      <div class="dl-art">
+        <div class="qr" aria-hidden="true">
+          <svg width="124" height="124" viewBox="0 0 29 29" shape-rendering="crispEdges">
+            <rect width="29" height="29" fill="#fff"/>
+            <g fill="#006b5d">
+              <rect x="1" y="1" width="7" height="7"/><rect x="2" y="2" width="5" height="5" fill="#fff"/><rect x="3" y="3" width="3" height="3" fill="#006b5d"/>
+              <rect x="21" y="1" width="7" height="7"/><rect x="22" y="2" width="5" height="5" fill="#fff"/><rect x="23" y="3" width="3" height="3" fill="#006b5d"/>
+              <rect x="1" y="21" width="7" height="7"/><rect x="2" y="22" width="5" height="5" fill="#fff"/><rect x="3" y="23" width="3" height="3" fill="#006b5d"/>
+              <rect x="10" y="2" width="2" height="2"/><rect x="14" y="2" width="2" height="2"/><rect x="18" y="2" width="1" height="3"/>
+              <rect x="10" y="6" width="3" height="2"/><rect x="16" y="6" width="2" height="2"/>
+              <rect x="2" y="10" width="2" height="2"/><rect x="6" y="10" width="3" height="2"/><rect x="12" y="10" width="2" height="3"/><rect x="16" y="10" width="2" height="2"/><rect x="20" y="10" width="2" height="2"/><rect x="24" y="10" width="3" height="2"/>
+              <rect x="10" y="14" width="2" height="2"/><rect x="14" y="14" width="3" height="2"/><rect x="20" y="14" width="2" height="3"/><rect x="25" y="14" width="2" height="2"/>
+              <rect x="2" y="16" width="3" height="2"/><rect x="7" y="16" width="2" height="2"/>
+              <rect x="11" y="18" width="2" height="2"/><rect x="15" y="18" width="2" height="2"/><rect x="19" y="18" width="3" height="2"/><rect x="24" y="18" width="2" height="2"/>
+              <rect x="10" y="22" width="2" height="2"/><rect x="14" y="22" width="3" height="2"/><rect x="20" y="22" width="2" height="2"/><rect x="24" y="22" width="3" height="3"/>
+              <rect x="11" y="25" width="3" height="2"/><rect x="16" y="25" width="2" height="2"/><rect x="20" y="25" width="2" height="2"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#" aria-label="Pulse home">
+          <span class="logo" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 12h3l2-5 4 10 2-7 2 2h5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Pulse
+        </a>
+        <p class="desc">Adaptive workouts and coaching that move with your real life. Train smarter, recover better, stay consistent.</p>
+      </div>
+      <div class="col"><h4>Product</h4><a href="#features">Features</a><a href="#screens">App tour</a><a href="#download">Download</a><a href="#">Apple Watch</a></div>
+      <div class="col"><h4>Company</h4><a href="#">About</a><a href="#">Coaches</a><a href="#">Careers</a><a href="#">Press</a></div>
+      <div class="col"><h4>Support</h4><a href="#">Help center</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Pulse Fitness, Inc. Move with you.</span>
+      <span>Not a medical device. Consult a professional before starting any program.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var mb=document.getElementById('menuBtn'),nl=document.getElementById('navlinks');
+  mb.addEventListener('click',function(){var o=nl.classList.toggle('open');mb.setAttribute('aria-expanded',o);});
+  nl.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nl.classList.remove('open');mb.setAttribute('aria-expanded',false);});});
+</script>
+</body>
+</html>

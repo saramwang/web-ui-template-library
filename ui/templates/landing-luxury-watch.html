@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AURELIAN — Calibre 01 Tourbillon | Haute Horlogerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0a0a0c;
+    --ink2:#101013;
+    --panel:#141417;
+    --gold:#c9a86a;
+    --gold-bright:#e8cf9a;
+    --champ:#d9c6a3;
+    --text:#ece8e1;
+    --muted:#8f8a82;
+    --line:rgba(201,168,106,.22);
+    --serif:'Cormorant Garamond',serif;
+    --sans:'Jost',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);color:var(--text);font-family:var(--sans);font-weight:300;
+    font-size:17px;line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased;letter-spacing:.01em;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--gold);color:#0a0a0c}
+  :focus-visible{outline:1px solid var(--gold-bright);outline-offset:4px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .gold-text{
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold) 55%,#a07f44);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  }
+  .eyebrow{font-family:var(--sans);font-weight:500;font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold)}
+  .serif{font-family:var(--serif)}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:400;font-size:13px;
+    letter-spacing:.18em;text-transform:uppercase;padding:16px 32px;cursor:pointer;border:none;transition:.3s}
+  .btn-gold{background:linear-gradient(120deg,var(--gold-bright),var(--gold));color:#0a0a0c}
+  .btn-gold:hover{box-shadow:0 8px 34px rgba(201,168,106,.32);transform:translateY(-1px)}
+  .btn-line{background:transparent;color:var(--champ);border:1px solid var(--line)}
+  .btn-line:hover{border-color:var(--gold);color:var(--gold-bright)}
+
+  /* ---------- NAV ---------- */
+  header{position:sticky;top:0;z-index:200;backdrop-filter:blur(16px);
+    background:linear-gradient(180deg,rgba(10,10,12,.92),rgba(10,10,12,.5));border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:84px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .name{font-family:var(--serif);font-weight:600;font-size:23px;letter-spacing:.26em;color:var(--text)}
+  .navlinks{display:flex;gap:38px;align-items:center}
+  .navlinks a{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:400;transition:.25s}
+  .navlinks a:hover{color:var(--gold-bright)}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);width:44px;height:44px;cursor:pointer;color:var(--gold)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:60px 0 100px;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;z-index:0;
+    background:radial-gradient(720px 620px at 72% 46%,rgba(201,168,106,.14),transparent 62%),
+              radial-gradient(500px 500px at 20% 90%,rgba(201,168,106,.06),transparent 60%),var(--ink)}
+  .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px}
+  .hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(48px,7vw,90px);line-height:1.02;letter-spacing:.01em;margin:24px 0 22px}
+  .hero h1 em{font-style:italic}
+  .hero p.lead{max-width:440px;color:var(--muted);font-size:18px;margin-bottom:34px}
+  .hero-cta{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .hero-meta{margin-top:48px;display:flex;gap:48px;flex-wrap:wrap}
+  .hero-meta .m b{display:block;font-family:var(--serif);font-size:30px;color:var(--gold-bright);font-weight:500;line-height:1}
+  .hero-meta .m span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+  /* watch render */
+  .watch-stage{position:relative;display:grid;place-items:center}
+  .watch-glow{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,168,106,.28),transparent 65%);filter:blur(6px)}
+  .watch-stage svg{position:relative;width:min(100%,440px);height:auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.6))}
+
+  /* ---------- SECTIONS ---------- */
+  section{position:relative;padding:110px 0}
+  .head{max-width:660px;margin:0 auto 64px;text-align:center}
+  .head h2{font-family:var(--serif);font-weight:500;font-size:clamp(34px,4.6vw,52px);line-height:1.08;margin:18px 0 16px}
+  .head h2 em{font-style:italic;color:var(--gold-bright)}
+  .head p{color:var(--muted);font-size:17px}
+  .rule{width:1px;height:54px;background:linear-gradient(var(--gold),transparent);margin:0 auto}
+
+  /* craftsmanship */
+  .craft{background:linear-gradient(180deg,var(--ink),#0c0c0f)}
+  .craft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .craft-cell{background:var(--ink);padding:46px 38px;transition:.35s}
+  .craft-cell:hover{background:var(--ink2)}
+  .craft-cell .num{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold);margin-bottom:22px}
+  .craft-cell .ic{margin-bottom:22px}
+  .craft-cell h3{font-family:var(--serif);font-weight:600;font-size:24px;margin-bottom:12px}
+  .craft-cell p{color:var(--muted);font-size:15.5px;line-height:1.7}
+
+  /* feature split */
+  .feature{background:var(--ink)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+  .split.rev .split-art{order:2}
+  .split-art{position:relative;aspect-ratio:4/3;border:1px solid var(--line);overflow:hidden;
+    background:radial-gradient(500px 400px at 50% 40%,rgba(201,168,106,.1),transparent),linear-gradient(160deg,#121214,#0a0a0c)}
+  .split-art svg{position:absolute;inset:0;width:100%;height:100%}
+  .split-copy .eyebrow{margin-bottom:18px;display:block}
+  .split-copy h3{font-family:var(--serif);font-weight:500;font-size:clamp(30px,3.6vw,40px);line-height:1.1;margin-bottom:18px}
+  .split-copy p{color:var(--muted);margin-bottom:18px}
+  .split-copy ul{list-style:none;display:grid;gap:12px}
+  .split-copy li{display:flex;gap:12px;align-items:flex-start;color:var(--text);font-size:15.5px}
+  .split-copy li svg{flex:none;margin-top:4px}
+
+  /* specs */
+  .specs{background:linear-gradient(180deg,#0c0c0f,var(--ink))}
+  .spec-table{max-width:760px;margin:0 auto;border-top:1px solid var(--line)}
+  .spec-table .row{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;padding:22px 6px;border-bottom:1px solid var(--line);align-items:baseline}
+  .spec-table .row .k{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .spec-table .row .v{font-family:var(--serif);font-size:21px;color:var(--text)}
+  .spec-table .row .v small{display:block;font-family:var(--sans);font-size:14px;color:var(--muted);letter-spacing:0;text-transform:none}
+
+  /* CTA limited edition */
+  .cta-sec{position:relative;overflow:hidden;text-align:center}
+  .cta-sec::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(600px 480px at 50% 30%,rgba(201,168,106,.16),transparent 65%),var(--ink)}
+  .cta-inner{position:relative;z-index:2;max-width:680px;margin:0 auto}
+  .cta-inner h2{font-family:var(--serif);font-weight:500;font-size:clamp(38px,5.4vw,62px);line-height:1.05;margin:18px 0 18px}
+  .cta-inner h2 em{font-style:italic;color:var(--gold-bright)}
+  .cta-inner p{color:var(--muted);font-size:18px;max-width:480px;margin:0 auto 34px}
+  .edition-no{display:inline-block;font-family:var(--serif);font-style:italic;font-size:18px;color:var(--gold);
+    border:1px solid var(--line);padding:8px 22px;border-radius:40px;margin-bottom:8px}
+
+  /* footer */
+  footer{background:#08080a;border-top:1px solid var(--line);padding:70px 0 32px}
+  .foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:36px}
+  .foot-grid h5{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;font-weight:500}
+  .foot-grid a{display:block;color:var(--muted);font-size:15px;padding:6px 0;transition:.25s}
+  .foot-grid a:hover{color:var(--gold-bright)}
+  .foot-grid p{color:var(--muted);font-size:15px;max-width:300px;margin-top:16px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:54px;padding-top:26px;
+    border-top:1px solid var(--line);flex-wrap:wrap;gap:14px}
+  .foot-bottom span{color:var(--muted);font-size:13px;letter-spacing:.06em}
+  .socials{display:flex;gap:12px}
+  .socials a{width:40px;height:40px;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);transition:.25s}
+  .socials a:hover{color:var(--gold);border-color:var(--gold)}
+
+  @media(max-width:920px){
+    .hero-inner{grid-template-columns:1fr;gap:50px}
+    .watch-stage{order:-1}
+    .craft-grid{grid-template-columns:1fr}
+    .split,.split.rev{grid-template-columns:1fr;gap:36px}
+    .split.rev .split-art{order:0}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .navlinks{display:none}
+    .navlinks.open{display:flex;position:absolute;top:84px;left:0;right:0;flex-direction:column;gap:0;
+      background:#0c0c0f;border-bottom:1px solid var(--line);padding:8px 28px 20px}
+    .navlinks.open a{padding:14px 0;border-bottom:1px solid var(--line)}
+    .menu-btn{display:grid;place-items:center}
+    .nav-cta{display:none}
+  }
+  @media(max-width:540px){
+    .foot-grid{grid-template-columns:1fr}
+    .spec-table .row{grid-template-columns:1fr;gap:6px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top" aria-label="Aurelian home">
+        <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
+          <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8cf9a"/><stop offset="1" stop-color="#a07f44"/></linearGradient></defs>
+          <circle cx="18" cy="18" r="15" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
+          <circle cx="18" cy="18" r="10" fill="none" stroke="url(#gg)" stroke-width="1"/>
+          <path d="M18 9v9l6 4" stroke="url(#gg)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="name">AURELIAN</span>
+      </a>
+      <div class="navlinks" id="nav">
+        <a href="#craft">Craftsmanship</a>
+        <a href="#movement">Movement</a>
+        <a href="#specs">Specifications</a>
+        <a href="#edition">The Edition</a>
+      </div>
+      <a href="#edition" class="btn btn-line nav-cta">Request Access</a>
+      <button class="menu-btn" id="mbtn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">Calibre 01 · Flying Tourbillon</span>
+        <h1>A measure of <em class="gold-text">eternity</em></h1>
+        <p class="lead">Five hundred hours of hand-finishing, a single-piece sapphire case, and a movement that floats. The Aurelian Calibre 01 is time, perfected.</p>
+        <div class="hero-cta">
+          <a href="#edition" class="btn btn-gold">Reserve a Timepiece</a>
+          <a href="#movement" class="btn btn-line">Explore the Movement</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>72h</b><span>Power Reserve</span></div>
+          <div class="m"><b>18k</b><span>Solid Rose Gold</span></div>
+          <div class="m"><b>250</b><span>Pieces Worldwide</span></div>
+        </div>
+      </div>
+
+      <!-- WATCH RENDER -->
+      <div class="watch-stage">
+        <div class="watch-glow" aria-hidden="true"></div>
+        <svg viewBox="0 0 360 460" aria-label="Aurelian Calibre 01 tourbillon wristwatch">
+          <defs>
+            <linearGradient id="caseGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0dcae"/><stop offset=".45" stop-color="#c9a86a"/><stop offset="1" stop-color="#8a6a36"/></linearGradient>
+            <linearGradient id="bezel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8cf9a"/><stop offset=".5" stop-color="#a07f44"/><stop offset="1" stop-color="#caa86a"/></linearGradient>
+            <radialGradient id="dial" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="#23252b"/><stop offset=".7" stop-color="#14151a"/><stop offset="1" stop-color="#0c0d10"/></radialGradient>
+            <linearGradient id="strap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2017"/><stop offset="1" stop-color="#171009"/></linearGradient>
+            <radialGradient id="tour" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#2c2e36"/><stop offset="1" stop-color="#0d0e12"/></radialGradient>
+          </defs>
+          <!-- straps -->
+          <path d="M150 40 q-6-30 30-30 q36 0 30 30 l-6 70 h-48Z" fill="url(#strap)"/>
+          <path d="M150 420 q-6 30 30 30 q36 0 30-30 l-6-70 h-48Z" fill="url(#strap)"/>
+          <g stroke="#3a2c1a" stroke-width="1" opacity=".6">
+            <path d="M156 30h48M156 46h48M156 62h48"/>
+            <path d="M156 430h48M156 414h48M156 398h48"/>
+          </g>
+          <!-- lugs -->
+          <rect x="146" y="96" width="20" height="34" rx="6" fill="url(#caseGrad)"/>
+          <rect x="194" y="96" width="20" height="34" rx="6" fill="url(#caseGrad)"/>
+          <rect x="146" y="330" width="20" height="34" rx="6" fill="url(#caseGrad)"/>
+          <rect x="194" y="330" width="20" height="34" rx="6" fill="url(#caseGrad)"/>
+          <!-- crown -->
+          <rect x="296" y="218" width="20" height="24" rx="4" fill="url(#bezel)"/>
+          <circle cx="306" cy="230" r="6" fill="#8a6a36"/>
+          <!-- case outer -->
+          <circle cx="180" cy="230" r="118" fill="url(#bezel)"/>
+          <circle cx="180" cy="230" r="106" fill="url(#caseGrad)"/>
+          <!-- dial -->
+          <circle cx="180" cy="230" r="96" fill="url(#dial)" stroke="#3a3026" stroke-width="1"/>
+          <!-- guilloché rings -->
+          <circle cx="180" cy="230" r="86" fill="none" stroke="rgba(201,168,106,.16)" stroke-width="1"/>
+          <circle cx="180" cy="230" r="70" fill="none" stroke="rgba(201,168,106,.1)" stroke-width="1"/>
+          <!-- hour markers -->
+          <g stroke="url(#bezel)" stroke-width="3" stroke-linecap="round">
+            <line x1="180" y1="142" x2="180" y2="156"/>
+            <line x1="180" y1="304" x2="180" y2="318"/>
+            <line x1="92" y1="230" x2="106" y2="230"/>
+            <line x1="254" y1="230" x2="268" y2="230"/>
+          </g>
+          <g stroke="rgba(201,168,106,.7)" stroke-width="2" stroke-linecap="round">
+            <line x1="223" y1="153" x2="216" y2="166"/>
+            <line x1="257" y1="187" x2="244" y2="194"/>
+            <line x1="257" y1="273" x2="244" y2="266"/>
+            <line x1="223" y1="307" x2="216" y2="294"/>
+            <line x1="137" y1="307" x2="144" y2="294"/>
+            <line x1="103" y1="273" x2="116" y2="266"/>
+            <line x1="103" y1="187" x2="116" y2="194"/>
+            <line x1="137" y1="153" x2="144" y2="166"/>
+          </g>
+          <!-- brand on dial -->
+          <text x="180" y="186" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="15" fill="#c9a86a" letter-spacing="4">AURELIAN</text>
+          <text x="180" y="200" text-anchor="middle" font-family="'Jost',sans-serif" font-size="7" fill="#8f8a82" letter-spacing="3">GENÈVE</text>
+          <!-- tourbillon aperture at 6 -->
+          <circle cx="180" cy="282" r="30" fill="url(#tour)" stroke="#c9a86a" stroke-width="1.5"/>
+          <g stroke="#c9a86a" stroke-width="1.4" fill="none">
+            <circle cx="180" cy="282" r="22"/>
+            <path d="M180 260v44M158 282h44"/>
+            <path d="M164 266l32 32M196 266l-32 32"/>
+          </g>
+          <circle cx="180" cy="282" r="5" fill="#e8cf9a"/>
+          <!-- hands -->
+          <g stroke-linecap="round">
+            <line x1="180" y1="230" x2="180" y2="172" stroke="#e8cf9a" stroke-width="4"/>
+            <line x1="180" y1="230" x2="226" y2="246" stroke="#e8cf9a" stroke-width="3"/>
+          </g>
+          <circle cx="180" cy="230" r="6" fill="#e8cf9a" stroke="#8a6a36" stroke-width="1"/>
+          <!-- sapphire reflection -->
+          <path d="M120 178 q60-44 120 0 q-44-18 -120 0Z" fill="rgba(255,255,255,.05)"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRAFTSMANSHIP -->
+  <section id="craft" class="craft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">The House of Aurelian</span>
+        <h2>An obsession with the <em>imperceptible</em></h2>
+        <p>Each Calibre 01 passes through the hands of a single master watchmaker, from first bridge to final regulation.</p>
+      </div>
+      <div class="craft-grid">
+        <div class="craft-cell">
+          <div class="num">I.</div>
+          <svg class="ic" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#c9a86a" stroke-width="1.4"><circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="6"/><path d="M20 6v6M20 28v6M6 20h6M28 20h6"/></svg>
+          <h3>Hand Finishing</h3>
+          <p>Every bridge is anglaged by hand, its edges polished to a mirror at forty-five degrees. The black-polished steel takes three days alone.</p>
+        </div>
+        <div class="craft-cell">
+          <div class="num">II.</div>
+          <svg class="ic" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#c9a86a" stroke-width="1.4"><path d="M20 4l14 8v16l-14 8-14-8V12z"/><circle cx="20" cy="20" r="6"/></svg>
+          <h3>In-House Movement</h3>
+          <p>The flying tourbillon, escapement, and balance are conceived, machined, and assembled entirely within our Geneva atelier.</p>
+        </div>
+        <div class="craft-cell">
+          <div class="num">III.</div>
+          <svg class="ic" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#c9a86a" stroke-width="1.4"><path d="M8 30l24-20M12 10h6v6M28 24v6h-6"/><circle cx="20" cy="20" r="14"/></svg>
+          <h3>Rare Materials</h3>
+          <p>An 18-karat rose gold case, a hand-grained meteorite dial, and a sapphire crystal carved from a single block of crystal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOVEMENT FEATURE -->
+  <section id="movement" class="feature">
+    <div class="wrap">
+      <div class="split">
+        <div class="split-art">
+          <svg viewBox="0 0 440 330" aria-label="Calibre 01 movement detail">
+            <defs><radialGradient id="mv" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#1c1d22"/><stop offset="1" stop-color="#0a0b0e"/></radialGradient></defs>
+            <rect width="440" height="330" fill="url(#mv)"/>
+            <!-- main plate -->
+            <circle cx="220" cy="165" r="120" fill="none" stroke="rgba(201,168,106,.3)" stroke-width="1.5"/>
+            <circle cx="220" cy="165" r="98" fill="none" stroke="rgba(201,168,106,.18)" stroke-width="1"/>
+            <!-- bridges -->
+            <path d="M120 130 q60-30 130-6 q40 14 50 60 q-50-10 -90 6 q-60 24 -90-60Z" fill="rgba(201,168,106,.06)" stroke="rgba(201,168,106,.4)" stroke-width="1.2"/>
+            <!-- gears -->
+            <g stroke="#c9a86a" stroke-width="1.3" fill="none">
+              <circle cx="160" cy="150" r="34"/><circle cx="160" cy="150" r="6"/>
+              <circle cx="262" cy="200" r="26"/><circle cx="262" cy="200" r="5"/>
+              <circle cx="290" cy="120" r="20"/><circle cx="290" cy="120" r="4"/>
+            </g>
+            <!-- gear teeth -->
+            <g stroke="#c9a86a" stroke-width="1">
+              <g>
+                <line x1="160" y1="112" x2="160" y2="120"/><line x1="160" y1="180" x2="160" y2="188"/>
+                <line x1="122" y1="150" x2="130" y2="150"/><line x1="190" y1="150" x2="198" y2="150"/>
+                <line x1="133" y1="123" x2="139" y2="129"/><line x1="181" y1="171" x2="187" y2="177"/>
+                <line x1="187" y1="123" x2="181" y2="129"/><line x1="139" y1="171" x2="133" y2="177"/>
+              </g>
+            </g>
+            <!-- jewels -->
+            <circle cx="160" cy="150" r="4" fill="#c9385a" opacity=".8"/>
+            <circle cx="262" cy="200" r="3.5" fill="#c9385a" opacity=".8"/>
+            <circle cx="290" cy="120" r="3" fill="#c9385a" opacity=".8"/>
+            <!-- balance wheel -->
+            <circle cx="220" cy="230" r="38" fill="none" stroke="#e8cf9a" stroke-width="1.5"/>
+            <g stroke="rgba(201,168,106,.6)" stroke-width="1">
+              <line x1="182" y1="230" x2="258" y2="230"/><line x1="220" y1="192" x2="220" y2="268"/>
+              <line x1="193" y1="203" x2="247" y2="257"/><line x1="247" y1="203" x2="193" y2="257"/>
+            </g>
+            <circle cx="220" cy="230" r="6" fill="#e8cf9a"/>
+            <!-- engraving -->
+            <text x="220" y="60" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="12" fill="#8f8a82" letter-spacing="3">CALIBRE 01 · GENÈVE</text>
+          </svg>
+        </div>
+        <div class="split-copy">
+          <span class="eyebrow">The Calibre 01</span>
+          <h3>A movement that defies gravity</h3>
+          <p>At its heart turns a flying tourbillon — a rotating cage that averages out the pull of gravity, freed of any upper bridge so it appears to float within the dial.</p>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>One-minute flying tourbillon with hand-bevelled cage</li>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Free-sprung balance running at 21,600 vph</li>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Twin barrels delivering a 72-hour reserve</li>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Certified to chronometer tolerance in six positions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE FEATURE (reversed) -->
+  <section class="feature" style="padding-top:0">
+    <div class="wrap">
+      <div class="split rev">
+        <div class="split-art">
+          <svg viewBox="0 0 440 330" aria-label="18k rose gold case detail">
+            <defs><radialGradient id="cs" cx="50%" cy="44%" r="60%"><stop offset="0" stop-color="#1a1b20"/><stop offset="1" stop-color="#0a0b0e"/></radialGradient>
+            <linearGradient id="ringg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8cf9a"/><stop offset=".5" stop-color="#a07f44"/><stop offset="1" stop-color="#caa86a"/></linearGradient></defs>
+            <rect width="440" height="330" fill="url(#cs)"/>
+            <!-- side profile of case -->
+            <ellipse cx="220" cy="165" rx="150" ry="62" fill="none" stroke="url(#ringg)" stroke-width="2.5"/>
+            <ellipse cx="220" cy="165" rx="150" ry="62" fill="none" stroke="rgba(201,168,106,.2)" stroke-width="10"/>
+            <ellipse cx="220" cy="148" rx="150" ry="62" fill="none" stroke="url(#ringg)" stroke-width="2"/>
+            <path d="M70 165 v18 a150 62 0 0 0 300 0 v-18" fill="rgba(201,168,106,.08)" stroke="url(#ringg)" stroke-width="2.5"/>
+            <!-- crown -->
+            <rect x="368" y="150" width="26" height="26" rx="5" fill="url(#ringg)"/>
+            <circle cx="381" cy="163" r="7" fill="#8a6a36"/>
+            <!-- sapphire highlight -->
+            <ellipse cx="220" cy="148" rx="130" ry="50" fill="rgba(120,140,160,.08)"/>
+            <path d="M120 130 q100-40 200 0 q-100-16 -200 0Z" fill="rgba(255,255,255,.06)"/>
+            <text x="220" y="280" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="12" fill="#8f8a82" letter-spacing="3">18K ROSE GOLD · 41 MM</text>
+          </svg>
+        </div>
+        <div class="split-copy">
+          <span class="eyebrow">The Case</span>
+          <h3>Sculpted from solid gold</h3>
+          <p>The 41-millimetre case is machined from a single billet of 18-karat rose gold, its lugs flowing into the wrist with a slimness that belies the complication within.</p>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Box-domed sapphire crystal with seven-layer anti-reflective coating</li>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Exhibition caseback revealing the finished movement</li>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Hand-stitched alligator strap with a gold deployant clasp</li>
+            <li><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#c9a86a" stroke-width="1.6"><path d="M3 9l4 4 8-9"/></svg>Water resistant to 30 metres</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section id="specs" class="specs">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Technical</span>
+        <h2>Every detail, <em>declared</em></h2>
+        <div class="rule"></div>
+      </div>
+      <div class="spec-table">
+        <div class="row"><div class="k">Movement</div><div class="v">Calibre 01<small>Manual-wind flying tourbillon, 198 components</small></div></div>
+        <div class="row"><div class="k">Frequency</div><div class="v">21,600 vph<small>3 Hz, free-sprung balance</small></div></div>
+        <div class="row"><div class="k">Power Reserve</div><div class="v">72 hours<small>Twin series-coupled barrels</small></div></div>
+        <div class="row"><div class="k">Case</div><div class="v">18k Rose Gold<small>41 mm diameter, 9.8 mm thickness</small></div></div>
+        <div class="row"><div class="k">Dial</div><div class="v">Grained Meteorite<small>Widmanstätten pattern, applied gold indices</small></div></div>
+        <div class="row"><div class="k">Crystal</div><div class="v">Box Sapphire<small>Anti-reflective both faces</small></div></div>
+        <div class="row"><div class="k">Strap</div><div class="v">Alligator Leather<small>Hand-stitched, gold deployant clasp</small></div></div>
+        <div class="row"><div class="k">Edition</div><div class="v">250 Pieces<small>Individually numbered and certified</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="edition" class="cta-sec">
+    <div class="wrap cta-inner">
+      <span class="edition-no">№ 001 — 250</span>
+      <br />
+      <span class="eyebrow">A Limited Edition</span>
+      <h2>Own a chapter of <em>horological history</em></h2>
+      <p>Only 250 examples of the Calibre 01 will ever be made. Each is reserved by private appointment with a brand ambassador.</p>
+      <div class="hero-cta" style="justify-content:center">
+        <a href="#top" class="btn btn-gold">Reserve a Timepiece</a>
+        <a href="#specs" class="btn btn-line">Book a Private Viewing</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="Aurelian" style="margin-bottom:6px">
+          <svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true">
+            <circle cx="18" cy="18" r="15" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
+            <circle cx="18" cy="18" r="10" fill="none" stroke="url(#gg)" stroke-width="1"/>
+            <path d="M18 9v9l6 4" stroke="url(#gg)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span class="name">AURELIAN</span>
+        </a>
+        <p>Independent haute horlogerie, established in Geneva. Crafting fewer than one thousand timepieces each year.</p>
+      </div>
+      <div>
+        <h5>Collection</h5>
+        <a href="#movement">Calibre 01</a><a href="#craft">Atelier</a><a href="#specs">Specifications</a><a href="#edition">The Edition</a>
+      </div>
+      <div>
+        <h5>Maison</h5>
+        <a href="#top">Heritage</a><a href="#top">Boutiques</a><a href="#top">Sustainability</a><a href="#top">Press</a>
+      </div>
+      <div>
+        <h5>Client Care</h5>
+        <a href="#top">Servicing</a><a href="#top">Warranty</a><a href="#top">Authenticity</a><a href="#top">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Aurelian Genève SA. All rights reserved.</span>
+      <div class="socials">
+        <a href="#top" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#top" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-4z"/></svg></a>
+        <a href="#top" aria-label="Pinterest"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.2-5s-.3-.6-.3-1.5c0-1.4.8-2.4 1.8-2.4.9 0 1.3.6 1.3 1.4 0 .9-.5 2.2-.8 3.4-.2 1 .5 1.8 1.5 1.8 1.8 0 3.1-2.4 3.1-5.1 0-2.1-1.4-3.7-4-3.7a4.5 4.5 0 0 0-4.7 4.5c0 .9.3 1.5.8 2 .2.3.3.4.2.7l-.2.9c-.1.3-.3.4-.6.3-1.6-.7-2.4-2.5-2.4-4.6 0-3.4 2.9-7.5 8.5-7.5 4.5 0 7.5 3.3 7.5 6.8 0 4.6-2.6 8.1-6.4 8.1-1.3 0-2.5-.7-2.9-1.5l-.8 3c-.3 1-.9 2.1-1.4 2.9A10 10 0 1 0 12 2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var b=document.getElementById('mbtn'),n=document.getElementById('nav');
+    b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});
+    n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');b.setAttribute('aria-expanded','false');});});
+  })();
+</script>
+</body>
+</html>

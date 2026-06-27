@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipedeck CRM · Sales Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5fb; --surface:#ffffff; --ink:#181b2e; --muted:#5b607a; --faint:#9499b3;
+    --line:#e9eaf3; --line-2:#dfe1ee; --accent:#4f46e5; --accent-2:#6366f1; --accent-soft:#eef0ff;
+    --green:#15a06a; --green-soft:#e7f7f0; --amber:#d4860b; --amber-soft:#fdf3e3;
+    --pink:#db2777; --pink-soft:#fdeef6; --sky:#0c8ce9; --sky-soft:#e8f4fe;
+    --radius:16px; --shadow:0 1px 2px rgba(24,27,46,.04),0 2px 8px rgba(24,27,46,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+  .app{display:grid;grid-template-columns:256px 1fr;min-height:100vh}
+
+  /* Sidebar */
+  .sidebar{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:40}
+  .brand{display:flex;align-items:center;gap:12px;padding:22px 22px;border-bottom:1px solid var(--line)}
+  .brand .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:grid;place-items:center;flex:none;box-shadow:0 4px 12px rgba(79,70,229,.32)}
+  .brand b{font-size:16px;font-weight:800;letter-spacing:-.02em}
+  .brand span{display:block;font-size:11px;color:var(--faint);font-weight:600}
+  .nav{padding:14px 12px;overflow-y:auto;flex:1}
+  .nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:700;padding:14px 12px 7px}
+  .nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--muted);font-weight:600;margin-bottom:2px;transition:.15s}
+  .nav a svg{width:19px;height:19px;flex:none}
+  .nav a:hover{background:#f5f6fc;color:var(--ink)}
+  .nav a.active{background:var(--accent-soft);color:var(--accent)}
+  .nav a .badge{margin-left:auto;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:20px}
+  .side-foot{padding:14px;border-top:1px solid var(--line)}
+  .upsell{background:linear-gradient(160deg,#312e81,#4f46e5);border-radius:14px;padding:16px;color:#fff}
+  .upsell b{font-size:13.5px}
+  .upsell p{font-size:12px;color:#d8d6ff;margin:4px 0 12px}
+  .upsell button{width:100%;background:#fff;color:#312e81;border:0;border-radius:9px;padding:9px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+
+  /* Topbar */
+  .main{display:flex;flex-direction:column;min-width:0}
+  .topbar{height:66px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 26px;position:sticky;top:0;z-index:30}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:9px;width:40px;height:40px;cursor:pointer;color:var(--ink)}
+  .topbar h1{font-size:17px;font-weight:800;letter-spacing:-.02em}
+  .topbar h1 small{display:block;font-size:12px;color:var(--faint);font-weight:600}
+  .search{margin-left:auto;position:relative;width:300px;max-width:36vw}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint);width:16px;height:16px}
+  .search input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px 38px;font-family:inherit;font-size:13px;color:var(--ink)}
+  .search input::placeholder{color:var(--faint)}
+  .icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);position:relative}
+  .icon-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  .icon-btn .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;background:var(--pink);border-radius:50%;border:2px solid var(--surface)}
+  .user{display:flex;align-items:center;gap:10px;padding:4px 8px 4px 4px;border-radius:30px;border:1px solid var(--line);cursor:pointer}
+  .avatar{border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;flex:none;overflow:hidden}
+  .user .av{width:32px;height:32px;font-size:12.5px}
+  .user .who{font-size:12.5px;font-weight:700;line-height:1.15}
+  .user .who small{color:var(--faint);font-weight:600;font-size:11px;display:block}
+
+  /* Content */
+  .content{padding:24px 26px 40px;display:flex;flex-direction:column;gap:20px}
+  .page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  .page-head .title h2{font-size:22px;font-weight:800;letter-spacing:-.03em}
+  .page-head .title p{color:var(--muted);font-size:13px;margin-top:2px}
+  .page-head .actions{margin-left:auto;display:flex;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn svg{width:16px;height:16px}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.28)}
+  .btn:hover{filter:brightness(.99);border-color:var(--accent-2)}
+
+  /* KPI row */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .kpi .top{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px;font-weight:700}
+  .kpi .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+  .kpi .ic svg{width:18px;height:18px}
+  .kpi .val{font-size:27px;font-weight:800;letter-spacing:-.03em;margin-top:12px}
+  .kpi .delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;margin-top:6px}
+  .kpi .delta.up{color:var(--green)} .kpi .delta.down{color:var(--pink)}
+  .kpi .delta svg{width:13px;height:13px}
+  .kpi .delta span{color:var(--faint);font-weight:600;margin-left:2px}
+
+  /* Pipeline */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .panel-head h3{font-size:15px;font-weight:800;letter-spacing:-.02em}
+  .panel-head .sub{color:var(--faint);font-size:12px;font-weight:600}
+  .panel-head .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .chip{font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;cursor:pointer;background:var(--surface)}
+  .chip.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+
+  .pipeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;padding:16px}
+  .col-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .col-head .dot{width:9px;height:9px;border-radius:3px;flex:none}
+  .col-head b{font-size:13px;font-weight:800}
+  .col-head .ct{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--faint);background:var(--bg);border-radius:20px;padding:2px 8px}
+  .col-sum{font-size:11.5px;color:var(--muted);font-weight:700;margin-bottom:10px}
+  .deck{display:flex;flex-direction:column;gap:10px}
+  .deal{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:grab;transition:.15s}
+  .deal:hover{border-color:var(--accent-2);box-shadow:0 4px 12px rgba(79,70,229,.1);transform:translateY(-1px)}
+  .deal .co{font-size:13px;font-weight:800;letter-spacing:-.01em}
+  .deal .meta{font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px}
+  .deal .row{display:flex;align-items:center;gap:8px;margin-top:11px}
+  .deal .amt{font-size:14px;font-weight:800}
+  .deal .row .av{width:26px;height:26px;font-size:10.5px;margin-left:auto}
+  .tag{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.03em}
+  .tag.hot{background:var(--pink-soft);color:var(--pink)} .tag.warm{background:var(--amber-soft);color:var(--amber)} .tag.new{background:var(--sky-soft);color:var(--sky)} .tag.won{background:var(--green-soft);color:var(--green)}
+
+  /* Bottom grid */
+  .grid-2{display:grid;grid-template-columns:1.55fr 1fr;gap:20px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+  /* Forecast chart */
+  .chart-wrap{padding:18px}
+  .legend{display:flex;gap:18px;margin-bottom:6px}
+  .legend span{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted)}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  svg{display:block}
+
+  /* Leaderboard */
+  .lb{padding:8px 8px 14px}
+  .lb-row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px}
+  .lb-row:hover{background:var(--bg)}
+  .lb-rank{width:24px;font-size:13px;font-weight:800;color:var(--faint);text-align:center}
+  .lb-row.top .lb-rank{color:var(--amber)}
+  .lb .who{flex:1;min-width:0}
+  .lb .who b{font-size:13px;font-weight:800;display:block}
+  .lb .who small{font-size:11.5px;color:var(--faint);font-weight:600}
+  .lb .amt{font-size:13.5px;font-weight:800;text-align:right}
+  .lb .bar{height:5px;background:var(--line);border-radius:3px;margin-top:5px;overflow:hidden;width:120px}
+  .lb .bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#4f46e5);border-radius:3px}
+  .av-blue{background:linear-gradient(135deg,#0c8ce9,#0ea5e9)}.av-purple{background:linear-gradient(135deg,#7c3aed,#6366f1)}.av-pink{background:linear-gradient(135deg,#db2777,#ec4899)}.av-green{background:linear-gradient(135deg,#15a06a,#10b981)}.av-amber{background:linear-gradient(135deg,#d4860b,#f59e0b)}.av-indigo{background:linear-gradient(135deg,#4f46e5,#818cf8)}
+
+  /* Activity */
+  .timeline{padding:6px 18px 18px;position:relative}
+  .tl-item{display:flex;gap:14px;padding:13px 0;position:relative}
+  .tl-item:not(:last-child)::before{content:"";position:absolute;left:16px;top:34px;bottom:-13px;width:2px;background:var(--line)}
+  .tl-dot{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;z-index:1}
+  .tl-dot svg{width:16px;height:16px}
+  .tl-body b{font-size:13px;font-weight:800}
+  .tl-body p{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .tl-body time{font-size:11.5px;color:var(--faint);font-weight:600}
+
+  /* Table */
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:700;padding:12px 18px;border-bottom:1px solid var(--line)}
+  tbody td{padding:13px 18px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:var(--bg)}
+  .cell-co{display:flex;align-items:center;gap:11px}
+  .cell-co .av{width:34px;height:34px;font-size:12px}
+  .cell-co b{font-weight:800} .cell-co small{display:block;color:var(--faint);font-weight:600;font-size:11.5px}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:20px}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill.green{background:var(--green-soft);color:var(--green)}
+  .pill.amber{background:var(--amber-soft);color:var(--amber)}
+  .pill.sky{background:var(--sky-soft);color:var(--sky)}
+  .pill.pink{background:var(--pink-soft);color:var(--pink)}
+  .prog{display:flex;align-items:center;gap:9px}
+  .prog .track{width:90px;height:6px;background:var(--line);border-radius:4px;overflow:hidden}
+  .prog .track i{display:block;height:100%;background:var(--accent);border-radius:4px}
+  .prog b{font-size:12px;font-weight:700;color:var(--muted)}
+
+  .scrim{display:none}
+  @media(max-width:1180px){.pipeline{grid-template-columns:repeat(3,1fr)}.grid-2,.grid-3{grid-template-columns:1fr}}
+  @media(max-width:980px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:860px){
+    .app{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:0;top:0;width:264px;transform:translateX(-100%);transition:.25s;box-shadow:0 10px 40px rgba(0,0,0,.18)}
+    .sidebar.open{transform:none}
+    .menu-btn{display:grid;place-items:center}
+    .search{display:none}
+    .scrim.show{display:block;position:fixed;inset:0;background:rgba(15,18,40,.4);z-index:35}
+    .pipeline{grid-template-columns:1fr}
+  }
+  @media(max-width:560px){.kpis{grid-template-columns:1fr}.page-head .actions{width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M4 14l5-5 4 4 7-7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 6h6v6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div><b>Pipedeck</b><span>Sales Workspace</span></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Workspace</div>
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>Pipeline</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 14l4-4 3 3 5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Forecast</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 6.5a3 3 0 0 1 0 5.6M18 19a5 5 0 0 0-3-4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Contacts<span class="badge">248</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Tasks</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Inbox<span class="badge">5</span></a>
+      <div class="nav-label">Insights</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Reports</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="5" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 12.5L7 21l5-3 5 3-1.5-8.5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Goals</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 4 15M4.6 9A1.6 1.6 0 0 0 4 7.2L3.9 7a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9.5 4.6M15 4.6a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="upsell">
+        <b>Upgrade to Scale</b>
+        <p>Unlock AI lead scoring and unlimited automations.</p>
+        <button>View plans</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <h1>Sales Pipeline<small>Q3 2026 · North America team</small></h1>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="search" placeholder="Search deals, contacts, companies…" aria-label="Search">
+      </div>
+      <button class="icon-btn" aria-label="Notifications"><span class="dot"></span><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="user">
+        <div class="avatar av av-indigo">MR</div>
+        <div class="who">Mara Reyes<small>Sales Lead</small></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-head">
+        <div class="title">
+          <h2>Pipeline overview</h2>
+          <p>Tracking 38 open deals worth $2.4M across 5 stages.</p>
+        </div>
+        <div class="actions">
+          <button class="btn"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16M7 12h10M10 20h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Filter</button>
+          <button class="btn primary"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>New deal</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <section class="kpis">
+        <div class="kpi">
+          <div class="top"><span class="ic" style="background:var(--accent-soft);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>Pipeline value</div>
+          <div class="val">$2.41M</div>
+          <div class="delta up"><svg viewBox="0 0 24 24" fill="none"><path d="M5 15l7-7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>12.4% <span>vs last quarter</span></div>
+        </div>
+        <div class="kpi">
+          <div class="top"><span class="ic" style="background:var(--green-soft);color:var(--green)"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Win rate</div>
+          <div class="val">31.8%</div>
+          <div class="delta up"><svg viewBox="0 0 24 24" fill="none"><path d="M5 15l7-7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>3.1 pts <span>vs last quarter</span></div>
+        </div>
+        <div class="kpi">
+          <div class="top"><span class="ic" style="background:var(--sky-soft);color:var(--sky)"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 14h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Open deals</div>
+          <div class="val">38</div>
+          <div class="delta down"><svg viewBox="0 0 24 24" fill="none"><path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>4 <span>fewer this month</span></div>
+        </div>
+        <div class="kpi">
+          <div class="top"><span class="ic" style="background:var(--amber-soft);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Avg cycle time</div>
+          <div class="val">28 days</div>
+          <div class="delta up"><svg viewBox="0 0 24 24" fill="none"><path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>5 days <span>faster</span></div>
+        </div>
+      </section>
+
+      <!-- Pipeline kanban -->
+      <section class="panel">
+        <div class="panel-head">
+          <div><h3>Deal pipeline</h3></div>
+          <div class="panel-head"><span class="sub">Drag cards to move stages</span></div>
+          <div class="right">
+            <button class="chip on">All owners</button>
+            <button class="chip">This quarter</button>
+          </div>
+        </div>
+        <div class="pipeline">
+          <div class="col">
+            <div class="col-head"><span class="dot" style="background:#0c8ce9"></span><b>Lead</b><span class="ct">9</span></div>
+            <div class="col-sum">$420K total</div>
+            <div class="deck">
+              <div class="deal"><div class="co">Brightwave Media</div><div class="meta">Marketing platform · Inbound</div><div class="row"><span class="amt">$48,000</span><span class="tag new">New</span><div class="avatar av av-blue">TC</div></div></div>
+              <div class="deal"><div class="co">Cobalt Logistics</div><div class="meta">Fleet SaaS · Referral</div><div class="row"><span class="amt">$92,500</span><div class="avatar av av-green">DA</div></div></div>
+              <div class="deal"><div class="co">Lumen Studio</div><div class="meta">Design seats · Inbound</div><div class="row"><span class="amt">$21,000</span><span class="tag new">New</span><div class="avatar av av-pink">SP</div></div></div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span class="dot" style="background:#6366f1"></span><b>Qualified</b><span class="ct">7</span></div>
+            <div class="col-sum">$560K total</div>
+            <div class="deck">
+              <div class="deal"><div class="co">Northpeak Health</div><div class="meta">Enterprise · 120 seats</div><div class="row"><span class="amt">$184,000</span><span class="tag warm">Warm</span><div class="avatar av av-purple">MR</div></div></div>
+              <div class="deal"><div class="co">Vertex Robotics</div><div class="meta">Annual contract</div><div class="row"><span class="amt">$76,000</span><div class="avatar av av-amber">JK</div></div></div>
+              <div class="deal"><div class="co">Pinecrest Bank</div><div class="meta">Security add-on</div><div class="row"><span class="amt">$54,000</span><div class="avatar av av-blue">TC</div></div></div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span class="dot" style="background:#d4860b"></span><b>Proposal</b><span class="ct">6</span></div>
+            <div class="col-sum">$612K total</div>
+            <div class="deck">
+              <div class="deal"><div class="co">Apex Manufacturing</div><div class="meta">Multi-year · 3 yr</div><div class="row"><span class="amt">$240,000</span><span class="tag hot">Hot</span><div class="avatar av av-green">DA</div></div></div>
+              <div class="deal"><div class="co">Solace Retail</div><div class="meta">Renewal + upsell</div><div class="row"><span class="amt">$118,000</span><span class="tag warm">Warm</span><div class="avatar av av-pink">SP</div></div></div>
+              <div class="deal"><div class="co">Driftwood Co.</div><div class="meta">Pro tier</div><div class="row"><span class="amt">$63,500</span><div class="avatar av av-amber">JK</div></div></div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span class="dot" style="background:#db2777"></span><b>Negotiation</b><span class="ct">5</span></div>
+            <div class="col-sum">$498K total</div>
+            <div class="deck">
+              <div class="deal"><div class="co">Helios Energy</div><div class="meta">Enterprise · legal review</div><div class="row"><span class="amt">$310,000</span><span class="tag hot">Hot</span><div class="avatar av av-purple">MR</div></div></div>
+              <div class="deal"><div class="co">Maple &amp; Co.</div><div class="meta">Final pricing</div><div class="row"><span class="amt">$87,000</span><div class="avatar av av-blue">TC</div></div></div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span class="dot" style="background:#15a06a"></span><b>Won</b><span class="ct">11</span></div>
+            <div class="col-sum">$318K this qtr</div>
+            <div class="deck">
+              <div class="deal"><div class="co">Cedar Analytics</div><div class="meta">Closed · Jun 19</div><div class="row"><span class="amt">$142,000</span><span class="tag won">Won</span><div class="avatar av av-green">DA</div></div></div>
+              <div class="deal"><div class="co">Quill &amp; Type</div><div class="meta">Closed · Jun 11</div><div class="row"><span class="amt">$58,000</span><span class="tag won">Won</span><div class="avatar av av-amber">JK</div></div></div>
+              <div class="deal"><div class="co">Beacon Labs</div><div class="meta">Closed · Jun 04</div><div class="row"><span class="amt">$96,000</span><span class="tag won">Won</span><div class="avatar av av-pink">SP</div></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forecast + leaderboard -->
+      <section class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h3>Revenue forecast</h3><span class="sub">Committed vs. best case</span>
+            <div class="right"><span class="chip on">6 months</span></div>
+          </div>
+          <div class="chart-wrap">
+            <div class="legend">
+              <span><i style="background:#4f46e5"></i>Committed</span>
+              <span><i style="background:#a5b4fc"></i>Best case</span>
+              <span><i style="background:#15a06a"></i>Closed won</span>
+            </div>
+            <svg viewBox="0 0 640 240" width="100%" height="240" role="img" aria-label="Revenue forecast chart">
+              <defs>
+                <linearGradient id="fArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f46e5" stop-opacity=".22"/><stop offset="1" stop-color="#4f46e5" stop-opacity="0"/></linearGradient>
+              </defs>
+              <g stroke="#eef0f6" stroke-width="1">
+                <line x1="44" y1="30" x2="620" y2="30"/><line x1="44" y1="80" x2="620" y2="80"/><line x1="44" y1="130" x2="620" y2="130"/><line x1="44" y1="180" x2="620" y2="180"/>
+              </g>
+              <g fill="#9499b3" font-size="11" font-weight="600" font-family="inherit">
+                <text x="10" y="34">$1M</text><text x="14" y="84">$750k</text><text x="14" y="134">$500k</text><text x="14" y="184">$250k</text>
+                <text x="60" y="218">Jan</text><text x="155" y="218">Feb</text><text x="250" y="218">Mar</text><text x="345" y="218">Apr</text><text x="440" y="218">May</text><text x="535" y="218">Jun</text>
+              </g>
+              <!-- best case area -->
+              <path d="M68,150 L162,128 L256,138 L350,96 L444,108 L538,66 L538,190 L68,190 Z" fill="url(#fArea)"/>
+              <path d="M68,150 L162,128 L256,138 L350,96 L444,108 L538,66" fill="none" stroke="#a5b4fc" stroke-width="2.4" stroke-dasharray="5 5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- committed line -->
+              <path d="M68,168 L162,150 L256,158 L350,124 L444,132 L538,98" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <g fill="#4f46e5"><circle cx="68" cy="168" r="4"/><circle cx="162" cy="150" r="4"/><circle cx="256" cy="158" r="4"/><circle cx="350" cy="124" r="4"/><circle cx="444" cy="132" r="4"/><circle cx="538" cy="98" r="4.5" stroke="#fff" stroke-width="2"/></g>
+              <!-- closed won bars -->
+              <g fill="#15a06a" opacity=".85"><rect x="58" y="178" width="20" height="12" rx="3"/><rect x="152" y="172" width="20" height="18" rx="3"/><rect x="246" y="176" width="20" height="14" rx="3"/><rect x="340" y="160" width="20" height="30" rx="3"/><rect x="434" y="166" width="20" height="24" rx="3"/><rect x="528" y="150" width="20" height="40" rx="3"/></g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>Rep leaderboard</h3><span class="sub">Closed this quarter</span></div>
+          <div class="lb">
+            <div class="lb-row top">
+              <div class="lb-rank">1</div><div class="avatar av av-green" style="width:36px;height:36px;font-size:13px">DA</div>
+              <div class="who"><b>Devon Akhtar</b><small>11 deals · 38% win</small><div class="bar"><i style="width:100%"></i></div></div>
+              <div class="amt">$418K</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">2</div><div class="avatar av av-purple" style="width:36px;height:36px;font-size:13px">MR</div>
+              <div class="who"><b>Mara Reyes</b><small>9 deals · 34% win</small><div class="bar"><i style="width:82%"></i></div></div>
+              <div class="amt">$342K</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">3</div><div class="avatar av av-pink" style="width:36px;height:36px;font-size:13px">SP</div>
+              <div class="who"><b>Sofia Park</b><small>8 deals · 31% win</small><div class="bar"><i style="width:68%"></i></div></div>
+              <div class="amt">$287K</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">4</div><div class="avatar av av-amber" style="width:36px;height:36px;font-size:13px">JK</div>
+              <div class="who"><b>Jonah Kim</b><small>7 deals · 27% win</small><div class="bar"><i style="width:54%"></i></div></div>
+              <div class="amt">$224K</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">5</div><div class="avatar av av-blue" style="width:36px;height:36px;font-size:13px">TC</div>
+              <div class="who"><b>Tara Cohen</b><small>6 deals · 25% win</small><div class="bar"><i style="width:41%"></i></div></div>
+              <div class="amt">$176K</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity + deals table -->
+      <section class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h3>Top open deals</h3><span class="sub">By value</span></div>
+          <table>
+            <thead><tr><th>Company</th><th>Stage</th><th>Probability</th><th style="text-align:right">Value</th></tr></thead>
+            <tbody>
+              <tr><td><div class="cell-co"><div class="avatar av av-purple">HE</div><div><b>Helios Energy</b><small>Enterprise · MR</small></div></div></td><td><span class="pill pink">Negotiation</span></td><td><div class="prog"><div class="track"><i style="width:75%"></i></div><b>75%</b></div></td><td style="text-align:right;font-weight:800">$310K</td></tr>
+              <tr><td><div class="cell-co"><div class="avatar av av-green">AM</div><div><b>Apex Manufacturing</b><small>Multi-year · DA</small></div></div></td><td><span class="pill amber">Proposal</span></td><td><div class="prog"><div class="track"><i style="width:60%"></i></div><b>60%</b></div></td><td style="text-align:right;font-weight:800">$240K</td></tr>
+              <tr><td><div class="cell-co"><div class="avatar av av-purple">NH</div><div><b>Northpeak Health</b><small>120 seats · MR</small></div></div></td><td><span class="pill sky">Qualified</span></td><td><div class="prog"><div class="track"><i style="width:45%"></i></div><b>45%</b></div></td><td style="text-align:right;font-weight:800">$184K</td></tr>
+              <tr><td><div class="cell-co"><div class="avatar av av-pink">SR</div><div><b>Solace Retail</b><small>Renewal · SP</small></div></div></td><td><span class="pill amber">Proposal</span></td><td><div class="prog"><div class="track"><i style="width:55%"></i></div><b>55%</b></div></td><td style="text-align:right;font-weight:800">$118K</td></tr>
+              <tr><td><div class="cell-co"><div class="avatar av av-blue">CL</div><div><b>Cobalt Logistics</b><small>Fleet SaaS · TC</small></div></div></td><td><span class="pill green">Lead</span></td><td><div class="prog"><div class="track"><i style="width:20%"></i></div><b>20%</b></div></td><td style="text-align:right;font-weight:800">$92K</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>Activity timeline</h3><span class="sub">Today</span></div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot" style="background:var(--green-soft);color:var(--green)"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tl-body"><b>Cedar Analytics marked Won</b><p>Devon closed a $142K annual contract.</p><time>14 minutes ago</time></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:var(--accent-soft);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tl-body"><b>Proposal sent to Apex</b><p>Mara emailed the 3-year proposal deck.</p><time>1 hour ago</time></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:var(--sky-soft);color:var(--sky)"><svg viewBox="0 0 24 24" fill="none"><path d="M3 5a2 2 0 0 1 2-2h3l2 5-2.5 1.5a11 11 0 0 0 5 5L19 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div><div class="tl-body"><b>Discovery call · Helios Energy</b><p>Sofia logged a 45-min call with the CTO.</p><time>2 hours ago</time></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:var(--amber-soft);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6 4.5 2.3 7.1L12 16.8 5.7 21l2.3-7.1-6-4.5h7.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div class="tl-body"><b>Vertex Robotics moved to Qualified</b><p>Jonah updated stage after demo.</p><time>4 hours ago</time></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:var(--pink-soft);color:var(--pink)"><svg viewBox="0 0 24 24" fill="none"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></div><div class="tl-body"><b>New lead: Brightwave Media</b><p>Inbound form submission assigned to Tara.</p><time>6 hours ago</time></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+  const sb=document.getElementById('sidebar'),sc=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
+  function toggle(o){sb.classList.toggle('open',o);sc.classList.toggle('show',o);}
+  mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
+  sc.addEventListener('click',()=>toggle(false));
+</script>
+</body>
+</html>

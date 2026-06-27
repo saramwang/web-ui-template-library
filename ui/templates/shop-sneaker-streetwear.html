@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KICKLAB — Sneaker Drops, Streetwear & Hype Releases</title>
+<meta name="description" content="KICKLAB is the home of hype. Cop the latest sneaker drops, limited streetwear and exclusive releases before they sell out.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-2:#101014;
+    --panel:#15151b;
+    --panel-2:#1c1c24;
+    --line:rgba(255,255,255,.10);
+    --line-strong:rgba(255,255,255,.18);
+    --ink:#f4f4f6;
+    --muted:#9a9aa6;
+    --muted-2:#6f6f7a;
+    --acid:#c6ff00;
+    --acid-dim:#9fd000;
+    --magenta:#ff2e88;
+    --radius:18px;
+    --shadow:0 30px 60px -25px rgba(0,0,0,.85);
+    --maxw:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Space Grotesk","Archivo",system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:"Anton","Archivo",sans-serif;font-weight:400;letter-spacing:.5px;line-height:.95;text-transform:uppercase}
+  a{color:inherit;text-decoration:none}
+  img{display:none}
+  ::selection{background:var(--acid);color:#0a0a0c}
+  :focus-visible{outline:3px solid var(--acid);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .acid{color:var(--acid)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+  /* ===== NAV ===== */
+  header.nav{
+    position:sticky;top:0;z-index:60;
+    background:rgba(10,10,12,.82);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;gap:28px;height:72px}
+  .logo{font-family:"Anton",sans-serif;font-size:1.7rem;letter-spacing:1px;display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .logo b{color:var(--acid)}
+  .logo .dot{width:11px;height:11px;background:var(--acid);border-radius:50%;box-shadow:0 0 14px var(--acid)}
+  nav.links{display:flex;gap:26px;margin-left:14px;font-weight:600;font-size:.92rem}
+  nav.links a{position:relative;color:var(--muted);transition:color .18s;text-transform:uppercase;letter-spacing:.4px;font-size:.82rem}
+  nav.links a:hover{color:var(--ink)}
+  nav.links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--acid);transition:width .2s}
+  nav.links a:hover::after{width:100%}
+  nav.links a.sale{color:var(--magenta)}
+  .nav-tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .icon-btn{
+    width:42px;height:42px;border:1px solid var(--line);background:var(--panel);
+    border-radius:12px;color:var(--ink);display:grid;place-items:center;cursor:pointer;
+    transition:.18s;position:relative;
+  }
+  .icon-btn:hover{border-color:var(--acid);color:var(--acid)}
+  .icon-btn svg{width:20px;height:20px}
+  .cart-badge{
+    position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;padding:0 5px;
+    background:var(--acid);color:#0a0a0c;border-radius:20px;font-size:.7rem;font-weight:800;
+    display:grid;place-items:center;font-family:"Archivo";
+  }
+  .hamburger{display:none}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;overflow:hidden;padding:60px 0 80px}
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(60% 60% at 78% 30%, rgba(198,255,0,.18), transparent 60%),
+      radial-gradient(50% 50% at 12% 80%, rgba(255,46,136,.14), transparent 60%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:relative;z-index:2;display:grid;grid-template-columns:1.05fr 1fr;
+    gap:40px;align-items:center;min-height:520px;
+  }
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:.78rem;
+    letter-spacing:2px;text-transform:uppercase;color:var(--acid);
+    border:1px solid var(--line-strong);border-radius:40px;padding:7px 16px;margin-bottom:22px;
+  }
+  .hero-eyebrow .pulse{width:8px;height:8px;background:var(--acid);border-radius:50%;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(198,255,0,.6)}50%{opacity:.6;box-shadow:0 0 0 8px rgba(198,255,0,0)}}
+  .hero h1{font-size:clamp(3rem,8.5vw,7rem);margin-bottom:18px}
+  .hero h1 .stroke{
+    -webkit-text-stroke:2px var(--acid);color:transparent;
+  }
+  .hero p.lede{color:var(--muted);font-size:1.1rem;max-width:440px;margin-bottom:30px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .btn{
+    font-family:"Archivo";font-weight:800;text-transform:uppercase;letter-spacing:.6px;
+    border:none;cursor:pointer;border-radius:13px;padding:16px 30px;font-size:.95rem;transition:.18s;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .btn-primary{background:var(--acid);color:#0a0a0c}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 30px -10px rgba(198,255,0,.55)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong)}
+  .btn-ghost:hover{border-color:var(--acid);color:var(--acid)}
+  .hero-stats{display:flex;gap:30px;margin-top:34px}
+  .hero-stats .s b{font-family:"Anton";font-size:1.8rem;color:var(--ink);display:block}
+  .hero-stats .s span{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+  .hero-shoe{position:relative;display:grid;place-items:center}
+  .hero-shoe .glow{
+    position:absolute;width:80%;height:80%;border-radius:50%;
+    background:radial-gradient(circle,rgba(198,255,0,.30),transparent 65%);filter:blur(20px);z-index:0;
+  }
+  .hero-shoe svg{width:100%;max-width:580px;position:relative;z-index:1;filter:drop-shadow(0 40px 40px rgba(0,0,0,.6));animation:float 5s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-16px) rotate(1deg)}}
+  .price-tag{
+    position:absolute;top:8%;right:4%;z-index:3;background:var(--acid);color:#0a0a0c;
+    font-family:"Anton";font-size:1.5rem;padding:10px 18px;border-radius:12px;transform:rotate(6deg);
+    box-shadow:0 12px 24px -8px rgba(198,255,0,.6);
+  }
+  .price-tag small{display:block;font-family:"Archivo";font-weight:700;font-size:.6rem;letter-spacing:1px}
+
+  /* ===== COUNTDOWN ===== */
+  .countdown{position:relative;z-index:2;padding:46px 0}
+  .cd-card{
+    background:linear-gradient(135deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:24px;padding:34px 32px;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:30px;
+    position:relative;overflow:hidden;
+  }
+  .cd-card::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(255,46,136,.18),transparent 70%)}
+  .cd-left h2{font-size:2.1rem}
+  .cd-left .drop-name{color:var(--acid);font-weight:700;letter-spacing:2px;font-size:.8rem;text-transform:uppercase;margin-bottom:8px;font-family:"Archivo"}
+  .cd-left p{color:var(--muted);font-size:.95rem;margin-top:8px;max-width:320px}
+  .cd-timer{display:flex;gap:12px}
+  .cd-box{
+    background:var(--bg);border:1px solid var(--line-strong);border-radius:14px;
+    width:84px;padding:14px 8px;text-align:center;
+  }
+  .cd-box .num{font-family:"Anton";font-size:2.3rem;color:var(--acid);line-height:1;font-variant-numeric:tabular-nums}
+  .cd-box .lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:6px}
+
+  /* ===== SECTION HEAD ===== */
+  .sec{padding:70px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:36px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(2rem,5vw,3.2rem)}
+  .sec-head .tag{color:var(--acid);font-family:"Archivo";font-weight:700;letter-spacing:2px;font-size:.78rem;text-transform:uppercase;margin-bottom:6px;display:block}
+  .sec-head a.viewall{color:var(--muted);font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;display:inline-flex;gap:6px;align-items:center}
+  .sec-head a.viewall:hover{color:var(--acid)}
+
+  /* ===== TRENDING GRID ===== */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;transition:.22s;position:relative;display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-6px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+  .card-media{
+    position:relative;aspect-ratio:1/1;display:grid;place-items:center;overflow:hidden;
+    background:radial-gradient(circle at 50% 120%,rgba(255,255,255,.05),transparent 60%);
+  }
+  .card-media svg{width:86%;transition:transform .3s}
+  .card:hover .card-media svg{transform:rotate(-7deg) scale(1.06)}
+  .badge{
+    position:absolute;top:12px;left:12px;font-family:"Archivo";font-weight:800;font-size:.68rem;
+    letter-spacing:.5px;padding:5px 10px;border-radius:7px;text-transform:uppercase;z-index:2;
+  }
+  .b-hot{background:var(--magenta);color:#fff}
+  .b-new{background:var(--acid);color:#0a0a0c}
+  .b-low{background:#ff8a00;color:#0a0a0c}
+  .b-off{background:#fff;color:#0a0a0c}
+  .card-body{padding:16px;display:flex;flex-direction:column;gap:4px;flex:1}
+  .card-body .brand{font-size:.72rem;color:var(--muted-2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+  .card-body .name{font-family:"Archivo";font-weight:800;font-size:1.02rem;color:var(--ink)}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .price{font-family:"Anton";font-size:1.35rem}
+  .price s{font-family:"Archivo";font-weight:600;font-size:.85rem;color:var(--muted-2);margin-right:6px}
+  .add-btn{
+    background:var(--panel-2);border:1px solid var(--line-strong);color:var(--ink);
+    width:40px;height:40px;border-radius:11px;cursor:pointer;display:grid;place-items:center;transition:.18s;
+  }
+  .add-btn:hover{background:var(--acid);color:#0a0a0c;border-color:var(--acid)}
+  .add-btn svg{width:18px;height:18px}
+  .add-btn.added{background:var(--acid);color:#0a0a0c;border-color:var(--acid)}
+
+  /* ===== BRAND MARQUEE ===== */
+  .brands{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 0;overflow:hidden;background:var(--bg-2)}
+  .marquee{display:flex;width:max-content;animation:scroll 26s linear infinite}
+  .brands:hover .marquee{animation-play-state:paused}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .marquee span{
+    font-family:"Anton";font-size:2.2rem;color:var(--muted-2);padding:0 38px;white-space:nowrap;
+    transition:color .2s;letter-spacing:1px;display:flex;align-items:center;gap:38px;
+  }
+  .marquee span:hover{color:var(--acid)}
+  .marquee .sep{width:9px;height:9px;background:var(--line-strong);border-radius:50%;display:inline-block}
+
+  /* ===== HYPE BANNER ===== */
+  .hype-banner{
+    background:linear-gradient(120deg,#c6ff00,#9fd000);color:#0a0a0c;border-radius:24px;
+    padding:48px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    position:relative;overflow:hidden;
+  }
+  .hype-banner h2{font-size:clamp(2rem,5vw,3.4rem)}
+  .hype-banner p{font-weight:600;max-width:420px;margin-top:8px}
+  .hype-banner .btn-dark{background:#0a0a0c;color:var(--acid);padding:16px 30px;border-radius:13px;font-family:"Archivo";font-weight:800;text-transform:uppercase;letter-spacing:.6px}
+  .hype-banner .btn-dark:hover{transform:translateY(-3px)}
+  .hype-banner .ghost-shoe{position:absolute;right:-30px;bottom:-40px;opacity:.13;width:340px}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--bg-2);border-top:1px solid var(--line);padding:64px 0 30px;margin-top:30px}
+  .foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+  .foot-brand .logo{margin-bottom:16px}
+  .foot-brand p{color:var(--muted);font-size:.92rem;max-width:280px;margin-bottom:20px}
+  .news{display:flex;gap:8px;max-width:330px}
+  .news input{
+    flex:1;background:var(--panel);border:1px solid var(--line-strong);color:var(--ink);
+    padding:13px 15px;border-radius:11px;font-family:inherit;font-size:.9rem;
+  }
+  .news input::placeholder{color:var(--muted-2)}
+  .news button{background:var(--acid);color:#0a0a0c;border:none;border-radius:11px;padding:0 20px;font-family:"Archivo";font-weight:800;cursor:pointer;text-transform:uppercase;font-size:.8rem;letter-spacing:.5px}
+  .news button:hover{background:#fff}
+  .foot-col h4{font-family:"Archivo";font-weight:800;text-transform:uppercase;letter-spacing:1px;font-size:.82rem;margin-bottom:16px;color:var(--ink)}
+  .foot-col a{display:block;color:var(--muted);font-size:.9rem;padding:5px 0;transition:.15s}
+  .foot-col a:hover{color:var(--acid);padding-left:4px}
+  .socials{display:flex;gap:10px;margin-top:18px}
+  .socials a{width:40px;height:40px;border:1px solid var(--line);border-radius:11px;display:grid;place-items:center;color:var(--muted);transition:.18s}
+  .socials a:hover{border-color:var(--acid);color:var(--acid)}
+  .socials svg{width:19px;height:19px}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted-2);font-size:.82rem}
+  .foot-bottom a{color:var(--muted-2)}
+  .foot-bottom a:hover{color:var(--acid)}
+
+  /* ===== MOBILE MENU ===== */
+  .mobile-menu{
+    display:none;position:fixed;inset:0;z-index:80;background:rgba(10,10,12,.97);
+    backdrop-filter:blur(8px);flex-direction:column;padding:90px 30px 40px;
+  }
+  .mobile-menu.open{display:flex}
+  .mobile-menu a{font-family:"Anton";font-size:2rem;padding:14px 0;border-bottom:1px solid var(--line);color:var(--ink)}
+  .mobile-menu a.sale{color:var(--magenta)}
+  .mobile-menu .close{position:absolute;top:24px;right:24px;width:46px;height:46px;border:1px solid var(--line);background:var(--panel);border-radius:12px;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+
+  /* toast */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+    background:var(--acid);color:#0a0a0c;font-family:"Archivo";font-weight:800;padding:13px 24px;
+    border-radius:12px;z-index:90;transition:transform .3s;box-shadow:0 16px 30px -10px rgba(198,255,0,.5);
+    display:flex;align-items:center;gap:8px;text-transform:uppercase;font-size:.85rem;letter-spacing:.5px;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:980px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .foot-top{grid-template-columns:1fr 1fr}
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .hero-shoe{order:-1}
+    .hero-cta,.hero-stats{justify-content:center}
+    .hero p.lede{margin-left:auto;margin-right:auto}
+  }
+  @media(max-width:760px){
+    nav.links,.nav-tools .desk-only{display:none}
+    .hamburger{display:grid}
+    .cd-card{flex-direction:column;align-items:flex-start}
+    .cd-timer{width:100%;justify-content:space-between;gap:8px}
+    .cd-box{flex:1;width:auto}
+    .foot-top{grid-template-columns:1fr}
+  }
+  @media(max-width:480px){
+    .grid{grid-template-columns:1fr}
+    .cd-box .num{font-size:1.9rem}
+    .hero-stats{gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo" aria-label="KICKLAB home"><span class="dot"></span>KICK<b>LAB</b></a>
+    <nav class="links" aria-label="Primary">
+      <a href="#trending">New Drops</a>
+      <a href="#trending">Men</a>
+      <a href="#trending">Women</a>
+      <a href="#brands">Brands</a>
+      <a href="#hype" class="sale">Sale</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="icon-btn desk-only" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Cart, items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge" id="cartCount">2</span>
+      </button>
+      <button class="icon-btn hamburger" id="menuOpen" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close" id="menuClose" aria-label="Close menu">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+  <a href="#trending">New Drops</a>
+  <a href="#trending">Men</a>
+  <a href="#trending">Women</a>
+  <a href="#brands">Brands</a>
+  <a href="#hype" class="sale">Sale</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="hero-eyebrow"><span class="pulse"></span>Drop 027 · Live Now</span>
+      <h1>Cop The<br><span class="stroke">Heat</span> First.</h1>
+      <p class="lede">Limited pairs. Zero restocks. KICKLAB drops the freshest silhouettes from the underground straight to your doorstep — before the resale market wakes up.</p>
+      <div class="hero-cta">
+        <a href="#trending" class="btn btn-primary">Shop The Drop
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#countdown" class="btn btn-ghost">Next Release</a>
+      </div>
+      <div class="hero-stats">
+        <div class="s"><b>120+</b><span>Brands</span></div>
+        <div class="s"><b>48h</b><span>Express Ship</span></div>
+        <div class="s"><b>4.9★</b><span>32k Reviews</span></div>
+      </div>
+    </div>
+
+    <div class="hero-shoe">
+      <div class="glow"></div>
+      <div class="price-tag">$219<small>Flagship Drop</small></div>
+      <!-- FLAGSHIP SNEAKER (3/4 side profile) -->
+      <svg viewBox="0 0 640 360" role="img" aria-label="KICKLAB Velocity flagship sneaker">
+        <defs>
+          <linearGradient id="upperG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#22232b"/><stop offset="1" stop-color="#0e0f14"/>
+          </linearGradient>
+          <linearGradient id="midG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f4f4f6"/><stop offset="1" stop-color="#c9c9d2"/>
+          </linearGradient>
+          <linearGradient id="acidG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#c6ff00"/><stop offset="1" stop-color="#8fd400"/>
+          </linearGradient>
+          <linearGradient id="soleG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2a2b33"/><stop offset="1" stop-color="#17181d"/>
+          </linearGradient>
+        </defs>
+        <!-- ground shadow -->
+        <ellipse cx="320" cy="332" rx="250" ry="20" fill="#000" opacity=".5"/>
+        <!-- outsole -->
+        <path d="M70 300 C60 322 90 326 130 326 L520 326 C560 326 585 320 588 300 C590 286 575 282 560 284 L96 290 C80 291 72 294 70 300Z" fill="url(#soleG)"/>
+        <!-- outsole tread notches -->
+        <g fill="#0a0a0c" opacity=".6">
+          <rect x="150" y="306" width="10" height="14" rx="2"/><rect x="200" y="306" width="10" height="14" rx="2"/>
+          <rect x="250" y="306" width="10" height="14" rx="2"/><rect x="300" y="306" width="10" height="14" rx="2"/>
+          <rect x="350" y="306" width="10" height="14" rx="2"/><rect x="400" y="306" width="10" height="14" rx="2"/>
+          <rect x="450" y="306" width="10" height="14" rx="2"/><rect x="500" y="306" width="10" height="14" rx="2"/>
+        </g>
+        <!-- white midsole (chunky) -->
+        <path d="M78 268 C70 296 100 300 140 300 L530 300 C566 300 586 292 584 270 C582 250 560 248 540 252 C500 240 360 232 250 244 C180 250 120 248 100 256 C88 260 80 262 78 268Z" fill="url(#midG)"/>
+        <!-- midsole accent stripe -->
+        <path d="M92 278 C88 290 110 292 150 292 L520 292 C548 292 566 288 566 278" fill="none" stroke="#c6ff00" stroke-width="4" opacity=".9"/>
+        <!-- heel pull cushion -->
+        <path d="M540 252 C560 248 582 250 584 270 C585 280 578 286 568 288 C566 274 558 262 540 252Z" fill="#c6ff00"/>
+        <!-- main upper -->
+        <path d="M120 250 C120 200 150 150 210 130 C260 113 320 112 380 130 C430 145 470 170 500 200 C520 220 530 240 530 252 C490 244 360 236 250 246 C190 250 150 250 120 250Z" fill="url(#upperG)" stroke="#000" stroke-width="1.5"/>
+        <!-- toe box overlay -->
+        <path d="M120 250 C120 214 138 178 175 158 C200 145 230 142 256 148 C250 190 248 224 250 246 C190 250 150 250 120 250Z" fill="#1a1b22"/>
+        <!-- toe stitch -->
+        <path d="M150 240 C150 206 168 178 200 162" fill="none" stroke="#3a3b44" stroke-width="2" stroke-dasharray="5 5"/>
+        <!-- swoosh-like accent -->
+        <path d="M250 244 C300 196 380 168 470 178 C440 196 380 206 320 224 C300 230 274 238 250 244Z" fill="url(#acidG)" stroke="#0a0a0c" stroke-width="1.5"/>
+        <!-- mudguard accent -->
+        <path d="M250 246 C190 250 150 250 120 250 C120 244 122 238 124 232 C160 230 210 230 252 234 Z" fill="#c6ff00" opacity=".25"/>
+        <!-- lace panel -->
+        <path d="M268 150 C320 138 372 142 412 168 C420 188 424 208 424 224 C390 214 340 206 296 210 C284 192 274 170 268 150Z" fill="#101116"/>
+        <!-- eyelets + laces -->
+        <g stroke="#c6ff00" stroke-width="5" stroke-linecap="round">
+          <line x1="300" y1="168" x2="360" y2="158"/>
+          <line x1="306" y1="184" x2="370" y2="176"/>
+          <line x1="312" y1="200" x2="380" y2="194"/>
+        </g>
+        <g fill="#0a0a0c" stroke="#c6ff00" stroke-width="2">
+          <circle cx="300" cy="168" r="4"/><circle cx="360" cy="158" r="4"/>
+          <circle cx="306" cy="184" r="4"/><circle cx="370" cy="176" r="4"/>
+          <circle cx="312" cy="200" r="4"/><circle cx="380" cy="194" r="4"/>
+        </g>
+        <!-- tongue -->
+        <path d="M392 132 C404 120 420 120 430 134 C436 148 436 164 430 178 C418 172 404 168 392 168 C390 156 390 144 392 132Z" fill="#1c1d24" stroke="#000"/>
+        <text x="406" y="156" font-family="Anton" font-size="14" fill="#c6ff00" text-anchor="middle">KL</text>
+        <!-- heel collar + tab -->
+        <path d="M470 178 C492 180 510 196 520 218 C524 232 526 244 524 252 C514 250 502 248 492 248 C492 224 484 200 470 178Z" fill="#16171d"/>
+        <!-- heel pull tab -->
+        <path d="M512 150 C528 146 540 156 540 172 C540 184 532 192 520 194 C518 180 516 164 512 150Z" fill="#c6ff00"/>
+        <text x="524" y="178" font-family="Anton" font-size="11" fill="#0a0a0c" text-anchor="middle" transform="rotate(8 524 178)">LAB</text>
+        <!-- ankle stitch -->
+        <path d="M474 190 C492 196 506 210 514 230" fill="none" stroke="#3a3b44" stroke-width="2" stroke-dasharray="4 4"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COUNTDOWN ===== -->
+<section class="countdown" id="countdown">
+  <div class="wrap">
+    <div class="cd-card">
+      <div class="cd-left">
+        <span class="drop-name">Drop 028 · Phantom Series</span>
+        <h2>Next Drop Live In</h2>
+        <p>Set your alarm. The Phantom "Acid Storm" releases in strictly limited numbers. Members get early access.</p>
+      </div>
+      <div class="cd-timer" id="timer" aria-live="polite">
+        <div class="cd-box"><div class="num" id="dd">00</div><div class="lbl">Days</div></div>
+        <div class="cd-box"><div class="num" id="hh">00</div><div class="lbl">Hours</div></div>
+        <div class="cd-box"><div class="num" id="mm">00</div><div class="lbl">Mins</div></div>
+        <div class="cd-box"><div class="num" id="ss">00</div><div class="lbl">Secs</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRENDING ===== -->
+<section class="sec" id="trending">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="tag">// Selling Fast</span>
+        <h2>Trending This Week</h2>
+      </div>
+      <a href="#trending" class="viewall">View All
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- ===== BRAND STRIP ===== -->
+<section class="brands" id="brands" aria-label="Brands we carry">
+  <div class="marquee" id="marquee"></div>
+</section>
+
+<!-- ===== HYPE BANNER ===== -->
+<section class="sec" id="hype">
+  <div class="wrap">
+    <div class="hype-banner">
+      <div>
+        <h2>Members Save 20%<br>On Every Drop.</h2>
+        <p>Join the KICKLAB crew for early access, exclusive colorways and free express shipping on all orders over $120.</p>
+      </div>
+      <a href="#" class="btn-dark">Join The Crew</a>
+      <svg class="ghost-shoe" viewBox="0 0 640 360" aria-hidden="true">
+        <path d="M70 300 C60 322 90 326 130 326 L520 326 C560 326 585 320 588 300 C590 286 575 282 560 284 L96 290 C80 291 72 294 70 300Z" fill="#0a0a0c"/>
+        <path d="M120 250 C120 200 150 150 210 130 C260 113 320 112 380 130 C430 145 470 170 500 200 C520 220 530 240 530 252 C490 244 360 236 250 246 C190 250 150 250 120 250Z" fill="#0a0a0c"/>
+        <path d="M250 244 C300 196 380 168 470 178 C440 196 380 206 320 224 C300 230 274 238 250 244Z" fill="#0a0a0c"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#" class="logo"><span class="dot"></span>KICK<b>LAB</b></a>
+        <p>The lab where hype is engineered. Authenticated kicks, exclusive drops, shipped worldwide.</p>
+        <form class="news" onsubmit="return subscribe(event)">
+          <label class="sr-only" for="email">Email address</label>
+          <input type="email" id="email" placeholder="you@email.com" required>
+          <button type="submit">Join</button>
+        </form>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.3 2.2 1.7 3.9 3.9 4.2v3c-1.5 0-2.9-.5-3.9-1.3v6.2A5.6 5.6 0 1 1 10 9.7v3.1a2.6 2.6 0 1 0 2.9 2.6V3z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Shop</h4>
+        <a href="#trending">New Drops</a><a href="#trending">Men's Sneakers</a><a href="#trending">Women's Sneakers</a><a href="#trending">Apparel</a><a href="#hype">Sale</a>
+      </div>
+      <div class="foot-col">
+        <h4>Help</h4>
+        <a href="#">Shipping & Returns</a><a href="#">Size Guide</a><a href="#">Authentication</a><a href="#">Track Order</a><a href="#">Contact Us</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#">About KICKLAB</a><a href="#">Careers</a><a href="#">Sustainability</a><a href="#">Press</a><a href="#">Store Locator</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 KICKLAB Inc. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Cookies</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastMsg">Added to cart</span>
+</div>
+
+<script>
+/* ===== MOBILE MENU ===== */
+const menu=document.getElementById('mobileMenu');
+const openBtn=document.getElementById('menuOpen');
+const closeBtn=document.getElementById('menuClose');
+function toggleMenu(open){
+  menu.classList.toggle('open',open);
+  openBtn.setAttribute('aria-expanded',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+openBtn.addEventListener('click',()=>toggleMenu(true));
+closeBtn.addEventListener('click',()=>toggleMenu(false));
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggleMenu(false)));
+
+/* ===== CART ===== */
+let cart=2;
+const cartCount=document.getElementById('cartCount');
+const toast=document.getElementById('toast');
+const toastMsg=document.getElementById('toastMsg');
+let toastTimer;
+function showToast(msg){
+  toastMsg.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),1900);
+}
+function addToCart(name,btn){
+  cart++;
+  cartCount.textContent=cart;
+  document.getElementById('cartBtn').setAttribute('aria-label','Cart, '+cart+' items');
+  showToast(name+' added');
+  if(btn){btn.classList.add('added');setTimeout(()=>btn.classList.remove('added'),900);}
+}
+document.getElementById('cartBtn').addEventListener('click',()=>showToast(cart+' items in cart'));
+
+/* ===== NEWSLETTER ===== */
+function subscribe(e){e.preventDefault();showToast("You're on the list");e.target.reset();return false;}
+
+/* ===== COUNTDOWN ===== */
+const target=new Date('2026-07-18T10:00:00').getTime();
+function pad(n){return String(n).padStart(2,'0');}
+function tick(){
+  let diff=target-Date.now();
+  if(diff<0)diff=0;
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor(diff%86400000/3600000);
+  const m=Math.floor(diff%3600000/60000);
+  const s=Math.floor(diff%60000/1000);
+  document.getElementById('dd').textContent=pad(d);
+  document.getElementById('hh').textContent=pad(h);
+  document.getElementById('mm').textContent=pad(m);
+  document.getElementById('ss').textContent=pad(s);
+}
+tick();setInterval(tick,1000);
+
+/* ===== PRODUCT DATA + SNEAKER SVG ===== */
+function sneakerSVG(body,mid,accent){
+  return `<svg viewBox="0 0 360 220" aria-hidden="true">
+    <ellipse cx="180" cy="196" rx="140" ry="11" fill="#000" opacity=".4"/>
+    <path d="M30 168 C24 182 42 184 66 184 L300 184 C324 184 338 180 338 168 C338 160 326 158 314 160 L60 162 C44 163 32 164 30 168Z" fill="#17181d"/>
+    <path d="M36 150 C30 168 50 170 74 170 L300 170 C322 170 334 164 332 152 C330 140 314 140 302 142 C270 134 200 130 140 138 C100 142 64 140 52 144 C42 146 38 148 36 150Z" fill="${mid}"/>
+    <path d="M44 158 C42 164 56 166 80 166 L296 166 C312 166 322 162 322 156" fill="none" stroke="${accent}" stroke-width="3"/>
+    <path d="M64 140 C64 110 84 80 118 68 C150 57 188 56 222 68 C250 78 276 94 294 112 C306 124 312 134 312 142 C284 136 200 130 140 138 C104 142 82 140 64 140Z" fill="${body}" stroke="#000" stroke-width="1.2"/>
+    <path d="M64 140 C64 118 76 96 98 84 C114 75 134 73 150 78 C146 104 145 124 146 138 C108 142 82 140 64 140Z" fill="rgba(0,0,0,.22)"/>
+    <path d="M146 138 C176 108 224 92 282 100 C262 112 224 118 188 128 C174 132 160 135 146 138Z" fill="${accent}" stroke="#0a0a0c" stroke-width="1"/>
+    <path d="M158 86 C190 78 222 80 248 96 C254 110 256 122 256 132 C232 124 200 120 174 122 C168 110 162 98 158 86Z" fill="#0e0f14"/>
+    <g stroke="${accent}" stroke-width="4" stroke-linecap="round">
+      <line x1="176" y1="98" x2="216" y2="92"/><line x1="180" y1="110" x2="222" y2="104"/><line x1="184" y1="122" x2="228" y2="116"/>
+    </g>
+    <path d="M232 80 C240 72 250 72 256 82 C260 92 260 102 256 112 C248 108 240 106 232 106 C230 98 230 88 232 80Z" fill="#1c1d24"/>
+    <path d="M282 90 C294 87 302 95 302 106 C302 114 296 120 288 121 C286 110 285 100 282 90Z" fill="${accent}"/>
+  </svg>`;
+}
+const products=[
+  {brand:"KICKLAB",name:"Velocity Pro 'Acid'",price:189,old:null,badge:["NEW","b-new"],body:"#1c1d24",mid:"#f4f4f6",accent:"#c6ff00"},
+  {brand:"VONS",name:"Phantom Hi 'Storm'",price:159,old:null,badge:["🔥 HOT","b-hot"],body:"#16171d",mid:"#e9e9ee",accent:"#ff2e88"},
+  {brand:"PUNA",name:"Rift Runner 'Volt'",price:134,old:null,badge:["LOW STOCK","b-low"],body:"#23242c",mid:"#d8d8e0",accent:"#39e6ff"},
+  {brand:"ADIDOS",name:"Glide 4D 'Mono'",price:97,old:139,badge:["-30%","b-off"],body:"#101116",mid:"#f4f4f6",accent:"#ffd400"},
+  {brand:"NIKR",name:"Apex Court 'Lime'",price:175,old:null,badge:["NEW","b-new"],body:"#1a1b22",mid:"#ececed",accent:"#c6ff00"},
+  {brand:"ASICX",name:"Surge Gel 'Magma'",price:148,old:null,badge:["🔥 HOT","b-hot"],body:"#1e1f27",mid:"#e2e2e8",accent:"#ff6a00"},
+  {brand:"NUW BALANCE",name:"Trail 992 'Slate'",price:119,old:null,badge:["LOW STOCK","b-low"],body:"#202129",mid:"#dadae2",accent:"#7c9eff"},
+  {brand:"KICKLAB",name:"Lab One 'Blackout'",price:89,old:129,badge:["-30%","b-off"],body:"#0e0f14",mid:"#cfcfd8",accent:"#c6ff00"}
+];
+const grid=document.getElementById('productGrid');
+products.forEach(p=>{
+  const card=document.createElement('article');
+  card.className='card';
+  card.innerHTML=`
+    <div class="card-media">
+      <span class="badge ${p.badge[1]}">${p.badge[0]}</span>
+      ${sneakerSVG(p.body,p.mid,p.accent)}
+    </div>
+    <div class="card-body">
+      <span class="brand">${p.brand}</span>
+      <span class="name">${p.name}</span>
+      <div class="card-foot">
+        <span class="price">${p.old?`<s>$${p.old}</s>`:''}$${p.price}</span>
+        <button class="add-btn" aria-label="Add ${p.name} to cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+    </div>`;
+  card.querySelector('.add-btn').addEventListener('click',function(){addToCart(p.name,this);});
+  grid.appendChild(card);
+});
+
+/* ===== BRAND MARQUEE ===== */
+const brands=["NIKR","ADIDOS","PUNA","NUW BALANCE","ASICX","VONS","REBOK","CONVRSE","JORDN","SAUCONI"];
+const mq=document.getElementById('marquee');
+let html='';
+for(let i=0;i<2;i++){
+  brands.forEach(b=>{html+=`<span>${b}<i class="sep" aria-hidden="true"></i></span>`;});
+}
+mq.innerHTML=html;
+</script>
+</body>
+</html>

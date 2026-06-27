@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stacks — The notes app that thinks in blocks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7f9;
+    --card:#ffffff;
+    --ink:#0e1116;
+    --ink-2:#3b4252;
+    --ink-3:#7a8290;
+    --line:#e7e9ee;
+    --accent:#4f46e5;
+    --accent-2:#7c6cf6;
+    --accent-soft:#eef0fe;
+    --radius:24px;
+    --shadow:0 1px 2px rgba(16,20,32,.04), 0 8px 24px rgba(16,20,32,.06);
+    --shadow-hov:0 2px 4px rgba(16,20,32,.05), 0 16px 40px rgba(79,70,229,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3,h4{letter-spacing:-.02em;line-height:1.1}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  :focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:8px}
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:60;background:rgba(246,247,249,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:20px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+  .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center}
+  .nav-links{display:flex;align-items:center;gap:4px}
+  .nav-links a{padding:8px 14px;border-radius:10px;font-weight:500;color:var(--ink-2);font-size:15px;transition:.15s}
+  .nav-links a:hover{background:#eceef2;color:var(--ink)}
+  .nav-cta{display:flex;align-items:center;gap:10px}
+  .btn{font-family:inherit;font-weight:600;font-size:15px;cursor:pointer;border:none;border-radius:12px;padding:11px 20px;transition:.18s;display:inline-flex;align-items:center;gap:8px}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+  .btn-primary:hover{background:#4338ca;transform:translateY(-1px)}
+  .btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .btn-ghost:hover{border-color:#cfd3db}
+  .menu-btn{display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;width:44px;height:44px;cursor:pointer}
+  .menu-btn span{display:block;width:20px;height:2px;background:var(--ink);margin:4px auto;border-radius:2px}
+
+  /* HERO */
+  .hero{padding:74px 0 44px;text-align:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:6px 14px;border-radius:30px;font-size:13.5px;font-weight:600;color:var(--ink-2);box-shadow:var(--shadow);margin-bottom:24px}
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:#16a34a}
+  .hero h1{font-size:clamp(38px,6vw,68px);font-weight:800;max-width:14ch;margin:0 auto}
+  .hero h1 .grad{background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:clamp(17px,2.2vw,21px);color:var(--ink-3);max-width:40ch;margin:22px auto 30px}
+  .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .hero-meta{margin-top:18px;font-size:14px;color:var(--ink-3);font-weight:500}
+
+  /* BENTO */
+  section{padding:50px 0}
+  .sec-head{max-width:46ch;margin-bottom:36px}
+  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+  .sec-head h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-top:12px}
+  .sec-head p{color:var(--ink-3);font-size:18px;margin-top:12px}
+
+  .bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(150px,auto);gap:16px}
+  .cell{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);transition:.2s;position:relative;overflow:hidden;display:flex;flex-direction:column}
+  .cell:hover{box-shadow:var(--shadow-hov);transform:translateY(-3px);border-color:#dcdfe6}
+  .cell h3{font-size:19px;font-weight:700;margin-bottom:8px}
+  .cell p{color:var(--ink-3);font-size:15px}
+  .cell .chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:20px;align-self:flex-start;margin-bottom:14px}
+  .span2{grid-column:span 2}
+  .row2{grid-row:span 2}
+  .ico{width:46px;height:46px;border-radius:13px;background:var(--accent-soft);display:grid;place-items:center;margin-bottom:16px}
+  .ico svg{stroke:var(--accent)}
+
+  .cell.hero-cell{background:linear-gradient(150deg,#4f46e5,#7c6cf6);color:#fff;border:none}
+  .cell.hero-cell h3{color:#fff;font-size:24px}
+  .cell.hero-cell p{color:rgba(255,255,255,.86)}
+  .cell.dark{background:#10131b;border-color:#10131b;color:#fff}
+  .cell.dark h3{color:#fff}.cell.dark p{color:#9aa3b2}
+
+  /* editor mock */
+  .editor{margin-top:auto;background:#fbfbfd;border:1px solid var(--line);border-radius:14px;padding:14px;font-size:13px}
+  .e-line{display:flex;align-items:center;gap:9px;padding:6px 4px;color:var(--ink-2)}
+  .e-line .gr{width:6px;height:18px;border-radius:3px}
+  .e-bar{height:9px;border-radius:5px;background:#e9ebf1}
+  .e-check{width:16px;height:16px;border-radius:5px;border:2px solid var(--accent);display:grid;place-items:center;flex:0 0 auto}
+  .e-check.done{background:var(--accent)}
+
+  /* kanban mini in dark cell */
+  .kan{display:flex;gap:8px;margin-top:auto}
+  .kan .col{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;display:grid;gap:6px}
+  .kan .t{height:22px;border-radius:6px;background:rgba(255,255,255,.1)}
+  .kan .t.a{background:linear-gradient(90deg,#7c6cf6,#a78bfa)}
+  .kan .t.b{background:linear-gradient(90deg,#22c55e,#4ade80)}
+
+  /* stat */
+  .bignum{font-size:46px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:auto}
+
+  /* INTEGRATIONS */
+  .integ{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+  .integ .pill{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 20px;box-shadow:var(--shadow);font-weight:600;font-size:15px;transition:.18s}
+  .integ .pill:hover{transform:translateY(-2px);box-shadow:var(--shadow-hov)}
+  .integ .pill .sq{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
+
+  /* PRICING */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .plan.feat{border:2px solid var(--accent);box-shadow:0 18px 50px rgba(79,70,229,.16);position:relative}
+  .plan.feat .tag{position:absolute;top:-13px;left:32px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:5px 13px;border-radius:20px}
+  .plan h3{font-size:20px;font-weight:700}
+  .plan .pr{font-size:44px;font-weight:800;letter-spacing:-.03em;margin:12px 0 2px}
+  .plan .pr small{font-size:16px;font-weight:600;color:var(--ink-3)}
+  .plan .sub{color:var(--ink-3);font-size:14.5px;margin-bottom:22px}
+  .plan ul{list-style:none;display:grid;gap:12px;margin-bottom:26px}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--ink-2)}
+  .plan li svg{flex:0 0 auto;margin-top:3px}
+  .plan .btn{width:100%;justify-content:center;margin-top:auto}
+
+  /* CTA */
+  .cta{padding:60px 0 50px}
+  .cta-box{background:linear-gradient(150deg,#10131b,#1d2233);border-radius:32px;padding:60px 40px;text-align:center;position:relative;overflow:hidden}
+  .cta-box::before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(124,108,246,.4),transparent 70%);top:-120px;right:-60px}
+  .cta-box h2{color:#fff;font-size:clamp(28px,4vw,44px);font-weight:800;position:relative}
+  .cta-box p{color:#aab2c2;font-size:18px;max-width:44ch;margin:16px auto 28px;position:relative}
+  .cta-box .btn-light{background:#fff;color:var(--ink);position:relative}
+  .cta-box .btn-light:hover{transform:translateY(-1px);background:#f1f1f4}
+
+  /* FOOTER */
+  footer{padding:54px 0 34px;border-top:1px solid var(--line)}
+  .foot-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:30px}
+  footer h4{font-size:14px;font-weight:700;margin-bottom:14px}
+  footer .col a{display:block;color:var(--ink-3);font-size:14.5px;padding:5px 0}
+  footer .col a:hover{color:var(--ink)}
+  footer .desc{color:var(--ink-3);font-size:14.5px;margin-top:12px;max-width:28ch}
+  .foot-bottom{margin-top:36px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--ink-3);font-size:14px}
+
+  @media(max-width:960px){
+    .bento{grid-template-columns:repeat(2,1fr)}
+    .span2{grid-column:span 2}.row2{grid-row:auto}
+    .price-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:720px){
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:68px;left:16px;right:16px;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow-hov)}
+    .menu-btn{display:block}
+    .nav-cta .btn-ghost{display:none}
+    .bento{grid-template-columns:1fr}
+    .span2{grid-column:auto}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:460px){.foot-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#" aria-label="Stacks home">
+      <span class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4-8 4-8-4 8-4z" fill="#fff"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      Stacks
+    </a>
+    <nav class="nav-links" id="navlinks" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Changelog</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="#">Sign in</a>
+      <a class="btn btn-primary" href="#pricing">Get Stacks free</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <span class="badge"><span class="dot"></span> New: AI block suggestions are live</span>
+    <h1>Your notes, finally <span class="grad">organized in blocks</span></h1>
+    <p>Stacks is the modular workspace for notes, tasks and docs. Drag, drop and connect everything — one calm home for your thinking.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#pricing">Start for free</a>
+      <a class="btn btn-ghost" href="#features">Take the tour</a>
+    </div>
+    <p class="hero-meta">Free forever for individuals · No credit card · Works on every device</p>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">Everything in one canvas</span>
+      <h2>One grid for every kind of thinking</h2>
+      <p>Mix notes, tasks, databases and embeds in a single flexible layout that bends to your brain.</p>
+    </div>
+
+    <div class="bento">
+      <article class="cell span2 row2 hero-cell">
+        <span class="chip" style="background:rgba(255,255,255,.18);color:#fff">Block editor</span>
+        <h3>Write the way you think</h3>
+        <p>Headings, to-dos, toggles, tables and embeds — every paragraph is a block you can drag anywhere.</p>
+        <div class="editor" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)">
+          <div class="e-line"><span class="gr" style="background:#fff"></span><span class="e-bar" style="width:62%;background:rgba(255,255,255,.35)"></span></div>
+          <div class="e-line"><span class="e-check done"><svg width="10" height="10" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="e-bar" style="width:48%;background:rgba(255,255,255,.3)"></span></div>
+          <div class="e-line"><span class="e-check"></span><span class="e-bar" style="width:70%;background:rgba(255,255,255,.3)"></span></div>
+          <div class="e-line"><span class="e-check"></span><span class="e-bar" style="width:40%;background:rgba(255,255,255,.3)"></span></div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7" stroke-linecap="round"/></svg></div>
+        <h3>Instant capture</h3>
+        <p>Hit Ctrl + K anywhere to jot an idea before it escapes.</p>
+      </article>
+
+      <article class="cell">
+        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg></div>
+        <h3>Search that reads</h3>
+        <p>Find anything by meaning, not just keywords.</p>
+      </article>
+
+      <article class="cell dark span2">
+        <span class="chip" style="background:rgba(124,108,246,.18);color:#a78bfa">Boards</span>
+        <h3>Turn any list into a board</h3>
+        <p style="margin-bottom:14px">Switch a page to kanban, calendar or timeline in one click.</p>
+        <div class="kan">
+          <div class="col"><div class="t a"></div><div class="t"></div><div class="t"></div></div>
+          <div class="col"><div class="t"></div><div class="t b"></div></div>
+          <div class="col"><div class="t"></div><div class="t"></div><div class="t a"></div></div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <span class="chip">AI</span>
+        <h3>Draft &amp; summarize</h3>
+        <p>Ask Stacks to outline, rewrite or shorten — right inside the page.</p>
+      </article>
+
+      <article class="cell">
+        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="10" cy="7" r="4"/><path d="M21 21v-2a4 4 0 0 0-3-3.87" stroke-linecap="round"/></svg></div>
+        <h3>Real-time teamwork</h3>
+        <p>See cursors, leave comments, share a page in a tap.</p>
+      </article>
+
+      <article class="cell">
+        <p style="font-weight:600;color:var(--ink-2)">Pages synced offline &amp; back online — never lose a thought.</p>
+        <span class="bignum">99.99%</span>
+      </article>
+
+      <article class="cell">
+        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18" stroke-linecap="round"/></svg></div>
+        <h3>Templates</h3>
+        <p>200+ starting points for plans, journals and wikis.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="integrations">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">Plays well with others</span>
+      <h2>Connect the tools you already use</h2>
+      <p>Pull in events, files and conversations so your workspace stays the single source of truth.</p>
+    </div>
+    <div class="integ">
+      <span class="pill"><span class="sq" style="background:#4285f4">G</span>Google Drive</span>
+      <span class="pill"><span class="sq" style="background:#611f69">S</span>Slack</span>
+      <span class="pill"><span class="sq" style="background:#0061ff">D</span>Dropbox</span>
+      <span class="pill"><span class="sq" style="background:#5865f2">D</span>Discord</span>
+      <span class="pill"><span class="sq" style="background:#24292f">Gh</span>GitHub</span>
+      <span class="pill"><span class="sq" style="background:#0f9d58">C</span>Calendar</span>
+      <span class="pill"><span class="sq" style="background:#fc6d26">Gl</span>GitLab</span>
+      <span class="pill"><span class="sq" style="background:#635bff">St</span>Stripe</span>
+      <span class="pill"><span class="sq" style="background:#1a73e8">Fg</span>Figma</span>
+      <span class="pill"><span class="sq" style="background:#0acf83">Zp</span>Zapier</span>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">Pricing</span>
+      <h2>Start free, scale when you're ready</h2>
+      <p>Simple plans with no per-block fees and no surprises. Cancel anytime.</p>
+    </div>
+    <div class="price-grid">
+      <div class="plan">
+        <h3>Personal</h3>
+        <div class="pr">$0<small> /forever</small></div>
+        <p class="sub">For individuals organizing their own world.</p>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited blocks &amp; pages</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync across all devices</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>50 AI actions / month</li>
+        </ul>
+        <a class="btn btn-ghost" href="#">Get started</a>
+      </div>
+      <div class="plan feat">
+        <span class="tag">Most popular</span>
+        <h3>Pro</h3>
+        <div class="pr">$8<small> /mo</small></div>
+        <p class="sub">For power users who live in their workspace.</p>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Personal</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited AI actions</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Version history &amp; page locking</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>All integrations</li>
+        </ul>
+        <a class="btn btn-primary" href="#">Start 14-day trial</a>
+      </div>
+      <div class="plan">
+        <h3>Team</h3>
+        <div class="pr">$14<small> /user</small></div>
+        <p class="sub">For teams building a shared brain.</p>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Pro</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Shared team spaces</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4f46e5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Admin controls &amp; SSO</li>
+        </ul>
+        <a class="btn btn-ghost" href="#">Contact sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="cta-box">
+      <h2>Give your thoughts a home</h2>
+      <p>Join 1.2 million people who turned scattered notes into one organized, searchable workspace.</p>
+      <a class="btn btn-light" href="#pricing">Get Stacks free</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#" aria-label="Stacks home">
+          <span class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4-8 4-8-4 8-4z" fill="#fff"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Stacks
+        </a>
+        <p class="desc">The modular workspace for notes, tasks and docs. One calm home for everything you think.</p>
+      </div>
+      <div class="col"><h4>Product</h4><a href="#features">Features</a><a href="#integrations">Integrations</a><a href="#pricing">Pricing</a><a href="#">Download</a></div>
+      <div class="col"><h4>Resources</h4><a href="#">Help center</a><a href="#">Templates</a><a href="#">API docs</a><a href="#">Community</a></div>
+      <div class="col"><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Blog</a><a href="#">Privacy</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Stacks Labs, Inc. All rights reserved.</span>
+      <span>Made for people who think in blocks.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var mb=document.getElementById('menuBtn'),nl=document.getElementById('navlinks');
+  mb.addEventListener('click',function(){var o=nl.classList.toggle('open');mb.setAttribute('aria-expanded',o);});
+  nl.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nl.classList.remove('open');mb.setAttribute('aria-expanded',false);});});
+</script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NEONRIFT // Cyber Arena — Competitive Sci-Fi Shooter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#05060c;
+    --bg2:#0a0d1a;
+    --panel:#0c1120;
+    --cyan:#00f0ff;
+    --magenta:#ff2bd6;
+    --yellow:#f5ff3d;
+    --line:rgba(0,240,255,.22);
+    --line-mag:rgba(255,43,214,.28);
+    --text:#dbe7ff;
+    --muted:#7e8bb5;
+    --display:'Orbitron',sans-serif;
+    --mono:'Share Tech Mono',monospace;
+    --ui:'Rajdhani',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--ui);
+    font-size:17px;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* scanlines + grid overlay */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+    background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.16) 3px,rgba(0,0,0,0) 4px);
+    mix-blend-mode:overlay;opacity:.5;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  ::selection{background:var(--magenta);color:#06070d}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono);letter-spacing:.06em}
+  .tag{
+    font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--cyan);display:inline-flex;align-items:center;gap:10px;
+  }
+  .tag::before{content:"";width:26px;height:1px;background:var(--cyan);display:inline-block}
+
+  .clip{clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+  .clip-sm{clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+
+  /* ---------- NAV ---------- */
+  header{position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);
+    background:linear-gradient(180deg,rgba(5,6,12,.92),rgba(5,6,12,.6));
+    border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:900;
+    letter-spacing:.18em;font-size:19px}
+  .brand .mark{width:34px;height:34px}
+  .navlinks{display:flex;gap:30px;align-items:center}
+  .navlinks a{font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:.2s;position:relative}
+  .navlinks a:hover{color:var(--cyan)}
+  .navlinks a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--cyan);transition:.25s}
+  .navlinks a:hover::after{width:100%}
+  .btn{
+    font-family:var(--ui);font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:14px;padding:12px 22px;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:9px;
+    background:var(--cyan);color:#03070d;transition:.2s;
+    clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  }
+  .btn:hover{background:#fff;box-shadow:0 0 24px rgba(0,240,255,.55)}
+  .btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+  .btn-ghost:hover{background:rgba(0,240,255,.12);color:#fff;box-shadow:0 0 24px rgba(0,240,255,.25)}
+  .btn-mag{background:var(--magenta);color:#fff}
+  .btn-mag:hover{background:#fff;color:var(--magenta);box-shadow:0 0 26px rgba(255,43,214,.55)}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);width:44px;height:44px;cursor:pointer;color:var(--cyan)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:72px 0 90px;overflow:hidden}
+  .hero-grid{
+    position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(900px 500px at 78% 18%,rgba(255,43,214,.18),transparent 60%),
+      radial-gradient(900px 600px at 14% 88%,rgba(0,240,255,.16),transparent 60%),
+      var(--bg);
+  }
+  .hero-grid::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 35%,#000 30%,transparent 80%);
+            mask-image:radial-gradient(ellipse 80% 70% at 50% 35%,#000 30%,transparent 80%);
+  }
+  .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .glitch{font-family:var(--display);font-weight:900;line-height:.92;letter-spacing:.01em;
+    font-size:clamp(46px,7vw,92px);text-transform:uppercase;position:relative;margin:18px 0 14px}
+  .glitch .ln2{color:var(--cyan);text-shadow:0 0 26px rgba(0,240,255,.5)}
+  .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;pointer-events:none}
+  .glitch::before{color:var(--magenta);transform:translate(-3px,1px);mix-blend-mode:screen;opacity:.55;animation:glx 4s infinite steps(2)}
+  .glitch::after{color:var(--cyan);transform:translate(3px,-1px);mix-blend-mode:screen;opacity:.4;animation:glx 5.5s infinite reverse steps(2)}
+  @keyframes glx{0%,92%,100%{clip-path:inset(0 0 100% 0)}93%{clip-path:inset(8% 0 70% 0)}95%{clip-path:inset(50% 0 20% 0)}97%{clip-path:inset(20% 0 55% 0)}}
+  @media(prefers-reduced-motion:reduce){.glitch::before,.glitch::after{animation:none;opacity:0}}
+  .hero p.lead{color:#b6c4ef;max-width:520px;font-size:18px;margin-bottom:26px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .hero-stats{display:flex;gap:30px;margin-top:38px;flex-wrap:wrap}
+  .hero-stats .s b{font-family:var(--display);font-size:26px;color:#fff;display:block;line-height:1}
+  .hero-stats .s span{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+
+  /* hero key-art (pure CSS/SVG) */
+  .keyart{position:relative;aspect-ratio:1/1.06;width:100%}
+  .hud-frame{position:absolute;inset:0}
+  .corner{position:absolute;width:38px;height:38px;border:2px solid var(--cyan);opacity:.85}
+  .corner.tl{top:0;left:0;border-right:none;border-bottom:none}
+  .corner.tr{top:0;right:0;border-left:none;border-bottom:none;border-color:var(--magenta)}
+  .corner.bl{bottom:0;left:0;border-right:none;border-top:none;border-color:var(--magenta)}
+  .corner.br{bottom:0;right:0;border-left:none;border-top:none}
+  .readout{position:absolute;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--cyan);text-shadow:0 0 8px rgba(0,240,255,.6)}
+  .readout.a{top:14px;left:50px}
+  .readout.b{bottom:16px;right:50px;color:var(--magenta);text-shadow:0 0 8px rgba(255,43,214,.6)}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{position:relative;padding:96px 0}
+  .head{max-width:680px;margin-bottom:54px}
+  .head h2{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+    font-size:clamp(30px,4.2vw,46px);line-height:1.04;margin:16px 0 14px}
+  .head h2 em{font-style:normal;color:var(--magenta)}
+  .head p{color:var(--muted);font-size:17px}
+
+  /* features */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feat{background:linear-gradient(160deg,var(--panel),#070a15);border:1px solid var(--line);
+    padding:30px 26px;position:relative;transition:.25s}
+  .feat:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,240,255,.12)}
+  .feat .ic{width:52px;height:52px;margin-bottom:20px}
+  .feat h3{font-family:var(--display);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+  .feat p{color:var(--muted);font-size:15.5px}
+  .feat .idx{position:absolute;top:18px;right:20px;font-family:var(--mono);font-size:12px;color:var(--magenta);letter-spacing:.1em}
+
+  /* characters */
+  .char-sec{background:linear-gradient(180deg,#06070f,#080b18)}
+  .char-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .char{position:relative;border:1px solid var(--line);overflow:hidden;cursor:pointer;
+    background:#080b16;aspect-ratio:3/4.2;transition:.25s}
+  .char:hover{border-color:var(--magenta);box-shadow:0 0 0 1px var(--magenta),0 20px 50px rgba(255,43,214,.18)}
+  .char svg{position:absolute;inset:0;width:100%;height:100%}
+  .char .meta{position:absolute;left:0;right:0;bottom:0;padding:16px;z-index:3;
+    background:linear-gradient(180deg,transparent,rgba(4,5,11,.94))}
+  .char .role{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+  .char h4{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.04em;margin-top:4px}
+  .char .bar{height:4px;background:rgba(255,255,255,.12);margin-top:12px;position:relative}
+  .char .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cyan),var(--magenta))}
+
+  /* specs */
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:46px;align-items:center}
+  .spec-card{background:var(--panel);border:1px solid var(--line);padding:8px}
+  .spec-row{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}
+  .spec-row:last-child{border-bottom:none}
+  .spec-row .k{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .spec-row .v{font-weight:700;font-size:16px;color:#fff;text-align:right}
+  .spec-tabs{display:flex;gap:8px;margin-bottom:18px}
+  .spec-tab{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    padding:9px 16px;border:1px solid var(--line);color:var(--muted)}
+  .spec-tab.on{color:#03070d;background:var(--cyan);border-color:var(--cyan)}
+
+  /* CTA */
+  .cta-sec{position:relative;overflow:hidden}
+  .cta-box{position:relative;border:1px solid var(--line-mag);padding:64px 48px;text-align:center;
+    background:radial-gradient(700px 360px at 50% 0,rgba(255,43,214,.18),transparent 65%),linear-gradient(180deg,#0b0f1f,#070912)}
+  .cta-box h2{font-family:var(--display);font-weight:900;text-transform:uppercase;letter-spacing:.03em;
+    font-size:clamp(32px,5vw,58px);line-height:1;margin-bottom:16px}
+  .cta-box h2 .c{color:var(--cyan)}
+  .cta-box p{color:#b6c4ef;max-width:520px;margin:0 auto 30px}
+  .countdown{display:flex;gap:14px;justify-content:center;margin:28px 0 8px;flex-wrap:wrap}
+  .cd{min-width:78px;background:#070a16;border:1px solid var(--line);padding:14px 8px}
+  .cd b{font-family:var(--display);font-size:30px;color:#fff;display:block;line-height:1}
+  .cd span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);background:#04050b;padding:64px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px}
+  .foot-grid h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+  .foot-grid a{display:block;color:var(--muted);font-size:15px;padding:5px 0;transition:.2s}
+  .foot-grid a:hover{color:#fff}
+  .foot-grid p{color:var(--muted);font-size:15px;max-width:280px;margin-top:14px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:46px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap;gap:14px}
+  .foot-bottom span{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.08em}
+  .socials{display:flex;gap:12px}
+  .socials a{width:38px;height:38px;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);transition:.2s}
+  .socials a:hover{color:var(--cyan);border-color:var(--cyan)}
+
+  @media(max-width:920px){
+    .hero-inner{grid-template-columns:1fr;gap:30px}
+    .keyart{max-width:420px;margin:0 auto}
+    .feat-grid{grid-template-columns:1fr}
+    .char-grid{grid-template-columns:repeat(2,1fr)}
+    .specs{grid-template-columns:1fr;gap:30px}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .navlinks{display:none}
+    .navlinks.open{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;gap:0;
+      background:#070a14;border-bottom:1px solid var(--line);padding:10px 24px 18px}
+    .navlinks.open a{padding:13px 0;border-bottom:1px solid var(--line)}
+    .menu-btn{display:grid;place-items:center}
+    .nav-cta{display:none}
+  }
+  @media(max-width:520px){
+    .char-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top" aria-label="NEONRIFT home">
+        <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+          <defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient></defs>
+          <path d="M20 2 4 11v18l16 9 16-9V11L20 2z" fill="none" stroke="url(#bm)" stroke-width="2"/>
+          <path d="M13 25V14l7 5 7-5v11" fill="none" stroke="url(#bm)" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+        NEONRIFT
+      </a>
+      <div class="navlinks" id="nav">
+        <a href="#features">Arena</a>
+        <a href="#agents">Agents</a>
+        <a href="#specs">Specs</a>
+        <a href="#preorder">Pre-Order</a>
+      </div>
+      <a href="#preorder" class="btn nav-cta">Deploy Now</a>
+      <button class="menu-btn" id="mbtn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="wrap hero-inner">
+      <div>
+        <span class="tag">Season 04 // Operation Blackout</span>
+        <h1 class="glitch" data-text="ENTER THE">ENTER THE<br /><span class="ln2">NEONRIFT</span></h1>
+        <p class="lead">A 5v5 tactical sci-fi shooter built for the competitive edge. Sub-tick netcode, signature abilities, and a ranked ladder forged in chrome. The grid is open. Take it.</p>
+        <div class="hero-cta">
+          <a href="#preorder" class="btn btn-mag">Pre-Order Vanguard</a>
+          <a href="#features" class="btn btn-ghost">Watch Trailer
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M3 2l9 5-9 5z"/></svg>
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="s"><b>4.2M</b><span>Operators Online</span></div>
+          <div class="s"><b>120<sub style="font-size:14px">Hz</sub></b><span>Server Tickrate</span></div>
+          <div class="s"><b>16</b><span>Playable Agents</span></div>
+        </div>
+      </div>
+
+      <!-- KEY ART -->
+      <div class="keyart clip">
+        <svg viewBox="0 0 460 488" preserveAspectRatio="xMidYMid slice" aria-label="NEONRIFT cyber operator key art">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#10071f"/><stop offset=".55" stop-color="#1a0930"/><stop offset="1" stop-color="#050410"/>
+            </linearGradient>
+            <linearGradient id="suit" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0c1830"/><stop offset="1" stop-color="#05080f"/>
+            </linearGradient>
+            <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#ff2bd6"/>
+            </linearGradient>
+            <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+              <stop offset="0" stop-color="#ff2bd6" stop-opacity=".55"/><stop offset="1" stop-color="#ff2bd6" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="b1"><feGaussianBlur stdDeviation="3.2"/></filter>
+          </defs>
+          <rect width="460" height="488" fill="url(#sky)"/>
+          <circle cx="270" cy="190" r="150" fill="url(#glow)"/>
+          <!-- city silhouette -->
+          <g fill="#0a0820">
+            <rect x="20" y="300" width="34" height="188"/><rect x="60" y="250" width="26" height="238"/>
+            <rect x="92" y="320" width="40" height="168"/><rect x="138" y="270" width="22" height="218"/>
+            <rect x="320" y="290" width="30" height="198"/><rect x="356" y="240" width="44" height="248"/>
+            <rect x="406" y="310" width="28" height="178"/>
+          </g>
+          <g stroke="#00f0ff" stroke-width="1" opacity=".5">
+            <line x1="68" y1="270" x2="68" y2="488"/><line x1="372" y1="262" x2="372" y2="488"/>
+          </g>
+          <!-- moon ring -->
+          <circle cx="300" cy="150" r="62" fill="none" stroke="#ff2bd6" stroke-width="2" opacity=".7"/>
+          <circle cx="300" cy="150" r="78" fill="none" stroke="#00f0ff" stroke-width="1" opacity=".4" stroke-dasharray="4 8"/>
+          <!-- operator -->
+          <g>
+            <!-- shoulders/torso -->
+            <path d="M155 488 V330 q0-46 75-58 q75 12 75 58 V488 Z" fill="url(#suit)" stroke="url(#neon)" stroke-width="2"/>
+            <!-- chest light -->
+            <path d="M230 360 l30 22 -30 22 -30-22 Z" fill="none" stroke="#00f0ff" stroke-width="2"/>
+            <circle cx="230" cy="382" r="6" fill="#00f0ff" filter="url(#b1)"/>
+            <!-- neck -->
+            <rect x="214" y="296" width="32" height="40" rx="6" fill="#0c1830" stroke="url(#neon)" stroke-width="1.5"/>
+            <!-- helmet -->
+            <path d="M230 200 q44 0 46 56 q2 40 -22 56 q-24 14 -48 0 q-24-16 -22-56 q2-56 46-56Z" fill="url(#suit)" stroke="url(#neon)" stroke-width="2.4"/>
+            <!-- visor -->
+            <path d="M204 250 q26-14 52 0 l-6 30 q-20 10 -40 0 Z" fill="#04141c"/>
+            <path d="M210 254 q20-9 40 0" fill="none" stroke="#00f0ff" stroke-width="3" stroke-linecap="round"/>
+            <path d="M212 268 q18-7 36 0" fill="none" stroke="#ff2bd6" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+            <!-- helmet detail lines -->
+            <path d="M230 200 v22 M198 256 h-10 M262 256 h10" stroke="#00f0ff" stroke-width="1.5"/>
+            <!-- shoulder pads -->
+            <path d="M150 348 q-22 6 -22 40 l30 6 V348Z" fill="#0c1830" stroke="#ff2bd6" stroke-width="1.6"/>
+            <path d="M310 348 q22 6 22 40 l-30 6 V348Z" fill="#0c1830" stroke="#00f0ff" stroke-width="1.6"/>
+          </g>
+          <!-- HUD ticks -->
+          <g stroke="#00f0ff" stroke-width="1.4" opacity=".8">
+            <path d="M40 40 h26 M40 40 v26"/><path d="M420 448 h-26 M420 448 v-26"/>
+          </g>
+          <text x="44" y="70" fill="#00f0ff" font-family="'Share Tech Mono',monospace" font-size="11" letter-spacing="2">SYS//ONLINE</text>
+          <text x="300" y="466" fill="#ff2bd6" font-family="'Share Tech Mono',monospace" font-size="11" letter-spacing="2" text-anchor="end">RIFT_07</text>
+        </svg>
+        <div class="hud-frame">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <span class="readout a">// TARGET LOCK</span>
+          <span class="readout b">AMMO ∞ // CHRG 98%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="head">
+        <span class="tag">Combat Systems</span>
+        <h2>Engineered for the <em>top 0.1%</em></h2>
+        <p>Every system is tuned for high-skill expression. No filler — just the mechanics that decide rounds.</p>
+      </div>
+      <div class="feat-grid">
+        <article class="feat clip-sm">
+          <span class="idx">01</span>
+          <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M24 4l16 9v11c0 11-7 17-16 20-9-3-16-9-16-20V13z"/><path d="M16 24l6 6 10-12"/></svg>
+          <h3>Sub-Tick Netcode</h3>
+          <p>Hit registration resolved on the exact millisecond you fire. 120Hz servers across nine global regions, zero peeker's advantage.</p>
+        </article>
+        <article class="feat clip-sm">
+          <span class="idx">02</span>
+          <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="#ff2bd6" stroke-width="2"><circle cx="24" cy="24" r="6"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8M10 10l6 6M32 32l6 6M38 10l-6 6M16 32l-6 6"/></svg>
+          <h3>Signature Abilities</h3>
+          <p>Sixteen agents, each with a kit that rewards timing over spam. Charge meters, line-of-sight, and counterplay built into every cast.</p>
+        </article>
+        <article class="feat clip-sm">
+          <span class="idx">03</span>
+          <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M8 40V8h32v32z"/><path d="M8 26l8-8 6 6 10-12 8 8"/></svg>
+          <h3>Ranked Ladder</h3>
+          <p>Eight tiers of competitive grind with transparent MMR. Climb solo or stack, and watch your placement update live every match.</p>
+        </article>
+        <article class="feat clip-sm">
+          <span class="idx">04</span>
+          <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="#ff2bd6" stroke-width="2"><rect x="6" y="14" width="36" height="22" rx="3"/><path d="M14 14V9h20v5M16 24h4M28 24h4M20 30h8"/></svg>
+          <h3>Loadout Forge</h3>
+          <p>Build weapon trees, attachment paths, and ability variants. Save five presets and hot-swap them between rounds in the buy phase.</p>
+        </article>
+        <article class="feat clip-sm">
+          <span class="idx">05</span>
+          <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="#00f0ff" stroke-width="2"><circle cx="24" cy="24" r="18"/><path d="M24 6v12l8 8"/></svg>
+          <h3>Replay Theater</h3>
+          <p>Full match rewind with free-cam, kill-feed scrubbing, and frame export. Study every clutch and build VOD reviews in seconds.</p>
+        </article>
+        <article class="feat clip-sm">
+          <span class="idx">06</span>
+          <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="#ff2bd6" stroke-width="2"><path d="M24 4l6 14 15 1-11 10 4 15-14-8-14 8 4-15-11-10 15-1z"/></svg>
+          <h3>Tournament Mode</h3>
+          <p>Built-in brackets, lobby spectating, and an observer overlay used by the pros. Run a 64-team open cup straight from the client.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENTS -->
+  <section id="agents" class="char-sec">
+    <div class="wrap">
+      <div class="head">
+        <span class="tag">Roster // S04</span>
+        <h2>Choose your <em>agent</em></h2>
+        <p>Four archetypes, sixteen specialists. Each role bends the round in a different direction.</p>
+      </div>
+      <div class="char-grid">
+        <!-- VOLT -->
+        <article class="char">
+          <svg viewBox="0 0 220 308" preserveAspectRatio="xMidYMid slice" aria-label="Agent Volt, Duelist">
+            <defs><linearGradient id="c1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#04263a"/><stop offset="1" stop-color="#070a16"/></linearGradient></defs>
+            <rect width="220" height="308" fill="url(#c1)"/>
+            <circle cx="120" cy="120" r="92" fill="#00f0ff" opacity=".14"/>
+            <path d="M70 308V190q0-34 50-44 50 10 50 44v118Z" fill="#0a1426" stroke="#00f0ff" stroke-width="2"/>
+            <path d="M120 96q30 0 32 40q1 28-16 40-16 10-32 0-17-12-16-40 2-40 32-40Z" fill="#0c1830" stroke="#00f0ff" stroke-width="2.2"/>
+            <path d="M100 132q20-9 40 0l-5 22q-15 8-30 0Z" fill="#021018"/>
+            <path d="M105 136q15-6 30 0" fill="none" stroke="#00f0ff" stroke-width="3" stroke-linecap="round"/>
+            <path d="M88 92l-14 7 14 4Z" fill="#00f0ff"/>
+          </svg>
+          <div class="meta">
+            <span class="role">Duelist</span>
+            <h4>Volt</h4>
+            <div class="bar"><i style="width:88%"></i></div>
+          </div>
+        </article>
+        <!-- HEX -->
+        <article class="char">
+          <svg viewBox="0 0 220 308" preserveAspectRatio="xMidYMid slice" aria-label="Agent Hex, Controller">
+            <defs><linearGradient id="c2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c0734"/><stop offset="1" stop-color="#0a0716"/></linearGradient></defs>
+            <rect width="220" height="308" fill="url(#c2)"/>
+            <circle cx="110" cy="120" r="92" fill="#ff2bd6" opacity=".15"/>
+            <path d="M68 308V188q0-34 52-44 52 10 52 44v120Z" fill="#150a22" stroke="#ff2bd6" stroke-width="2"/>
+            <path d="M120 94q32 0 34 42q1 30-18 42-16 10-32 0-19-12-18-42 2-42 34-42Z" fill="#1a0c2a" stroke="#ff2bd6" stroke-width="2.2"/>
+            <path d="M100 130h40l-6 24h-28Z" fill="#0a0414"/>
+            <path d="M104 138h32" stroke="#ff2bd6" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="120" cy="70" r="6" fill="#ff2bd6"/>
+          </svg>
+          <div class="meta">
+            <span class="role">Controller</span>
+            <h4>Hex</h4>
+            <div class="bar"><i style="width:72%"></i></div>
+          </div>
+        </article>
+        <!-- WARD -->
+        <article class="char">
+          <svg viewBox="0 0 220 308" preserveAspectRatio="xMidYMid slice" aria-label="Agent Ward, Sentinel">
+            <defs><linearGradient id="c3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#073338"/><stop offset="1" stop-color="#06121a"/></linearGradient></defs>
+            <rect width="220" height="308" fill="url(#c3)"/>
+            <circle cx="115" cy="118" r="92" fill="#1cf5c8" opacity=".14"/>
+            <path d="M68 308V188q0-34 52-44 52 10 52 44v120Z" fill="#08221f" stroke="#1cf5c8" stroke-width="2"/>
+            <path d="M120 94q32 0 34 42q1 30-18 42-16 10-32 0-19-12-18-42 2-42 34-42Z" fill="#0a2a26" stroke="#1cf5c8" stroke-width="2.2"/>
+            <path d="M104 134l16-8 16 8-4 22h-24Z" fill="#021614"/>
+            <path d="M108 138l24 0" stroke="#1cf5c8" stroke-width="3" stroke-linecap="round"/>
+            <path d="M120 60l10 10-10 10-10-10Z" fill="none" stroke="#1cf5c8" stroke-width="2"/>
+          </svg>
+          <div class="meta">
+            <span class="role">Sentinel</span>
+            <h4>Ward</h4>
+            <div class="bar"><i style="width:64%"></i></div>
+          </div>
+        </article>
+        <!-- ECHO -->
+        <article class="char">
+          <svg viewBox="0 0 220 308" preserveAspectRatio="xMidYMid slice" aria-label="Agent Echo, Initiator">
+            <defs><linearGradient id="c4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#33270a"/><stop offset="1" stop-color="#13100a"/></linearGradient></defs>
+            <rect width="220" height="308" fill="url(#c4)"/>
+            <circle cx="112" cy="118" r="92" fill="#f5ff3d" opacity=".12"/>
+            <path d="M68 308V188q0-34 52-44 52 10 52 44v120Z" fill="#221a08" stroke="#f5ff3d" stroke-width="2"/>
+            <path d="M120 94q32 0 34 42q1 30-18 42-16 10-32 0-19-12-18-42 2-42 34-42Z" fill="#2a210a" stroke="#f5ff3d" stroke-width="2.2"/>
+            <path d="M102 132q18-8 36 0l-5 24h-26Z" fill="#161205"/>
+            <path d="M106 138q14-5 28 0" fill="none" stroke="#f5ff3d" stroke-width="3" stroke-linecap="round"/>
+            <path d="M120 58v18M111 64l9 6 9-6" stroke="#f5ff3d" stroke-width="2" fill="none"/>
+          </svg>
+          <div class="meta">
+            <span class="role">Initiator</span>
+            <h4>Echo</h4>
+            <div class="bar"><i style="width:79%"></i></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section id="specs">
+    <div class="wrap">
+      <div class="head">
+        <span class="tag">Hardware</span>
+        <h2>Runs lean. <em>Hits hard.</em></h2>
+        <p>Optimized for esports. Hit 240+ FPS on mid-range silicon, or push the chrome to ultra.</p>
+      </div>
+      <div class="specs">
+        <div>
+          <div class="spec-tabs">
+            <span class="spec-tab on">Minimum</span>
+            <span class="spec-tab">Recommended</span>
+            <span class="spec-tab">Esports / 240Hz</span>
+          </div>
+          <p style="color:var(--muted);max-width:440px">NEONRIFT ships with a dynamic resolution engine and a dedicated competitive profile that strips post-processing for maximum clarity and frametime stability.</p>
+          <div style="margin-top:24px"><a href="#preorder" class="btn">Check My Rig</a></div>
+        </div>
+        <div class="spec-card clip">
+          <div class="spec-row"><span class="k">OS</span><span class="v">Windows 11 64-bit</span></div>
+          <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 5 5600 / i5-12400</span></div>
+          <div class="spec-row"><span class="k">GPU</span><span class="v">RTX 3060 / RX 6600</span></div>
+          <div class="spec-row"><span class="k">Memory</span><span class="v">16 GB DDR4</span></div>
+          <div class="spec-row"><span class="k">Storage</span><span class="v">60 GB NVMe SSD</span></div>
+          <div class="spec-row"><span class="k">Network</span><span class="v">15 Mbps Broadband</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / PRE-ORDER -->
+  <section id="preorder" class="cta-sec">
+    <div class="wrap">
+      <div class="cta-box clip">
+        <span class="tag" style="justify-content:center;color:var(--magenta)">Founders Access // Limited</span>
+        <h2>Lock in your <span class="c">Vanguard</span> slot</h2>
+        <p>Pre-order before launch and drop in three days early with the founder skin line, 1,200 Rift Credits, and the Season 04 battle pass on the house.</p>
+        <div class="countdown" aria-label="Launch countdown">
+          <div class="cd clip-sm"><b>07</b><span>Days</span></div>
+          <div class="cd clip-sm"><b>14</b><span>Hrs</span></div>
+          <div class="cd clip-sm"><b>52</b><span>Min</span></div>
+          <div class="cd clip-sm"><b>08</b><span>Sec</span></div>
+        </div>
+        <div class="hero-cta" style="justify-content:center;margin-top:24px">
+          <a href="#top" class="btn btn-mag">Pre-Order — $49</a>
+          <a href="#features" class="btn btn-ghost">Join the Beta</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="NEONRIFT">
+          <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M20 2 4 11v18l16 9 16-9V11L20 2z" fill="none" stroke="url(#bm)" stroke-width="2"/>
+            <path d="M13 25V14l7 5 7-5v11" fill="none" stroke="url(#bm)" stroke-width="2.4" stroke-linejoin="round"/>
+          </svg>NEONRIFT
+        </a>
+        <p>A competitive sci-fi shooter from Helix Forge Studios. Built by players, for the grind.</p>
+      </div>
+      <div>
+        <h5>Game</h5>
+        <a href="#agents">Agents</a><a href="#features">Maps</a><a href="#specs">Patch Notes</a><a href="#preorder">Ranked</a>
+      </div>
+      <div>
+        <h5>Compete</h5>
+        <a href="#preorder">Tournaments</a><a href="#features">Leaderboards</a><a href="#agents">Esports Hub</a><a href="#specs">Creators</a>
+      </div>
+      <div>
+        <h5>Support</h5>
+        <a href="#top">Help Center</a><a href="#top">Server Status</a><a href="#top">Anti-Cheat</a><a href="#top">Careers</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span class="mono">© 2026 HELIX FORGE STUDIOS — ALL SYSTEMS NOMINAL</span>
+      <div class="socials">
+        <a href="#top" aria-label="Discord"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 5a18 18 0 0 0-4.5-1.4l-.3.6A14 14 0 0 1 18 6a16 16 0 0 0-12 0 14 14 0 0 1 2.8-1.8L8.5 3.6A18 18 0 0 0 4 5C1.6 8.6 1 12.1 1.2 15.6A18 18 0 0 0 6.7 18l.7-1a12 12 0 0 1-2-1l.5-.4a13 13 0 0 0 11.2 0l.5.4-2 1 .7 1a18 18 0 0 0 5.5-2.4C23.2 11.5 22.2 8 20 5zM8.7 13.6c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8zm6.6 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8z"/></svg></a>
+        <a href="#top" aria-label="Twitch"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 2 2 6v14h5v2h3l2-2h4l5-5V2zm16 11-3 3h-4l-2 2v-2H7V4h13zM15 7h-2v5h2zm-5 0H8v5h2z"/></svg></a>
+        <a href="#top" aria-label="X"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h3l-7 8 8 12h-6l-5-7-5 7H3l8-9L3 2h6l4 6zm-1 18h2L7 4H5z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var b=document.getElementById('mbtn'),n=document.getElementById('nav');
+    b.addEventListener('click',function(){
+      var open=n.classList.toggle('open');
+      b.setAttribute('aria-expanded',open?'true':'false');
+    });
+    n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');b.setAttribute('aria-expanded','false');});});
+    // spec tab toggle (cosmetic)
+    document.querySelectorAll('.spec-tab').forEach(function(t){
+      t.addEventListener('click',function(){
+        document.querySelectorAll('.spec-tab').forEach(function(x){x.classList.remove('on');});
+        t.classList.add('on');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

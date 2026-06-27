@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web UI 模板库 · Template Library</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#111317; --muted:#6b7280; --line:#e7e8ec; --bg:#f5f6f8; --card:#fff;
+    --brand:#4f46e5; --brand-soft:#eef2ff;
+  }
+  html,body{background:var(--bg);color:var(--ink)}
+  body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:16px 26px}
+  .top-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1480px;margin:0 auto}
+  .brandmark{font-weight:800;font-size:19px;letter-spacing:-.02em}
+  .brandmark span{color:var(--brand)}
+  .sub{color:var(--muted);font-size:13px;margin-top:3px}
+  .grow{flex:1}
+  .search{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 13px;font-size:14px;width:230px;outline:none}
+  .search:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px auto 0;max-width:1480px;align-items:center}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;transition:.12s;user-select:none}
+  .chip:hover{border-color:#c7c9d1}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .count{font-size:13px;color:var(--muted);margin-left:auto}
+  main{padding:24px 26px 120px;max-width:1480px;margin:0 auto}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:.16s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(17,19,40,.12);border-color:#d6d8df}
+  .preview{position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;background:#0b0d12;border-bottom:1px solid var(--line)}
+  /* scaled live iframe acts as a real thumbnail */
+  .preview iframe{position:absolute;top:0;left:0;width:1320px;height:825px;border:0;transform:scale(.2727);transform-origin:top left;pointer-events:none;background:#fff}
+  .preview .veil{position:absolute;inset:0;cursor:pointer}
+  .preview .open-pill{position:absolute;bottom:12px;right:12px;background:rgba(17,19,23,.86);color:#fff;font-size:12px;padding:7px 12px;border-radius:8px;opacity:0;transition:.16s;backdrop-filter:blur(4px)}
+  .card:hover .open-pill{opacity:1}
+  .theme-tag{position:absolute;top:12px;left:12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.85);color:#111;backdrop-filter:blur(4px)}
+  .theme-tag.dark{background:rgba(0,0,0,.6);color:#fff}
+  .body{padding:15px 17px 17px;display:flex;flex-direction:column;gap:9px}
+  .name-row{display:flex;align-items:center;gap:9px}
+  .dotc{width:11px;height:11px;border-radius:50%;flex:none}
+  .name{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .desc{font-size:12.5px;color:#566;line-height:1.45;min-height:34px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-size:10.5px;color:#444;background:#f1f2f4;border-radius:6px;padding:3px 8px}
+  .tag.cat{background:var(--brand-soft);color:#4338ca}
+  .actions{display:flex;gap:8px;margin-top:3px}
+  .btn{flex:1;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;transition:.12s;text-align:center}
+  .btn:hover{border-color:#c7c9d1}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.primary:hover{background:#000}
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#111317;color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;opacity:0;transition:.2s;z-index:80;pointer-events:none}
+  .toast.show{opacity:1}
+  .empty{text-align:center;color:var(--muted);padding:70px;font-size:14px}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px;max-width:1480px;margin-left:auto;margin-right:auto}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <div>
+      <div class="brandmark">Web UI 模板库 · <span>Template Library</span></div>
+      <div class="sub">50 套自带样式的响应式网页模板（落地页 20 · 仪表盘 10 · 作品集/博客 10 · 电商 10）· 纯 HTML/CSS · 实时预览 · 点卡片打开全屏，选用后复制提示词</div>
+    </div>
+    <div class="grow"></div>
+    <input id="search" class="search" placeholder="搜索名称 / 风格 / 关键词…">
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="hint">提示：缩略图是模板的真实渲染（缩放后的实时预览）。点「打开预览」可全屏查看与交互。</div>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">没有匹配的模板。</div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = {landing:"落地页",dashboard:"仪表盘/后台",portfolio:"作品集/博客",ecommerce:"电商"};
+const DATA = [
+  {file:"landing-aurora-saas.html",name:"Lumina",cat:"landing",theme:"light",accent:"#6d5cff",
+   desc:"极光渐变 + 玻璃拟态的 SaaS 落地页，含纯 CSS 仪表盘样机。",tags:["Aurora","玻璃拟态","SaaS"]},
+  {file:"landing-dark-ai.html",name:"Nebula",cat:"landing",theme:"dark",accent:"#7c5cff",
+   desc:"暗黑电影感 AI 产品落地页，发光球体与霓虹强调色。",tags:["暗黑","AI","霓虹"]},
+  {file:"landing-neubrutalist-agency.html",name:"SMASH&CO",cat:"landing",theme:"light",accent:"#ffd400",
+   desc:"新野兽派创意工作室落地页，粗黑边、硬阴影、跑马灯。",tags:["新野兽派","大胆","创意"]},
+  {file:"landing-clay-kids.html",name:"Doodlebug",cat:"landing",theme:"light",accent:"#ff8fab",
+   desc:"克莱morphism 儿童教育 app，软糯 3D 粘土形状与糖果色。",tags:["克莱morphism","儿童","活泼"]},
+  {file:"landing-bento-productivity.html",name:"Stacks",cat:"landing",theme:"light",accent:"#4f46e5",
+   desc:"Bento 网格效率/笔记 app，模块化卡片展示功能。",tags:["Bento","效率","浅色"]},
+  {file:"landing-material-fitness.html",name:"Pulse",cat:"landing",theme:"light",accent:"#14b8a6",
+   desc:"Material You 健身 app，圆润动态配色与手机样机。",tags:["Material","健身","圆润"]},
+  {file:"landing-food-delivery.html",name:"Nibblr",cat:"landing",theme:"light",accent:"#ef4444",
+   desc:"活力外卖/餐饮品牌，暖色食欲配色与趣味插画。",tags:["外卖","暖色","活力"]},
+  {file:"landing-swiss-studio.html",name:"Vonhaus",cat:"landing",theme:"light",accent:"#e23b2e",
+   desc:"瑞士国际主义建筑/设计工作室，严格网格与超大字。",tags:["瑞士风","极简","建筑"]},
+  {file:"landing-editorial-fashion.html",name:"Maison Éclat",cat:"landing",theme:"light",accent:"#1a1a1a",
+   desc:"杂志编辑风时尚生活品牌，衬线大字与非对称网格。",tags:["编辑风","时尚","衬线"]},
+  {file:"landing-corporate-b2b.html",name:"Northbridge",cat:"landing",theme:"light",accent:"#2563eb",
+   desc:"干净企业级 B2B/咨询站，蓝色信任感与案例展示。",tags:["企业","B2B","专业"]},
+  {file:"landing-coffee-artisan.html",name:"Ember & Oak",cat:"landing",theme:"light",accent:"#b4532a",
+   desc:"温暖手作咖啡烘焙品牌，泥土色调与质感颗粒。",tags:["咖啡","暖色","手作"]},
+  {file:"landing-brutalist-music.html",name:"Static Noise",cat:"landing",theme:"light",accent:"#c9e000",
+   desc:"粗野主义独立音乐厂牌/音乐节，等宽字与裸露边框。",tags:["粗野主义","音乐","原始"]},
+  {file:"landing-y2k-streetwear.html",name:"Hypergloss",cat:"landing",theme:"light",accent:"#c026d3",
+   desc:"Y2K 潮牌发售页，铬质/全息渐变与千禧光泽。",tags:["Y2K","潮牌","炫酷"]},
+  {file:"landing-vaporwave-music.html",name:"Néon Classique",cat:"landing",theme:"dark",accent:"#ff5fd2",
+   desc:"蒸汽波歌手/专辑页，落日渐变网格与霓虹复古。",tags:["蒸汽波","音乐","复古"]},
+  {file:"landing-cyberpunk-game.html",name:"NEONRIFT",cat:"landing",theme:"dark",accent:"#22d3ee",
+   desc:"赛博朋克 HUD 游戏/电竞页，霓虹青品红与故障感。",tags:["赛博朋克","游戏","HUD"]},
+  {file:"landing-retrofuture-synth.html",name:"OUTRUN-12",cat:"landing",theme:"dark",accent:"#ff36ab",
+   desc:"80 年代复古未来硬件页，铬质渐变与霓虹网格。",tags:["复古未来","合成器","霓虹"]},
+  {file:"landing-luxury-watch.html",name:"Aurelian",cat:"landing",theme:"dark",accent:"#d4af37",
+   desc:"暗调奢侈腕表页，黑金极简与戏剧化产品聚光。",tags:["奢侈","腕表","暗调"]},
+  {file:"landing-gradient-fintech.html",name:"Nuvora",cat:"landing",theme:"light",accent:"#6366f1",
+   desc:"渐变网格金融/支付 app，饱和渐变与银行卡样机。",tags:["渐变","金融","Fintech"]},
+  {file:"landing-organic-wellness.html",name:"Verdé Botanics",cat:"landing",theme:"light",accent:"#6b8e5a",
+   desc:"有机/亲生物护肤品牌，自然色与有机形状植物图。",tags:["有机","护肤","自然"]},
+  {file:"landing-travel-immersive.html",name:"Wayfarer",cat:"landing",theme:"dark",accent:"#f59e0b",
+   desc:"沉浸式旅行/目的地预订，满屏落日天空与分层山峦。",tags:["旅行","沉浸","渐变"]},
+  {file:"dashboard-analytics-light.html",name:"Northwind Analytics",cat:"dashboard",theme:"light",accent:"#2563eb",
+   desc:"清爽数据分析后台，SVG 折线/环形图、KPI 卡片与数据表。",tags:["分析","浅色","数据密集"]},
+  {file:"dashboard-finance-dark.html",name:"Vault",cat:"dashboard",theme:"dark",accent:"#10b981",
+   desc:"暗色金融/加密仪表盘，资产走势图、涨跌色与持仓配置。",tags:["金融","暗色","Fintech"]},
+  {file:"dashboard-admin-minimal.html",name:"Atelier",cat:"dashboard",theme:"light",accent:"#e4572e",
+   desc:"瑞士极简后台管理，留白、细分割线、成员管理表。",tags:["极简","瑞士风","后台"]},
+  {file:"dashboard-crm-sales.html",name:"Pipedeck CRM",cat:"dashboard",theme:"light",accent:"#6366f1",
+   desc:"CRM 销售管线后台，看板式商机卡片与营收预测。",tags:["CRM","销售","看板"]},
+  {file:"dashboard-ecommerce-orders.html",name:"Commerce Admin",cat:"dashboard",theme:"light",accent:"#14b8a6",
+   desc:"电商订单/库存后台，销售曲线、订单表与缺货预警。",tags:["电商后台","订单","浅色"]},
+  {file:"dashboard-healthcare.html",name:"Meridian Care",cat:"dashboard",theme:"light",accent:"#38bdf8",
+   desc:"医疗患者监护台，生命体征卡片与趋势图。",tags:["医疗","监护","浅色"]},
+  {file:"dashboard-saas-metrics-dark.html",name:"Orbit",cat:"dashboard",theme:"dark",accent:"#8b5cf6",
+   desc:"暗色 SaaS 指标台，MRR/流失、留存热力图与漏斗。",tags:["SaaS","暗色","指标"]},
+  {file:"dashboard-devops-monitoring.html",name:"Sentinel",cat:"dashboard",theme:"dark",accent:"#22c55e",
+   desc:"DevOps 可观测性台，服务健康、延迟图与事故日志。",tags:["DevOps","暗色","监控"]},
+  {file:"dashboard-social-analytics.html",name:"Pulse Social",cat:"dashboard",theme:"light",accent:"#ec4899",
+   desc:"社媒/营销分析台，涨粉曲线、互动环形与热门帖。",tags:["社媒","分析","活力"]},
+  {file:"dashboard-project-management.html",name:"Tracer",cat:"dashboard",theme:"light",accent:"#4f46e5",
+   desc:"项目/任务管理台，看板、冲刺进度与甘特时间线。",tags:["项目管理","看板","浅色"]},
+  {file:"portfolio-editorial.html",name:"Marlowe Vance",cat:"portfolio",theme:"light",accent:"#1a1a1a",
+   desc:"杂志编辑风设计师作品集，衬线大标题与非对称网格。",tags:["编辑风","衬线","作品集"]},
+  {file:"personal-mono.html",name:"Ivo Renner",cat:"portfolio",theme:"light",accent:"#2563eb",
+   desc:"极简黑白个人站/link-in-bio，单栏排版、克制优雅。",tags:["极简","黑白","个人站"]},
+  {file:"blog-magazine.html",name:"The Margin",cat:"portfolio",theme:"light",accent:"#b91c1c",
+   desc:"阅读优先的杂志/博客布局，特稿头图、卡片网格与订阅栏。",tags:["博客","杂志","阅读"]},
+  {file:"portfolio-photographer.html",name:"Aperture",cat:"portfolio",theme:"dark",accent:"#d4af37",
+   desc:"摄影师作品集，暗色沉浸式画廊与悬停说明。",tags:["摄影","暗色","画廊"]},
+  {file:"portfolio-developer.html",name:"Dev Folio",cat:"portfolio",theme:"dark",accent:"#22c55e",
+   desc:"开发者作品集，终端风 hero、技术栈与贡献热力图。",tags:["开发者","暗色","终端"]},
+  {file:"portfolio-illustrator.html",name:"Pixel Play",cat:"portfolio",theme:"light",accent:"#7c3aed",
+   desc:"插画/3D 设计师作品集，鲜艳大字与趣味贴纸。",tags:["插画","鲜艳","创意"]},
+  {file:"blog-tech.html",name:"DevLog",cat:"portfolio",theme:"light",accent:"#2563eb",
+   desc:"技术/开发博客，标签、代码卡片与趋势侧栏。",tags:["技术博客","代码","浅色"]},
+  {file:"blog-newsletter.html",name:"Longform",cat:"portfolio",theme:"light",accent:"#b45309",
+   desc:"作家/Newsletter 站，衬线极简与订阅区。",tags:["Newsletter","衬线","极简"]},
+  {file:"portfolio-studio-cases.html",name:"Studio Cases",cat:"portfolio",theme:"dark",accent:"#a3e635",
+   desc:"设计工作室案例集，暗色编辑风与案例指标。",tags:["工作室","案例","暗色"]},
+  {file:"portfolio-resume-cv.html",name:"Resume / CV",cat:"portfolio",theme:"light",accent:"#0ea5e9",
+   desc:"个人简历/CV 单页，经历时间线与技能条。",tags:["简历","CV","专业"]},
+  {file:"shop-luxury-fashion.html",name:"Maison Éldr",cat:"ecommerce",theme:"light",accent:"#1a1a1a",
+   desc:"极简轻奢时装店，米白+黑、衬线大字与留白编辑感。",tags:["轻奢","时装","极简"]},
+  {file:"product-detail-modern.html",name:"Aria · 商品详情",cat:"ecommerce",theme:"light",accent:"#e85d4e",
+   desc:"现代商品详情页，图廊切换、规格选择与转化型购买区。",tags:["详情页","转化","现代"]},
+  {file:"shop-tech-vibrant.html",name:"VOLT",cat:"ecommerce",theme:"dark",accent:"#a855f7",
+   desc:"鲜艳数码/3C 商城，渐变发光、爆款网格与折扣角标。",tags:["数码","鲜艳","活力"]},
+  {file:"shop-beauty-cosmetics.html",name:"Lumière Beauty",cat:"ecommerce",theme:"light",accent:"#f472b6",
+   desc:"美妆/护肤商城，柔粉优雅、色号选择与评价。",tags:["美妆","柔粉","优雅"]},
+  {file:"shop-furniture-home.html",name:"Norrland",cat:"ecommerce",theme:"light",accent:"#b08968",
+   desc:"家具/家居商城，北欧暖色与 Shop the Look。",tags:["家居","北欧","暖色"]},
+  {file:"shop-jewelry-luxury.html",name:"Auréa",cat:"ecommerce",theme:"dark",accent:"#d4af37",
+   desc:"珠宝奢侈商城，黑金衬线与闪耀产品聚光。",tags:["珠宝","奢侈","黑金"]},
+  {file:"shop-sneaker-streetwear.html",name:"KICKLAB",cat:"ecommerce",theme:"dark",accent:"#a3e635",
+   desc:"球鞋/潮牌商城，暗色酸性绿、发售倒计时与爆款。",tags:["球鞋","潮牌","活力"]},
+  {file:"shop-grocery-organic.html",name:"FreshRoots",cat:"ecommerce",theme:"light",accent:"#22c55e",
+   desc:"有机生鲜商城，清新绿、分类胶囊与每周特惠。",tags:["生鲜","有机","清新"]},
+  {file:"cart-checkout.html",name:"购物车 / 结算",cat:"ecommerce",theme:"light",accent:"#4f46e5",
+   desc:"购物车/结算页，分步进度、订单摘要与表单。",tags:["购物车","结算","转化"]},
+  {file:"shop-electronics-marketplace.html",name:"VoltMart",cat:"ecommerce",theme:"light",accent:"#2563eb",
+   desc:"数码电器商城，蓝色信任、密集网格与筛选侧栏。",tags:["数码","商城","密集"]},
+];
+
+let activeCat=null, query="";
+const esc=s=>(s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function buildFilters(){
+  const fc=document.getElementById('filters');
+  let h=`<span class="chip" data-cat="" >全部</span>`;
+  Object.keys(CATS).forEach(k=> h+=`<span class="chip" data-cat="${k}">${CATS[k]}</span>`);
+  h+=`<span class="count" id="count"></span>`;
+  fc.innerHTML=h;
+  fc.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+    const c=ch.dataset.cat||null; activeCat=(activeCat===c)?null:c; if(!ch.dataset.cat)activeCat=null; render();
+  });
+}
+function matches(t){
+  if(activeCat && t.cat!==activeCat) return false;
+  if(query){const b=(t.name+' '+t.cat+' '+CATS[t.cat]+' '+t.desc+' '+t.tags.join(' ')).toLowerCase(); if(!b.includes(query))return false;}
+  return true;
+}
+function cardHTML(t){
+  return `<div class="card" data-file="${t.file}">
+    <div class="preview">
+      <iframe src="templates/${t.file}" loading="lazy" title="${esc(t.name)} preview" scrolling="no"></iframe>
+      <span class="theme-tag ${t.theme}">${t.theme==='dark'?'DARK':'LIGHT'}</span>
+      <div class="veil" data-open="${t.file}"></div>
+      <span class="open-pill">点击打开全屏 ↗</span>
+    </div>
+    <div class="body">
+      <div class="name-row"><span class="dotc" style="background:${t.accent}"></span><span class="name">${esc(t.name)}</span></div>
+      <div class="desc">${esc(t.desc)}</div>
+      <div class="tags"><span class="tag cat">${CATS[t.cat]}</span>${t.tags.map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div>
+      <div class="actions">
+        <button class="btn" data-open="${t.file}">打开预览</button>
+        <button class="btn primary" data-use="${t.file}" data-name="${esc(t.name)}">选用</button>
+      </div>
+    </div>
+  </div>`;
+}
+function render(){
+  document.querySelectorAll('#filters .chip').forEach(ch=>{
+    const c=ch.dataset.cat; ch.classList.toggle('active', (c===''&&!activeCat) || (c&&c===activeCat));
+  });
+  const list=DATA.filter(matches);
+  document.getElementById('grid').innerHTML=list.map(cardHTML).join('');
+  document.getElementById('empty').style.display=list.length?'none':'block';
+  const cnt=document.getElementById('count'); if(cnt)cnt.textContent=`${list.length} / ${DATA.length} 套`;
+  document.querySelectorAll('[data-open]').forEach(el=>el.onclick=e=>{e.stopPropagation();window.open('templates/'+el.dataset.open,'_blank');});
+  document.querySelectorAll('[data-use]').forEach(el=>el.onclick=e=>{
+    e.stopPropagation();
+    const p=`用 web-ui-templates 里的「${el.dataset.name}」(${el.dataset.use}) 这套模板帮我做一个页面，内容换成：`;
+    navigator.clipboard?.writeText(p).then(()=>toast('已复制提示词，回到对话粘贴并补充你的内容')).catch(()=>toast('已复制：'+el.dataset.use));
+  });
+}
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1900);}
+buildFilters();render();
+</script>
+</body>
+</html>

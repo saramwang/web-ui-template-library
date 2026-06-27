@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Care · Patient Monitoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f2f6fb; --surface:#ffffff; --ink:#13283f; --muted:#566c84; --faint:#8aa0b6;
+    --line:#e6eef6; --line-2:#d8e4ef; --accent:#2e76d6; --accent-2:#4f93e8; --accent-soft:#e7f1fc;
+    --green:#1f9d6b; --green-soft:#e4f6ee; --teal:#149a9a; --teal-soft:#e2f5f5;
+    --amber:#cc8a18; --amber-soft:#fcf3df; --red:#d65151; --red-soft:#fcebeb; --violet:#7c5cd6; --violet-soft:#efeafb;
+    --radius:18px; --shadow:0 1px 2px rgba(19,40,63,.04),0 4px 14px rgba(19,40,63,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+  .app{display:grid;grid-template-columns:256px 1fr;min-height:100vh}
+
+  .sidebar{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:40}
+  .brand{display:flex;align-items:center;gap:12px;padding:22px 22px;border-bottom:1px solid var(--line)}
+  .brand .logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#2e76d6,#149a9a);display:grid;place-items:center;flex:none;box-shadow:0 6px 16px rgba(46,118,214,.3)}
+  .brand b{font-size:16px;font-weight:800;letter-spacing:-.02em}
+  .brand span{display:block;font-size:11px;color:var(--faint);font-weight:600}
+  .nav{padding:14px 12px;overflow-y:auto;flex:1}
+  .nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:700;padding:14px 12px 7px}
+  .nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:11px;color:var(--muted);font-weight:600;margin-bottom:2px;transition:.15s}
+  .nav a svg{width:19px;height:19px;flex:none}
+  .nav a:hover{background:#f1f6fb;color:var(--ink)}
+  .nav a.active{background:var(--accent-soft);color:var(--accent)}
+  .nav a .badge{margin-left:auto;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:20px}
+  .side-foot{padding:14px;border-top:1px solid var(--line)}
+  .oncall{background:var(--teal-soft);border:1px solid var(--teal);border-radius:14px;padding:14px;display:flex;align-items:center;gap:11px}
+  .oncall .pulse{width:10px;height:10px;border-radius:50%;background:var(--teal);flex:none;box-shadow:0 0 0 0 rgba(20,154,154,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(20,154,154,.45)}70%{box-shadow:0 0 0 8px rgba(20,154,154,0)}100%{box-shadow:0 0 0 0 rgba(20,154,154,0)}}
+  .oncall b{font-size:13px;font-weight:800;display:block;color:var(--teal)}
+  .oncall small{font-size:11.5px;color:var(--muted);font-weight:600}
+
+  .main{display:flex;flex-direction:column;min-width:0}
+  .topbar{height:66px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 26px;position:sticky;top:0;z-index:30}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:9px;width:40px;height:40px;cursor:pointer;color:var(--ink)}
+  .topbar h1{font-size:17px;font-weight:800;letter-spacing:-.02em}
+  .topbar h1 small{display:block;font-size:12px;color:var(--faint);font-weight:600}
+  .search{margin-left:auto;position:relative;width:300px;max-width:36vw}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint);width:16px;height:16px}
+  .search input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px 38px;font-family:inherit;font-size:13px;color:var(--ink)}
+  .search input::placeholder{color:var(--faint)}
+  .icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);position:relative}
+  .icon-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  .icon-btn .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--surface)}
+  .avatar{border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;flex:none}
+  .user{display:flex;align-items:center;gap:10px;padding:4px 8px 4px 4px;border-radius:30px;border:1px solid var(--line);cursor:pointer}
+  .user .av{width:32px;height:32px;font-size:12.5px}
+  .user .who{font-size:12.5px;font-weight:700;line-height:1.15}
+  .user .who small{color:var(--faint);font-weight:600;font-size:11px;display:block}
+
+  .content{padding:24px 26px 40px;display:flex;flex-direction:column;gap:20px}
+  .page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  .page-head .title h2{font-size:22px;font-weight:800;letter-spacing:-.03em}
+  .page-head .title p{color:var(--muted);font-size:13px;margin-top:2px}
+  .page-head .actions{margin-left:auto;display:flex;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:11px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn svg{width:16px;height:16px}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(46,118,214,.28)}
+
+  /* Vitals cards */
+  .vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .vital{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .vital .vtop{display:flex;align-items:center;gap:10px}
+  .vital .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none}
+  .vital .ic svg{width:20px;height:20px}
+  .vital .vtop b{font-size:13px;font-weight:700;color:var(--muted)}
+  .vital .vtop .status{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px}
+  .status.ok{background:var(--green-soft);color:var(--green)}
+  .status.watch{background:var(--amber-soft);color:var(--amber)}
+  .vital .num{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:12px;display:flex;align-items:baseline;gap:6px}
+  .vital .num u{font-size:14px;font-weight:700;color:var(--faint);text-decoration:none}
+  .vital .vspark{margin-top:8px}
+
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .panel-head h3{font-size:15px;font-weight:800;letter-spacing:-.02em}
+  .panel-head .sub{color:var(--faint);font-size:12px;font-weight:600}
+  .panel-head .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .chip{font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line-2);border-radius:8px;padding:6px 11px;cursor:pointer;background:var(--surface)}
+  .chip.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+
+  .grid-main{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
+  .chart-wrap{padding:18px}
+  .legend{display:flex;gap:18px;margin-bottom:8px}
+  .legend span{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted)}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  svg{display:block}
+
+  /* Appointments */
+  .appts{padding:6px 12px 14px}
+  .appt{display:flex;gap:14px;padding:12px 6px;align-items:center}
+  .appt:not(:last-child){border-bottom:1px solid var(--line)}
+  .appt .time{text-align:center;flex:none;width:58px}
+  .appt .time b{font-size:14px;font-weight:800;display:block}
+  .appt .time small{font-size:10.5px;color:var(--faint);font-weight:700}
+  .appt .bar{width:4px;align-self:stretch;border-radius:4px;flex:none}
+  .appt .info{flex:1;min-width:0}
+  .appt .info b{font-size:13px;font-weight:800;display:block}
+  .appt .info small{font-size:12px;color:var(--muted);font-weight:600}
+  .appt .tag{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .tag.checkup{background:var(--accent-soft);color:var(--accent)}
+  .tag.followup{background:var(--violet-soft);color:var(--violet)}
+  .tag.urgent{background:var(--red-soft);color:var(--red)}
+  .tag.lab{background:var(--teal-soft);color:var(--teal)}
+
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:700;padding:12px 18px;border-bottom:1px solid var(--line)}
+  tbody td{padding:13px 18px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:var(--bg)}
+  .pat{display:flex;align-items:center;gap:11px}
+  .pat .av{width:36px;height:36px;font-size:12px}
+  .pat b{font-weight:800}
+  .pat small{display:block;color:var(--faint);font-weight:600;font-size:11.5px}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;padding:4px 11px;border-radius:20px}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill.stable{background:var(--green-soft);color:var(--green)}
+  .pill.observe{background:var(--amber-soft);color:var(--amber)}
+  .pill.critical{background:var(--red-soft);color:var(--red)}
+  .pill.recovering{background:var(--accent-soft);color:var(--accent)}
+  .bpm{font-variant-numeric:tabular-nums;font-weight:700}
+  .minspark{vertical-align:middle}
+
+  .av-blue{background:linear-gradient(135deg,#2e76d6,#4f93e8)}.av-teal{background:linear-gradient(135deg,#149a9a,#2bc4c4)}.av-green{background:linear-gradient(135deg,#1f9d6b,#34c98a)}.av-violet{background:linear-gradient(135deg,#7c5cd6,#a78bfa)}.av-amber{background:linear-gradient(135deg,#cc8a18,#eab308)}.av-rose{background:linear-gradient(135deg,#d6517e,#fb7185)}
+
+  .scrim{display:none}
+  @media(max-width:1080px){.grid-main{grid-template-columns:1fr}.vitals{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:860px){
+    .app{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:0;top:0;width:262px;transform:translateX(-100%);transition:.25s;box-shadow:0 10px 40px rgba(0,0,0,.18)}
+    .sidebar.open{transform:none}
+    .menu-btn{display:grid;place-items:center}
+    .search{display:none}
+    .scrim.show{display:block;position:fixed;inset:0;background:rgba(19,40,63,.4);z-index:35}
+    .table-scroll{overflow-x:auto}
+  }
+  @media(max-width:560px){.vitals{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h3l2-5 4 10 2.5-7 1.5 2H21" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div><b>Meridian Care</b><span>Clinical Console</span></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Monitoring</div>
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-6 3 13 3-9 1.5 2H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Vitals overview</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 6.5a3 3 0 0 1 0 5.6M18 19a5 5 0 0 0-3-4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Patients<span class="badge">2</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Appointments</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M9 3h6v3l4 4v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9l4-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 11v4M10 13h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Lab results</a>
+      <div class="nav-label">Care</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M9 2h6v3a3 3 0 0 1-3 3 3 3 0 0 1-3-3z" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v6a4 4 0 0 1-8 0v-2M16 16a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Medications</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Care notes</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Messages</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 4 15M4.6 9A1.6 1.6 0 0 0 4 7.2L3.9 7a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9.5 4.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="oncall">
+        <span class="pulse"></span>
+        <div><b>On call now</b><small>Dr. Patel · Ward 4B</small></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <h1>Patient monitoring<small>Ward 4B · 18 patients under care</small></h1>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="search" placeholder="Search patients, MRN, rooms…" aria-label="Search">
+      </div>
+      <button class="icon-btn" aria-label="Notifications"><span class="dot"></span><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="user">
+        <div class="avatar av av-blue">AP</div>
+        <div class="who">Dr. Anya Patel<small>Attending</small></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-head">
+        <div class="title">
+          <h2>Today's vitals</h2>
+          <p>Live readings for highlighted patient · Room 412 · MRN 88-2041.</p>
+        </div>
+        <div class="actions">
+          <button class="btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export chart</button>
+          <button class="btn primary"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>New patient</button>
+        </div>
+      </div>
+
+      <!-- Vitals cards -->
+      <section class="vitals">
+        <div class="vital">
+          <div class="vtop"><span class="ic" style="background:var(--red-soft);color:var(--red)"><svg viewBox="0 0 24 24" fill="none"><path d="M20.8 8.6a4.6 4.6 0 0 0-7.8-3.3l-1 .9-1-.9A4.6 4.6 0 1 0 4.2 11l6.4 6.7a2 2 0 0 0 2.8 0L19.8 11a4.6 4.6 0 0 0 1-2.4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><b>Heart rate</b><span class="status ok">Normal</span></div>
+          <div class="num">76 <u>bpm</u></div>
+          <svg class="vspark" viewBox="0 0 240 48" width="100%" height="40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,30 20,30 30,30 36,12 44,42 52,26 60,30 90,30 110,30 116,14 124,40 132,26 140,30 170,30 190,30 196,12 204,42 212,26 220,30 240,30" fill="none" stroke="#d65151" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="vital">
+          <div class="vtop"><span class="ic" style="background:var(--accent-soft);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v4l3 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><b>Blood pressure</b><span class="status ok">Stable</span></div>
+          <div class="num">118<u>/76 mmHg</u></div>
+          <svg class="vspark" viewBox="0 0 240 48" width="100%" height="40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,28 30,24 60,30 90,22 120,26 150,20 180,24 210,18 240,22" fill="none" stroke="#2e76d6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="0,38 30,36 60,40 90,35 120,38 150,34 180,37 210,33 240,36" fill="none" stroke="#9fc2ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="vital">
+          <div class="vtop"><span class="ic" style="background:var(--teal-soft);color:var(--teal)"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 7 6 10 6 14a6 6 0 0 0 12 0c0-4-2-7-6-12z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><b>SpO₂</b><span class="status ok">Normal</span></div>
+          <div class="num">98 <u>%</u></div>
+          <svg class="vspark" viewBox="0 0 240 48" width="100%" height="40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,22 30,20 60,24 90,18 120,22 150,16 180,20 210,15 240,18" fill="none" stroke="#149a9a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="vital">
+          <div class="vtop"><span class="ic" style="background:var(--amber-soft);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none"><path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><b>Temperature</b><span class="status watch">Watch</span></div>
+          <div class="num">37.9 <u>°C</u></div>
+          <svg class="vspark" viewBox="0 0 240 48" width="100%" height="40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,34 30,32 60,30 90,28 120,26 150,22 180,20 210,16 240,14" fill="none" stroke="#cc8a18" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </section>
+
+      <section class="grid-main">
+        <!-- Vitals trend chart -->
+        <div class="panel">
+          <div class="panel-head"><h3>Vitals trend</h3><span class="sub">Last 12 hours</span>
+            <div class="right"><button class="chip on">12h</button><button class="chip">24h</button><button class="chip">7d</button></div>
+          </div>
+          <div class="chart-wrap">
+            <div class="legend">
+              <span><i style="background:#d65151"></i>Heart rate (bpm)</span>
+              <span><i style="background:#149a9a"></i>SpO₂ (%)</span>
+              <span><i style="background:#2e76d6"></i>Resp. rate</span>
+            </div>
+            <svg viewBox="0 0 640 250" width="100%" height="250" role="img" aria-label="Vitals trend over 12 hours">
+              <defs><linearGradient id="hrA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d65151" stop-opacity=".16"/><stop offset="1" stop-color="#d65151" stop-opacity="0"/></linearGradient></defs>
+              <g stroke="#eef4fa" stroke-width="1"><line x1="42" y1="40" x2="624" y2="40"/><line x1="42" y1="90" x2="624" y2="90"/><line x1="42" y1="140" x2="624" y2="140"/><line x1="42" y1="190" x2="624" y2="190"/></g>
+              <g fill="#8aa0b6" font-size="11" font-weight="600" font-family="inherit">
+                <text x="14" y="44">120</text><text x="14" y="94">100</text><text x="18" y="144">80</text><text x="18" y="194">60</text>
+                <text x="56" y="226">06:00</text><text x="174" y="226">08:00</text><text x="292" y="226">10:00</text><text x="410" y="226">12:00</text><text x="540" y="226">14:00</text>
+              </g>
+              <!-- HR area + line -->
+              <path d="M62,150 L160,142 L258,156 L356,134 L454,146 L552,128 L552,210 L62,210 Z" fill="url(#hrA)"/>
+              <path d="M62,150 L160,142 L258,156 L356,134 L454,146 L552,128" fill="none" stroke="#d65151" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- SpO2 -->
+              <path d="M62,76 L160,72 L258,80 L356,70 L454,74 L552,66" fill="none" stroke="#149a9a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Resp rate -->
+              <path d="M62,178 L160,182 L258,174 L356,180 L454,176 L552,170" fill="none" stroke="#2e76d6" stroke-width="2.4" stroke-dasharray="5 5" stroke-linecap="round" stroke-linejoin="round"/>
+              <g><circle cx="552" cy="128" r="4.5" fill="#d65151" stroke="#fff" stroke-width="2"/><circle cx="552" cy="66" r="4.5" fill="#149a9a" stroke="#fff" stroke-width="2"/></g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="panel">
+          <div class="panel-head"><h3>Today's schedule</h3><span class="sub">June 27</span></div>
+          <div class="appts">
+            <div class="appt"><div class="time"><b>08:30</b><small>AM</small></div><div class="bar" style="background:var(--accent)"></div><div class="info"><b>Marcus Bell</b><small>Room 412 · Routine check</small></div><span class="tag checkup">Checkup</span></div>
+            <div class="appt"><div class="time"><b>09:15</b><small>AM</small></div><div class="bar" style="background:var(--violet)"></div><div class="info"><b>Priya Anand</b><small>Room 408 · Post-op review</small></div><span class="tag followup">Follow-up</span></div>
+            <div class="appt"><div class="time"><b>10:00</b><small>AM</small></div><div class="bar" style="background:var(--red)"></div><div class="info"><b>Owen Castillo</b><small>Room 415 · Cardiac eval</small></div><span class="tag urgent">Urgent</span></div>
+            <div class="appt"><div class="time"><b>11:30</b><small>AM</small></div><div class="bar" style="background:var(--teal)"></div><div class="info"><b>Hana Suzuki</b><small>Lab 2 · Blood panel</small></div><span class="tag lab">Lab</span></div>
+            <div class="appt"><div class="time"><b>01:45</b><small>PM</small></div><div class="bar" style="background:var(--accent)"></div><div class="info"><b>Diego Romero</b><small>Room 410 · Discharge</small></div><span class="tag checkup">Checkup</span></div>
+            <div class="appt"><div class="time"><b>03:00</b><small>PM</small></div><div class="bar" style="background:var(--violet)"></div><div class="info"><b>Lena Fischer</b><small>Room 411 · Med review</small></div><span class="tag followup">Follow-up</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Patient roster -->
+      <section class="panel">
+        <div class="panel-head"><h3>Patient roster</h3><span class="sub">Ward 4B · live status</span>
+          <div class="right"><button class="chip on">All</button><button class="chip">Critical</button><button class="chip">Observe</button></div>
+        </div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>Patient</th><th>Room</th><th>Status</th><th>Heart rate</th><th>SpO₂</th><th>BP</th><th>Trend</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="pat"><div class="avatar av av-blue">MB</div><div><b>Marcus Bell</b><small>MRN 88-2041 · 64y</small></div></div></td>
+              <td>412</td><td><span class="pill stable">Stable</span></td>
+              <td class="bpm">76 bpm</td><td class="bpm">98%</td><td class="bpm">118/76</td>
+              <td><svg class="minspark" viewBox="0 0 100 28" width="92" height="26" preserveAspectRatio="none"><polyline points="0,18 20,16 40,20 60,15 80,17 100,12" fill="none" stroke="#1f9d6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="pat"><div class="avatar av av-rose">OC</div><div><b>Owen Castillo</b><small>MRN 88-1907 · 71y</small></div></div></td>
+              <td>415</td><td><span class="pill critical">Critical</span></td>
+              <td class="bpm">112 bpm</td><td class="bpm">91%</td><td class="bpm">148/95</td>
+              <td><svg class="minspark" viewBox="0 0 100 28" width="92" height="26" preserveAspectRatio="none"><polyline points="0,12 20,16 40,10 60,18 80,12 100,20" fill="none" stroke="#d65151" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="pat"><div class="avatar av av-violet">PA</div><div><b>Priya Anand</b><small>MRN 88-2110 · 52y</small></div></div></td>
+              <td>408</td><td><span class="pill recovering">Recovering</span></td>
+              <td class="bpm">82 bpm</td><td class="bpm">96%</td><td class="bpm">124/80</td>
+              <td><svg class="minspark" viewBox="0 0 100 28" width="92" height="26" preserveAspectRatio="none"><polyline points="0,20 20,18 40,16 60,17 80,13 100,11" fill="none" stroke="#2e76d6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="pat"><div class="avatar av av-amber">HS</div><div><b>Hana Suzuki</b><small>MRN 88-2056 · 38y</small></div></div></td>
+              <td>409</td><td><span class="pill observe">Observe</span></td>
+              <td class="bpm">88 bpm</td><td class="bpm">95%</td><td class="bpm">130/84</td>
+              <td><svg class="minspark" viewBox="0 0 100 28" width="92" height="26" preserveAspectRatio="none"><polyline points="0,16 20,14 40,18 60,15 80,19 100,16" fill="none" stroke="#cc8a18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="pat"><div class="avatar av av-green">DR</div><div><b>Diego Romero</b><small>MRN 88-1988 · 45y</small></div></div></td>
+              <td>410</td><td><span class="pill stable">Stable</span></td>
+              <td class="bpm">72 bpm</td><td class="bpm">99%</td><td class="bpm">116/74</td>
+              <td><svg class="minspark" viewBox="0 0 100 28" width="92" height="26" preserveAspectRatio="none"><polyline points="0,18 20,17 40,16 60,14 80,15 100,12" fill="none" stroke="#1f9d6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="pat"><div class="avatar av av-teal">LF</div><div><b>Lena Fischer</b><small>MRN 88-2133 · 59y</small></div></div></td>
+              <td>411</td><td><span class="pill observe">Observe</span></td>
+              <td class="bpm">90 bpm</td><td class="bpm">94%</td><td class="bpm">134/86</td>
+              <td><svg class="minspark" viewBox="0 0 100 28" width="92" height="26" preserveAspectRatio="none"><polyline points="0,14 20,16 40,13 60,17 80,14 100,16" fill="none" stroke="#cc8a18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+  const sb=document.getElementById('sidebar'),sc=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
+  function toggle(o){sb.classList.toggle('open',o);sc.classList.toggle('show',o);}
+  mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
+  sc.addEventListener('click',()=>toggle(false));
+</script>
+</body>
+</html>

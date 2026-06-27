@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Slow Letter — Elena Marsh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Newsreader:ital,opsz@0,6..72;1,6..72&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-2:#efe7d8;
+    --card:#fbf8f1;
+    --ink:#2b2620;
+    --muted:#6b6256;
+    --faint:#9a9082;
+    --line:#e0d6c4;
+    --accent:#9a4521;
+    --accent-soft:#f0e2d6;
+    --gold:#b08524;
+    --radius:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Newsreader',Georgia,serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    font-size:18px;
+  }
+  a{color:inherit;text-decoration:none}
+  .display{font-family:'Fraunces',Georgia,serif}
+  .wrap{max-width:720px;margin:0 auto;padding:0 28px}
+  .wrap-wide{max-width:980px;margin:0 auto;padding:0 28px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  /* Masthead */
+  header.mast{padding:34px 0 20px;border-bottom:1px solid var(--line)}
+  .mast-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .wordmark{font-family:'Fraunces',serif;font-weight:600;font-size:23px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+  .seal{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-family:'Fraunces',serif;font-weight:700;font-size:15px;flex:0 0 auto}
+  nav.mast-nav{display:flex;gap:22px;font-family:'Fraunces',serif;font-size:15px;color:var(--muted)}
+  nav.mast-nav a{padding-bottom:2px;border-bottom:1px solid transparent}
+  nav.mast-nav a:hover{color:var(--accent);border-color:var(--accent)}
+  .menu-toggle{display:none;background:transparent;border:1px solid var(--line);border-radius:6px;width:42px;height:42px;cursor:pointer}
+  .menu-toggle span{display:block;width:18px;height:1.5px;background:var(--ink);margin:4px auto}
+  .mobile-nav{display:none}
+
+  /* Hero subscribe */
+  .hero{text-align:center;padding:60px 0 50px;border-bottom:1px solid var(--line)}
+  .kicker{font-family:'Fraunces',serif;text-transform:uppercase;letter-spacing:.22em;font-size:12px;color:var(--accent);font-weight:600}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(34px,6vw,56px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 14px}
+  .hero p{color:var(--muted);max-width:520px;margin:0 auto;font-size:19px}
+  .sub-form{display:flex;gap:10px;max-width:440px;margin:30px auto 12px}
+  .sub-form input{flex:1;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);font-family:'Newsreader',serif;font-size:16px;color:var(--ink)}
+  .sub-form input:focus{outline:none;border-color:var(--accent)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:var(--radius);font-family:'Fraunces',serif;font-weight:600;font-size:15px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fdf8f0;white-space:nowrap}
+  .btn:hover{background:#85391b}
+  .btn-ghost{background:transparent;color:var(--accent)}
+  .btn-ghost:hover{background:var(--accent-soft)}
+  .micro{font-size:13.5px;color:var(--faint);font-family:'Fraunces',serif}
+  .sub-ok{display:none;color:var(--accent);font-family:'Fraunces',serif;font-weight:600;font-size:15px;margin-top:6px}
+
+  /* Featured essay */
+  .section-label{font-family:'Fraunces',serif;text-transform:uppercase;letter-spacing:.18em;font-size:12px;color:var(--faint);font-weight:600;margin-bottom:22px;display:flex;align-items:center;gap:12px}
+  .section-label::after{content:"";flex:1;height:1px;background:var(--line)}
+  .featured{padding:54px 0}
+  .feat-cover{height:240px;border-radius:var(--radius);position:relative;overflow:hidden;margin-bottom:26px;background:
+    radial-gradient(120% 130% at 18% 0%,#c98a52 0%,transparent 55%),
+    radial-gradient(120% 130% at 90% 100%,#7d3b1f 0%,transparent 55%),
+    linear-gradient(135deg,#a85a2e,#6e3318)}
+  .feat-cover svg{position:absolute;inset:0;width:100%;height:100%}
+  .feat-date{font-family:'Fraunces',serif;font-size:13.5px;color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+  .featured h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(28px,4.4vw,40px);line-height:1.12;letter-spacing:-.01em;margin:12px 0 14px}
+  .featured h2 a:hover{color:var(--accent)}
+  .featured .lede{color:var(--muted);font-size:19px}
+  .byline{display:flex;align-items:center;gap:12px;margin-top:22px;font-family:'Fraunces',serif;font-size:14.5px;color:var(--muted)}
+  .byline .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold));display:grid;place-items:center;color:#fff;font-weight:600;font-size:15px}
+  .byline b{color:var(--ink);font-weight:600}
+
+  /* Archive */
+  .archive{padding:10px 0 60px}
+  .arc-item{display:flex;gap:24px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .arc-date{flex:0 0 84px;font-family:'Fraunces',serif;font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;line-height:1.4}
+  .arc-body h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.25;letter-spacing:-.005em}
+  .arc-body h3 a:hover{color:var(--accent)}
+  .arc-body p{color:var(--muted);font-size:16.5px;margin-top:5px}
+  .arc-meta{font-family:'Fraunces',serif;font-size:12.5px;color:var(--faint);margin-top:8px;text-transform:uppercase;letter-spacing:.08em}
+
+  /* About */
+  .about{background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:64px 0}
+  .about-grid{display:grid;grid-template-columns:140px 1fr;gap:36px;align-items:start}
+  .portrait{width:140px;height:170px;border-radius:var(--radius);background:linear-gradient(160deg,#caa06b,#8c4b26);position:relative;overflow:hidden}
+  .portrait svg{position:absolute;inset:0;width:100%;height:100%}
+  .about h2{font-family:'Fraunces',serif;font-weight:600;font-size:30px;margin-bottom:14px;letter-spacing:-.01em}
+  .about p{color:var(--muted);font-size:17.5px;margin-bottom:14px}
+  .about .sig{font-family:'Fraunces',serif;font-style:italic;font-size:24px;color:var(--accent);margin-top:4px}
+
+  footer.foot{padding:46px 0;text-align:center}
+  .foot .wordmark{justify-content:center;margin-bottom:14px}
+  .foot-nav{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-family:'Fraunces',serif;font-size:14px;color:var(--muted);margin-bottom:16px}
+  .foot-nav a:hover{color:var(--accent)}
+  .foot small{color:var(--faint);font-family:'Fraunces',serif;font-size:13px}
+
+  @media(max-width:720px){
+    nav.mast-nav{display:none}
+    .menu-toggle{display:block}
+    .mobile-nav.open{display:flex;flex-direction:column;gap:6px;padding:14px 0 6px}
+    .mobile-nav.open a{padding:8px 0;font-family:'Fraunces',serif;color:var(--muted)}
+    .sub-form{flex-direction:column}
+    .about-grid{grid-template-columns:1fr;justify-items:center;text-align:center}
+    .arc-item{flex-direction:column;gap:4px}
+    .arc-date{flex:none}
+  }
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap-wide">
+    <div class="mast-row">
+      <a class="wordmark display" href="#"><span class="seal">SL</span>The Slow Letter</a>
+      <nav class="mast-nav">
+        <a href="#archive">Archive</a>
+        <a href="#about">About</a>
+        <a href="#subscribe">Subscribe</a>
+      </nav>
+      <button class="menu-toggle" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#archive">Archive</a><a href="#about">About</a><a href="#subscribe">Subscribe</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="subscribe">
+  <div class="wrap">
+    <span class="kicker">A letter on writing & attention</span>
+    <h1>Read fewer things,<br>but read them slowly.</h1>
+    <p>Every other Sunday, one unhurried essay from Elena Marsh on craft, quiet, and the long work of paying attention. Free, forever.</p>
+    <form class="sub-form" id="subForm">
+      <input type="email" required placeholder="your email address" aria-label="Email address">
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+    <p class="micro">Join 14,300 readers · No spam, unsubscribe anytime</p>
+    <p class="sub-ok" id="subOk">Welcome — your first letter arrives this Sunday.</p>
+  </div>
+</section>
+
+<section class="featured">
+  <div class="wrap">
+    <div class="section-label">The latest essay</div>
+    <div class="feat-cover">
+      <svg viewBox="0 0 800 240" preserveAspectRatio="none" aria-hidden="true">
+        <g fill="none" stroke="rgba(253,248,240,.28)" stroke-width="1.2">
+          <path d="M0 180 Q 200 120 400 170 T 800 150"/>
+          <path d="M0 200 Q 200 150 400 195 T 800 178"/>
+          <path d="M0 158 Q 220 96 420 148 T 800 122"/>
+        </g>
+        <circle cx="650" cy="64" r="38" fill="rgba(253,248,240,.16)"/>
+        <circle cx="650" cy="64" r="38" fill="none" stroke="rgba(253,248,240,.5)" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <span class="feat-date">Sunday, June 22 · Issue No. 87</span>
+    <h2><a href="#">On keeping a notebook you never reread</a></h2>
+    <p class="lede">The point was never the record. I filled forty notebooks before I understood that the writing down is the thinking, and the pages can be ash for all it matters. A small argument for process over product, and against the tyranny of the searchable archive.</p>
+    <div class="byline">
+      <span class="av">EM</span>
+      <span>By <b>Elena Marsh</b> · 9 minute read</span>
+    </div>
+  </div>
+</section>
+
+<section class="archive" id="archive">
+  <div class="wrap">
+    <div class="section-label">From the archive</div>
+
+    <div class="arc-item">
+      <div class="arc-date">Jun 08<br>2026</div>
+      <div class="arc-body">
+        <h3><a href="#">The sentence is a unit of breath</a></h3>
+        <p>Why I read everything aloud before I send it, and what my lungs taught me about rhythm that grammar never could.</p>
+        <div class="arc-meta">Issue 86 · 7 min</div>
+      </div>
+    </div>
+
+    <div class="arc-item">
+      <div class="arc-date">May 25<br>2026</div>
+      <div class="arc-body">
+        <h3><a href="#">In praise of the unfinished</a></h3>
+        <p>A defense of the drawer full of half-essays, and the strange productivity of letting an idea sit until it ripens.</p>
+        <div class="arc-meta">Issue 85 · 6 min</div>
+      </div>
+    </div>
+
+    <div class="arc-item">
+      <div class="arc-date">May 11<br>2026</div>
+      <div class="arc-body">
+        <h3><a href="#">The morning before the inbox</a></h3>
+        <p>I gave myself two hours before the world could reach me. Here is what came back to me in that small daily silence.</p>
+        <div class="arc-meta">Issue 84 · 8 min</div>
+      </div>
+    </div>
+
+    <div class="arc-item">
+      <div class="arc-date">Apr 27<br>2026</div>
+      <div class="arc-body">
+        <h3><a href="#">What a slow walk does to a stuck paragraph</a></h3>
+        <p>On the well-worn loop around the block that has rescued more drafts than any clever method I have ever tried.</p>
+        <div class="arc-meta">Issue 83 · 5 min</div>
+      </div>
+    </div>
+
+    <div class="arc-item">
+      <div class="arc-date">Apr 13<br>2026</div>
+      <div class="arc-body">
+        <h3><a href="#">Letters I never sent, and why I kept writing them</a></h3>
+        <p>The most honest things I have written were addressed to no one. An essay on audience, and the freedom of its absence.</p>
+        <div class="arc-meta">Issue 82 · 10 min</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <a href="#" class="btn btn-ghost">Browse all 87 issues</a>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap-wide">
+    <div class="about-grid">
+      <div class="portrait">
+        <svg viewBox="0 0 140 170" preserveAspectRatio="none" aria-hidden="true">
+          <circle cx="70" cy="62" r="30" fill="rgba(253,248,240,.85)"/>
+          <path d="M22 170 C 22 122 50 104 70 104 C 90 104 118 122 118 170 Z" fill="rgba(253,248,240,.85)"/>
+        </svg>
+      </div>
+      <div>
+        <h2>About Elena</h2>
+        <p>I'm a writer living at the edge of a small harbor town. For fifteen years I wrote for other people — magazines, brands, a book that did fine. The Slow Letter is the thing I write only for the joy of it, and somehow it has become the thing people read most.</p>
+        <p>There is no course to buy, no funnel, no growth strategy. Just a fortnightly note from one desk to yours, and the quiet conviction that some things are worth doing slowly.</p>
+        <p class="sig">— Elena</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap-wide">
+    <div class="wordmark display"><span class="seal">SL</span>The Slow Letter</div>
+    <nav class="foot-nav">
+      <a href="#archive">Archive</a><a href="#about">About</a><a href="#subscribe">Subscribe</a><a href="#">RSS</a><a href="#">Contact</a>
+    </nav>
+    <small>© 2026 Elena Marsh · Written by hand, sent with care</small>
+  </div>
+</footer>
+
+<script>
+  const menuBtn=document.getElementById('menuBtn');
+  const mobileNav=document.getElementById('mobileNav');
+  menuBtn.addEventListener('click',()=>{
+    const open=mobileNav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded',open);
+  });
+  document.getElementById('subForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    e.target.style.display='none';
+    document.getElementById('subOk').style.display='block';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STATIC NOISE — Independent Label &amp; Festival</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0a0a;
+    --paper:#f4f1ea;
+    --acid:#d9ff00;
+    --acid-ink:#0a0a0a;
+    --line:#0a0a0a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Mono',ui-monospace,monospace;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:none;
+  }
+  h1,h2,h3,.display{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.92;letter-spacing:-.01em}
+  a{color:inherit}
+  img{max-width:100%}
+  ::selection{background:var(--acid);color:var(--ink)}
+  a:focus-visible,button:focus-visible{outline:4px solid var(--acid);outline-offset:3px}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+  .skip{position:absolute;left:-9999px;top:0;background:var(--acid);color:#000;padding:10px 16px;font-weight:700;z-index:200}
+  .skip:focus{left:8px;top:8px}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:100;background:var(--ink);color:var(--paper);border-bottom:4px solid var(--ink)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1240px;margin:0 auto}
+  .brand{font-family:'Archivo Black';font-size:1.5rem;letter-spacing:-.03em;display:flex;align-items:center;gap:10px}
+  .brand .dot{width:18px;height:18px;background:var(--acid);display:inline-block}
+  .nav-links{display:flex;gap:4px;list-style:none;align-items:center}
+  .nav-links a{padding:8px 12px;text-decoration:none;font-weight:700;font-size:.82rem;text-transform:uppercase;border:2px solid transparent}
+  .nav-links a:hover{background:var(--acid);color:#000}
+  .nav-cta{background:var(--acid);color:#000 !important;border:2px solid var(--acid) !important}
+  .nav-cta:hover{background:transparent;color:var(--acid) !important;border-color:var(--acid) !important}
+  .menu-btn{display:none;background:var(--acid);color:#000;border:none;font-family:'Space Mono';font-weight:700;padding:10px 14px;cursor:pointer;text-transform:uppercase}
+
+  /* MARQUEE */
+  .marquee{background:var(--acid);color:#000;border-bottom:4px solid var(--ink);overflow:hidden;white-space:nowrap;padding:8px 0}
+  .marquee-track{display:inline-block;will-change:transform;animation:scroll 22s linear infinite;font-family:'Archivo Black';text-transform:uppercase;font-size:1rem;letter-spacing:.04em}
+  .marquee-track span{padding:0 22px}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media(prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+
+  /* HERO */
+  .hero{border-bottom:4px solid var(--ink);background:var(--paper);position:relative}
+  .hero-grid{display:grid;grid-template-columns:1fr 360px}
+  .hero-main{padding:40px 20px 30px;border-right:4px solid var(--ink)}
+  .kicker{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;border:3px solid var(--ink);display:inline-block;padding:6px 12px;margin-bottom:24px}
+  .hero h1{font-size:clamp(3rem,12vw,9.5rem);margin:0 0 18px;letter-spacing:-.04em}
+  .hero h1 .stroke{color:var(--paper);-webkit-text-stroke:3px var(--ink);text-stroke:3px var(--ink)}
+  .hero h1 .hl{background:var(--acid);padding:0 .08em;display:inline-block}
+  .hero-sub{max-width:560px;font-size:1.05rem;border-left:5px solid var(--acid);padding-left:16px;margin:18px 0 28px}
+  .hero-btns{display:flex;gap:0;flex-wrap:wrap}
+  .btn{font-family:'Archivo Black';text-transform:uppercase;text-decoration:none;padding:18px 30px;font-size:1rem;border:4px solid var(--ink);display:inline-flex;align-items:center;gap:10px;cursor:pointer;background:var(--ink);color:var(--paper)}
+  .btn:hover{background:var(--acid);color:#000}
+  .btn.alt{background:var(--paper);color:var(--ink);margin-left:-4px}
+  .btn.alt:hover{background:var(--acid)}
+  .hero-side{display:flex;flex-direction:column}
+  .hero-side .cell{padding:18px;border-bottom:4px solid var(--ink);flex:1;display:flex;flex-direction:column;justify-content:center}
+  .hero-side .cell:last-child{border-bottom:none}
+  .hero-side .big{font-family:'Archivo Black';font-size:2.6rem;line-height:.9}
+  .hero-side .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;margin-top:6px}
+  .hero-side .acidcell{background:var(--acid);color:#000}
+
+  /* SECTION HEADERS */
+  .sec{border-bottom:4px solid var(--ink)}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:26px 20px;border-bottom:4px solid var(--ink);max-width:1240px;margin:0 auto}
+  .sec-head h2{font-size:clamp(2rem,6vw,4rem)}
+  .sec-head .idx{font-family:'Space Mono';font-weight:700;font-size:.85rem;border:3px solid var(--ink);padding:6px 10px;white-space:nowrap}
+
+  /* LINEUP */
+  .lineup{display:grid;grid-template-columns:repeat(3,1fr)}
+  .act{padding:26px 18px 22px;border-right:4px solid var(--ink);border-bottom:4px solid var(--ink);position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:space-between;text-decoration:none}
+  .lineup .act:nth-child(3n){border-right:none}
+  .act:hover{background:var(--ink);color:var(--paper)}
+  .act:hover .act-tag{background:var(--acid);color:#000}
+  .act .when{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+  .act .name{font-family:'Archivo Black';font-size:clamp(1.6rem,4vw,2.6rem);margin:14px 0;text-transform:uppercase;letter-spacing:-.02em}
+  .act-tag{font-size:.7rem;font-weight:700;text-transform:uppercase;border:2px solid currentColor;padding:3px 8px;align-self:flex-start}
+  .act .headliner{position:absolute;top:14px;right:14px;background:var(--acid);color:#000;font-size:.65rem;font-weight:700;padding:3px 7px;text-transform:uppercase}
+
+  /* RELEASES */
+  .releases{display:grid;grid-template-columns:repeat(4,1fr)}
+  .rel{border-right:4px solid var(--ink);border-bottom:4px solid var(--ink);padding:16px;text-decoration:none}
+  .releases .rel:nth-child(4n){border-right:none}
+  .rel:hover{background:var(--acid);color:#000}
+  .sleeve{aspect-ratio:1;border:3px solid var(--ink);margin-bottom:12px;display:block}
+  .rel .rt{font-family:'Archivo Black';text-transform:uppercase;font-size:1.05rem;line-height:1;margin-bottom:4px}
+  .rel .ra{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+  .rel .rcat{font-size:.68rem;font-weight:700;margin-top:8px;opacity:.7}
+
+  /* MANIFESTO */
+  .manifesto{background:var(--ink);color:var(--paper);padding:60px 20px;border-bottom:4px solid var(--ink)}
+  .manifesto .wrap{max-width:1000px}
+  .manifesto p{font-family:'Archivo Black';text-transform:uppercase;font-size:clamp(1.4rem,4vw,2.8rem);line-height:1.05;letter-spacing:-.02em}
+  .manifesto .acid{color:var(--acid)}
+  .manifesto .small{font-family:'Space Mono';font-size:.95rem;text-transform:none;font-weight:400;letter-spacing:0;line-height:1.6;margin-top:24px;max-width:640px;opacity:.85}
+
+  /* CTA */
+  .cta{background:var(--acid);color:#000;border-bottom:4px solid var(--ink);padding:64px 20px;text-align:center}
+  .cta h2{font-size:clamp(2.4rem,9vw,6rem);margin-bottom:10px}
+  .cta p{font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:30px;font-size:1rem}
+  .cta .price{display:inline-flex;align-items:baseline;gap:8px;border:4px solid #000;padding:10px 18px;margin-bottom:26px;font-family:'Archivo Black'}
+  .cta .price .num{font-size:2.4rem}
+  .cta .btn{background:#000;color:var(--acid);border-color:#000}
+  .cta .btn:hover{background:var(--paper);color:#000}
+
+  /* FOOTER */
+  footer{background:var(--ink);color:var(--paper);padding:50px 20px 26px}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;max-width:1240px;margin:0 auto}
+  footer h4{font-family:'Archivo Black';text-transform:uppercase;font-size:.95rem;margin-bottom:14px;color:var(--acid)}
+  footer ul{list-style:none}
+  footer li{margin-bottom:8px}
+  footer a{text-decoration:none;font-size:.85rem}
+  footer a:hover{color:var(--acid);text-decoration:underline}
+  .foot-brand{font-family:'Archivo Black';font-size:2.4rem;text-transform:uppercase;letter-spacing:-.03em;line-height:.9;margin-bottom:14px}
+  .foot-brand .dot{display:inline-block;width:16px;height:16px;background:var(--acid)}
+  .foot-bottom{max-width:1240px;margin:36px auto 0;border-top:2px solid #2a2a2a;padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+
+  @media(max-width:880px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero-main{border-right:none;border-bottom:4px solid var(--ink)}
+    .hero-side{flex-direction:row;flex-wrap:wrap}
+    .hero-side .cell{flex:1 1 50%;border-right:4px solid var(--ink)}
+    .lineup{grid-template-columns:1fr 1fr}
+    .lineup .act:nth-child(3n){border-right:4px solid var(--ink)}
+    .lineup .act:nth-child(2n){border-right:none}
+    .releases{grid-template-columns:1fr 1fr}
+    .releases .rel:nth-child(4n){border-right:4px solid var(--ink)}
+    .releases .rel:nth-child(2n){border-right:none}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:680px){
+    .menu-btn{display:block}
+    .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--ink);border-bottom:4px solid var(--acid);padding:8px}
+    .nav-links.open{display:flex}
+    .nav-links a{width:100%}
+    .lineup{grid-template-columns:1fr}
+    .lineup .act{border-right:none !important}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#" aria-label="Static Noise home"><span class="dot"></span>STATIC&nbsp;NOISE</a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="navlinks" id="menuBtn">Menu</button>
+    <ul class="nav-links" id="navlinks">
+      <li><a href="#lineup">Lineup</a></li>
+      <li><a href="#releases">Catalog</a></li>
+      <li><a href="#manifesto">Label</a></li>
+      <li><a href="#tickets" class="nav-cta">Get Tickets</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>★ STATIC NOISE FEST '26</span><span>AUG 14–16</span><span>WAREHOUSE 9, DETROIT</span><span>40+ ACTS</span><span>NO REFUNDS, NO REGRETS</span><span>TURN IT UP</span>
+    <span>★ STATIC NOISE FEST '26</span><span>AUG 14–16</span><span>WAREHOUSE 9, DETROIT</span><span>40+ ACTS</span><span>NO REFUNDS, NO REGRETS</span><span>TURN IT UP</span>
+  </div>
+</div>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="hero-grid">
+      <div class="hero-main">
+        <span class="kicker">Independent since 2009 / Detroit, MI</span>
+        <h1 id="hero-h">RAW<br><span class="hl">SOUND</span><br><span class="stroke">UNFILTERED</span></h1>
+        <p class="hero-sub">A record label and a three-day festival for music that refuses to behave. No algorithms. No gatekeepers. Just loud rooms, blown speakers, and the people who show up.</p>
+        <div class="hero-btns">
+          <a class="btn" href="#tickets">Get Tickets →</a>
+          <a class="btn alt" href="#lineup">See Lineup</a>
+        </div>
+      </div>
+      <div class="hero-side" aria-hidden="false">
+        <div class="cell acidcell"><span class="big">40+</span><span class="lbl">Acts on 4 stages</span></div>
+        <div class="cell"><span class="big">3</span><span class="lbl">Days / nights</span></div>
+        <div class="cell"><span class="big">AUG<br>14–16</span><span class="lbl">2026 · Detroit, MI</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="lineup" aria-labelledby="lineup-h">
+    <div class="sec-head">
+      <h2 id="lineup-h">The Lineup</h2>
+      <span class="idx">[ 01 / WHO PLAYS ]</span>
+    </div>
+    <div class="lineup">
+      <a class="act" href="#tickets"><span class="headliner">Headline</span><span class="when">FRI · MAIN STAGE</span><span class="name">Concrete Choir</span><span class="act-tag">Industrial / Noise</span></a>
+      <a class="act" href="#tickets"><span class="headliner">Headline</span><span class="when">SAT · MAIN STAGE</span><span class="name">VHS Ghosts</span><span class="act-tag">Post-Punk</span></a>
+      <a class="act" href="#tickets"><span class="headliner">Headline</span><span class="when">SUN · MAIN STAGE</span><span class="name">Dead Air Club</span><span class="act-tag">Garage</span></a>
+      <a class="act" href="#tickets"><span class="when">FRI · STAGE B</span><span class="name">Rust Belt</span><span class="act-tag">Hardcore</span></a>
+      <a class="act" href="#tickets"><span class="when">FRI · STAGE C</span><span class="name">Low Static</span><span class="act-tag">Drone</span></a>
+      <a class="act" href="#tickets"><span class="when">SAT · STAGE B</span><span class="name">Neon Famine</span><span class="act-tag">Synthpunk</span></a>
+      <a class="act" href="#tickets"><span class="when">SAT · STAGE C</span><span class="name">Paper Teeth</span><span class="act-tag">Math Rock</span></a>
+      <a class="act" href="#tickets"><span class="when">SUN · STAGE B</span><span class="name">Brutalist</span><span class="act-tag">Techno</span></a>
+      <a class="act" href="#tickets"><span class="when">SUN · STAGE C</span><span class="name">Off Grid</span><span class="act-tag">Experimental</span></a>
+    </div>
+  </section>
+
+  <section class="sec" id="releases" aria-labelledby="rel-h">
+    <div class="sec-head">
+      <h2 id="rel-h">Catalog</h2>
+      <span class="idx">[ 02 / ON WAX ]</span>
+    </div>
+    <div class="releases">
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:linear-gradient(135deg,#0a0a0a 0 50%,#d9ff00 50% 100%);"></span>
+        <div class="rt">Wire / Hum</div><div class="ra">Concrete Choir</div><div class="rcat">SN-014 · LP</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:repeating-linear-gradient(45deg,#0a0a0a 0 12px,#f4f1ea 12px 24px);"></span>
+        <div class="rt">Tape Hiss</div><div class="ra">VHS Ghosts</div><div class="rcat">SN-013 · LP</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:radial-gradient(circle at 30% 30%,#d9ff00 0 18%,#0a0a0a 18% 100%);"></span>
+        <div class="rt">Last Call</div><div class="ra">Dead Air Club</div><div class="rcat">SN-012 · 7"</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:linear-gradient(0deg,#0a0a0a 0 33%,#f4f1ea 33% 66%,#d9ff00 66% 100%);"></span>
+        <div class="rt">Belt &amp; Bone</div><div class="ra">Rust Belt</div><div class="rcat">SN-011 · EP</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:conic-gradient(#0a0a0a 0 25%,#d9ff00 25% 50%,#0a0a0a 50% 75%,#d9ff00 75% 100%);"></span>
+        <div class="rt">Sustain</div><div class="ra">Low Static</div><div class="rcat">SN-010 · LP</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:linear-gradient(135deg,#d9ff00 0 50%,#0a0a0a 50% 100%);"></span>
+        <div class="rt">Famine Pop</div><div class="ra">Neon Famine</div><div class="rcat">SN-009 · LP</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:repeating-linear-gradient(90deg,#0a0a0a 0 8px,#f4f1ea 8px 16px);"></span>
+        <div class="rt">Odd Meter</div><div class="ra">Paper Teeth</div><div class="rcat">SN-008 · EP</div>
+      </a>
+      <a class="rel" href="#">
+        <span class="sleeve" style="background:radial-gradient(circle at 70% 70%,#0a0a0a 0 30%,#d9ff00 30% 60%,#0a0a0a 60% 100%);"></span>
+        <div class="rt">Grid Failure</div><div class="ra">Off Grid</div><div class="rcat">SN-007 · 12"</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="manifesto" id="manifesto" aria-labelledby="man-h">
+    <div class="wrap">
+      <h2 id="man-h" style="position:absolute;left:-9999px">Our Manifesto</h2>
+      <p>WE PRESS RECORDS NOBODY ELSE WILL. <span class="acid">WE BOOK ROOMS NOBODY ELSE CAN FILL.</span> WE PAY ARTISTS FIRST AND ARGUE LATER.</p>
+      <p class="small">Static Noise started in a basement with one tape duplicator and a busted PA. Seventeen years later we&rsquo;ve put out 60+ releases and thrown one festival a year that never breaks even and never stops. If it&rsquo;s too loud, too weird, or too honest for everyone else, send it to us.</p>
+    </div>
+  </section>
+
+  <section class="cta" id="tickets" aria-labelledby="cta-h">
+    <h2 id="cta-h">GET IN THE ROOM</h2>
+    <p>3-Day Pass · Aug 14–16 · Warehouse 9, Detroit</p>
+    <div class="price"><span class="lbl" style="font-size:.8rem;align-self:center">FROM</span><span class="num">$89</span><span style="align-self:center;font-size:.9rem">/ 3-day</span></div>
+    <div>
+      <a class="btn" href="#" aria-label="Buy a 3-day festival pass">Buy 3-Day Pass →</a>
+    </div>
+    <p style="margin-top:24px;font-size:.78rem;opacity:.8">Single-day passes from $39 · 18+ · No refunds</p>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-brand"><span class="dot"></span> STATIC NOISE</div>
+      <p style="font-size:.85rem;max-width:300px;opacity:.85">Independent record label &amp; annual festival. Detroit, Michigan. Loud on purpose.</p>
+    </div>
+    <div>
+      <h4>Festival</h4>
+      <ul><li><a href="#lineup">Lineup</a></li><li><a href="#tickets">Tickets</a></li><li><a href="#">Stages</a></li><li><a href="#">Getting There</a></li></ul>
+    </div>
+    <div>
+      <h4>Label</h4>
+      <ul><li><a href="#releases">Catalog</a></li><li><a href="#">Demos</a></li><li><a href="#">Artists</a></li><li><a href="#">Press</a></li></ul>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <ul><li><a href="#">Bandcamp</a></li><li><a href="#">Instagram</a></li><li><a href="#">Newsletter</a></li><li><a href="#">Contact</a></li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Static Noise Recordings</span>
+    <span>Made in Detroit / Turn it up</span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var btn=document.getElementById('menuBtn'),links=document.getElementById('navlinks');
+    btn.addEventListener('click',function(){
+      var open=links.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      btn.textContent=open?'Close':'Menu';
+    });
+    links.addEventListener('click',function(e){
+      if(e.target.tagName==='A'){links.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.textContent='Menu';}
+    });
+  })();
+</script>
+</body>
+</html>

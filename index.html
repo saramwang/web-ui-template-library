@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sara · 模板库 Template Hub</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--ink:#14161b;--muted:#6b7280;--line:#e7e8ec;--bg:#f5f6f8;--brand:#4f46e5;--brand2:#7c3aed}
+  html,body{height:100%}
+  body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",Inter,Roboto,sans-serif;background:
+    radial-gradient(1200px 600px at 15% -10%,#eef2ff 0,transparent 55%),
+    radial-gradient(1000px 600px at 110% 10%,#f3e8ff 0,transparent 50%),var(--bg);
+    color:var(--ink);min-height:100%;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:64px 24px 48px;flex:1;width:100%}
+  .eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--brand);font-weight:700}
+  h1{font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;margin:12px 0 10px;line-height:1.05}
+  .lede{font-size:16px;color:#4b5563;max-width:620px;line-height:1.6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:40px}
+  .card{position:relative;display:block;background:#fff;border:1px solid var(--line);border-radius:20px;
+    padding:26px;text-decoration:none;color:inherit;overflow:hidden;transition:.18s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 22px 50px rgba(20,22,40,.13);border-color:#d6d8df}
+  .card .thumb{height:150px;border-radius:14px;margin-bottom:20px;position:relative;overflow:hidden;border:1px solid var(--line)}
+  .t-ui{background:
+    radial-gradient(420px 220px at 20% 0,#c7d2fe,transparent 60%),
+    radial-gradient(380px 240px at 100% 100%,#ddd6fe,transparent 55%),#f8f9ff}
+  .t-slides{background:
+    linear-gradient(135deg,#0a0e27 0,#1b1040 100%)}
+  .miniwins{position:absolute;inset:0;display:flex;gap:8px;align-items:center;justify-content:center}
+  .win{width:54px;height:36px;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+  .swatches{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px}
+  .sw{width:26px;height:64px;border-radius:8px}
+  .num{font-size:13px;color:var(--brand);font-weight:700;letter-spacing:.04em}
+  .card h2{font-size:21px;letter-spacing:-.01em;margin:4px 0 8px}
+  .card p{font-size:13.5px;color:#566;line-height:1.5}
+  .go{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13.5px;font-weight:700;color:var(--brand)}
+  .card.slides .num,.card.slides .go{color:var(--brand2)}
+  footer{max-width:1040px;margin:0 auto;padding:0 24px 36px;color:var(--muted);font-size:12.5px;width:100%}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Design Template Hub</div>
+    <h1>Sara 的模板库</h1>
+    <p class="lede">两套可直接套用的设计模板库:做项目网页时挑一套网页 UI,做演示/海报时挑一套配色风格。点进去实时预览,选用后复制提示词即可让 Claude 套用。</p>
+
+    <div class="grid">
+      <a class="card ui" href="ui/index.html">
+        <div class="thumb t-ui">
+          <div class="miniwins">
+            <span class="win" style="background:linear-gradient(135deg,#6d5cff,#22d3ee)"></span>
+            <span class="win" style="background:linear-gradient(135deg,#0a0a0f,#7c5cff)"></span>
+            <span class="win" style="background:linear-gradient(135deg,#ffd400,#111)"></span>
+          </div>
+        </div>
+        <div class="num">50 套 · 落地页 / 仪表盘 / 作品集 / 电商</div>
+        <h2>网页 UI 模板库</h2>
+        <p>50 套纯 HTML/CSS 响应式网页模板,实时预览、可挑选套用到你的项目。</p>
+        <span class="go">进入 →</span>
+      </a>
+
+      <a class="card slides" href="slides.html">
+        <div class="thumb t-slides">
+          <div class="swatches">
+            <span class="sw" style="background:#5EDCF4"></span>
+            <span class="sw" style="background:#F0A6CA"></span>
+            <span class="sw" style="background:#F4D03F"></span>
+            <span class="sw" style="background:#E2D5F2"></span>
+          </div>
+        </div>
+        <div class="num">34 套 · 配色 / 版式风格</div>
+        <h2>配色 · 演示模板库</h2>
+        <p>34 套 frontend-slides 设计风格,配色、字体、版式一目了然,适合 PPT / 海报 / 封面。</p>
+        <span class="go">进入 →</span>
+      </a>
+    </div>
+  </div>
+  <footer>纯静态站点 · 部署于 Vercel · 由 Sara 构建</footer>
+</body>
+</html>

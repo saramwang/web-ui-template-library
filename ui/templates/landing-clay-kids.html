@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doodlebug — Playful Learning for Curious Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fef6ff;
+    --bg2:#fdeafc;
+    --ink:#4a3f63;
+    --ink-soft:#6c6088;
+    --white:#ffffff;
+    --pink:#ff9ecf;
+    --pink-d:#f56fb0;
+    --mint:#9be8c8;
+    --mint-d:#4fcf9f;
+    --sky:#9ec8ff;
+    --sky-d:#5b9bff;
+    --lemon:#ffe08a;
+    --lemon-d:#ffc83d;
+    --peach:#ffb39a;
+    --grape:#c8a8ff;
+    --grape-d:#9a6bff;
+    --radius:34px;
+    --shadow-clay: 8px 8px 18px rgba(180,150,200,.4), -8px -8px 18px rgba(255,255,255,.9), inset 2px 2px 4px rgba(255,255,255,.7), inset -3px -3px 6px rgba(180,150,200,.25);
+    --shadow-clay-sm: 5px 5px 12px rgba(180,150,200,.4), -5px -5px 12px rgba(255,255,255,.9), inset 1px 1px 2px rgba(255,255,255,.7);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, #ffe8f7 0, transparent 38%),
+      radial-gradient(circle at 88% 14%, #e6f0ff 0, transparent 36%),
+      radial-gradient(circle at 50% 100%, #e7fff3 0, transparent 50%),
+      var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.brand{font-family:'Baloo 2',cursive;font-weight:800;line-height:1.1;color:var(--ink)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+  .clay{box-shadow:var(--shadow-clay);background:var(--white);border-radius:var(--radius)}
+  :focus-visible{outline:3px solid var(--grape-d);outline-offset:3px;border-radius:14px}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:50;padding:14px 0;
+    background:rgba(254,246,255,.82);backdrop-filter:blur(12px);border-bottom:2px solid #f6e2fb}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:11px;font-size:25px;letter-spacing:.3px}
+  .brand .mark{width:44px;height:44px;border-radius:16px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--pink),var(--grape));box-shadow:var(--shadow-clay-sm)}
+  .nav-links{display:flex;align-items:center;gap:6px}
+  .nav-links a{padding:9px 16px;border-radius:16px;font-weight:700;color:var(--ink-soft);transition:.18s}
+  .nav-links a:hover{color:var(--ink);background:#fbe9fb}
+  .btn{font-family:'Baloo 2',cursive;font-weight:700;border:none;cursor:pointer;display:inline-flex;
+    align-items:center;gap:9px;border-radius:20px;padding:13px 24px;font-size:17px;transition:transform .15s, box-shadow .15s}
+  .btn:active{transform:translateY(2px)}
+  .btn-primary{color:#fff;background:linear-gradient(135deg,var(--pink-d),var(--grape-d));
+    box-shadow:6px 6px 14px rgba(154,107,255,.45), -4px -4px 12px rgba(255,255,255,.7), inset 2px 2px 3px rgba(255,255,255,.4)}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-mint{color:#15543c;background:linear-gradient(135deg,var(--mint),var(--mint-d));
+    box-shadow:6px 6px 14px rgba(79,207,159,.4), -4px -4px 12px rgba(255,255,255,.7), inset 2px 2px 3px rgba(255,255,255,.5)}
+  .btn-ghost{background:var(--white);color:var(--ink);box-shadow:var(--shadow-clay-sm)}
+  .menu-btn{display:none;background:var(--white);border:none;border-radius:16px;width:48px;height:48px;
+    cursor:pointer;box-shadow:var(--shadow-clay-sm)}
+  .menu-btn span{display:block;width:22px;height:3px;border-radius:3px;background:var(--ink);margin:4px auto}
+
+  /* HERO */
+  .hero{padding:54px 0 40px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);padding:8px 16px;border-radius:30px;
+    font-weight:800;color:var(--grape-d);font-size:14px;box-shadow:var(--shadow-clay-sm);margin-bottom:20px}
+  .hero h1{font-size:clamp(38px,6vw,62px)}
+  .hero h1 .hl{color:var(--pink-d)}
+  .hero h1 .hl2{color:var(--mint-d)}
+  .hero p.lead{font-size:20px;color:var(--ink-soft);margin:18px 0 28px;max-width:30em;font-weight:600}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .trust{display:flex;align-items:center;gap:14px;margin-top:26px;flex-wrap:wrap}
+  .avatars{display:flex}
+  .avatars span{width:42px;height:42px;border-radius:50%;border:3px solid var(--bg);margin-left:-12px;box-shadow:var(--shadow-clay-sm)}
+  .avatars span:first-child{margin-left:0}
+  .stars{color:var(--lemon-d);font-size:18px;letter-spacing:2px}
+  .trust small{color:var(--ink-soft);font-weight:700}
+
+  /* HERO ART */
+  .hero-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.85}
+  .mascot-card{position:relative;width:330px;height:330px;border-radius:46px;
+    background:linear-gradient(150deg,#fff,#fbeeff);box-shadow:var(--shadow-clay);display:grid;place-items:center}
+  .float{position:absolute;border-radius:24px;display:grid;place-items:center;font-family:'Baloo 2';font-weight:800;color:#fff}
+  .float.a{top:-18px;left:-26px;width:88px;height:88px;background:linear-gradient(135deg,var(--lemon),var(--lemon-d));
+    color:#7a5400;animation:bob 4s ease-in-out infinite;box-shadow:var(--shadow-clay-sm)}
+  .float.b{bottom:8px;left:-46px;width:104px;height:78px;background:linear-gradient(135deg,var(--sky),var(--sky-d));
+    animation:bob 5s ease-in-out infinite .6s;box-shadow:var(--shadow-clay-sm);font-size:14px;text-align:center}
+  .float.c{top:24px;right:-40px;width:96px;height:96px;border-radius:30px;background:linear-gradient(135deg,var(--mint),var(--mint-d));
+    color:#0e4d36;animation:bob 4.5s ease-in-out infinite 1s;box-shadow:var(--shadow-clay-sm)}
+  .float.d{bottom:-12px;right:-14px;width:84px;height:84px;background:linear-gradient(135deg,var(--peach),var(--pink-d));
+    animation:bob 5.5s ease-in-out infinite .3s;box-shadow:var(--shadow-clay-sm)}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+
+  /* SECTIONS */
+  section{padding:56px 0}
+  .sec-head{text-align:center;max-width:40rem;margin:0 auto 44px}
+  .sec-head .pill{margin-bottom:14px}
+  .sec-head h2{font-size:clamp(30px,4.5vw,44px)}
+  .sec-head p{color:var(--ink-soft);font-size:18px;font-weight:600;margin-top:12px}
+
+  /* FEATURES */
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .feature{padding:30px;border-radius:var(--radius);background:var(--white);box-shadow:var(--shadow-clay);
+    transition:transform .2s}
+  .feature:hover{transform:translateY(-6px)}
+  .feature .ico{width:74px;height:74px;border-radius:24px;display:grid;place-items:center;margin-bottom:18px;
+    box-shadow:var(--shadow-clay-sm)}
+  .feature h3{font-size:23px;margin-bottom:8px}
+  .feature p{color:var(--ink-soft);font-weight:600}
+  .i-pink{background:linear-gradient(135deg,var(--pink),var(--pink-d))}
+  .i-mint{background:linear-gradient(135deg,var(--mint),var(--mint-d))}
+  .i-sky{background:linear-gradient(135deg,var(--sky),var(--sky-d))}
+  .i-lemon{background:linear-gradient(135deg,var(--lemon),var(--lemon-d))}
+  .i-grape{background:linear-gradient(135deg,var(--grape),var(--grape-d))}
+  .i-peach{background:linear-gradient(135deg,var(--peach),#ff8f6b)}
+
+  /* HOW IT WORKS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .step{position:relative;padding:34px 28px;border-radius:var(--radius);background:linear-gradient(160deg,#fff,#fdf3ff);
+    box-shadow:var(--shadow-clay);text-align:center}
+  .step .num{width:58px;height:58px;border-radius:20px;margin:0 auto 16px;display:grid;place-items:center;
+    font-family:'Baloo 2';font-size:26px;font-weight:800;color:#fff;box-shadow:var(--shadow-clay-sm)}
+  .step h3{font-size:21px;margin-bottom:7px}
+  .step p{color:var(--ink-soft);font-weight:600}
+
+  /* SOCIAL PROOF */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .quote{padding:28px;border-radius:var(--radius);background:var(--white);box-shadow:var(--shadow-clay)}
+  .quote .stars{margin-bottom:12px}
+  .quote p{font-weight:600;color:var(--ink);font-size:16.5px}
+  .quote .who{display:flex;align-items:center;gap:12px;margin-top:18px}
+  .quote .who span.av{width:46px;height:46px;border-radius:50%;box-shadow:var(--shadow-clay-sm)}
+  .quote .who b{font-family:'Baloo 2';font-size:17px}
+  .quote .who small{color:var(--ink-soft);display:block;font-weight:700}
+
+  /* PRICING */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-items:stretch}
+  .plan{padding:34px 30px;border-radius:var(--radius);background:var(--white);box-shadow:var(--shadow-clay);
+    display:flex;flex-direction:column}
+  .plan.feat{background:linear-gradient(160deg,#fff3fb,#f3e9ff);transform:scale(1.04)}
+  .plan .ptag{display:inline-block;font-family:'Baloo 2';font-weight:700;font-size:14px;color:#fff;padding:5px 14px;
+    border-radius:20px;background:linear-gradient(135deg,var(--pink-d),var(--grape-d));margin-bottom:8px;align-self:flex-start}
+  .plan h3{font-size:24px}
+  .plan .price{font-family:'Baloo 2';font-size:46px;font-weight:800;margin:8px 0 4px}
+  .plan .price small{font-size:18px;color:var(--ink-soft)}
+  .plan ul{list-style:none;margin:18px 0 26px;display:grid;gap:11px}
+  .plan li{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink-soft)}
+  .plan li .ck{width:24px;height:24px;border-radius:9px;background:linear-gradient(135deg,var(--mint),var(--mint-d));
+    display:grid;place-items:center;flex:0 0 auto}
+  .plan .btn{margin-top:auto;justify-content:center}
+
+  /* CTA */
+  .cta-band{margin:20px 0 64px}
+  .cta-box{border-radius:46px;padding:54px 40px;text-align:center;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--grape),var(--pink-d));
+    box-shadow:10px 10px 26px rgba(154,107,255,.4), inset 3px 3px 8px rgba(255,255,255,.35)}
+  .cta-box h2{color:#fff;font-size:clamp(28px,4.5vw,44px)}
+  .cta-box p{color:#fff;opacity:.95;font-weight:700;font-size:19px;margin:14px auto 26px;max-width:34em}
+  .cta-box .puff{position:absolute;border-radius:50%;background:rgba(255,255,255,.22)}
+
+  /* FOOTER */
+  footer{padding:46px 0 36px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px;margin-bottom:30px}
+  footer h4{font-size:18px;margin-bottom:14px}
+  footer .col a{display:block;color:var(--ink-soft);font-weight:600;padding:5px 0}
+  footer .col a:hover{color:var(--pink-d)}
+  footer p.desc{color:var(--ink-soft);font-weight:600;margin-top:12px;max-width:24em}
+  .foot-bottom{border-top:2px solid #f3e1f6;padding-top:22px;display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:12px;color:var(--ink-soft);font-weight:700}
+  .socials{display:flex;gap:10px}
+  .socials a{width:44px;height:44px;border-radius:15px;background:var(--white);display:grid;place-items:center;
+    box-shadow:var(--shadow-clay-sm)}
+
+  @media(max-width:880px){
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:74px;left:16px;right:16px;flex-direction:column;
+      background:var(--white);padding:16px;border-radius:26px;box-shadow:var(--shadow-clay);align-items:stretch}
+    .nav-links.open a{text-align:center}
+    .menu-btn{display:block}
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .hero p.lead{margin-left:auto;margin-right:auto}
+    .hero-cta,.trust{justify-content:center}
+    .hero-art{margin-top:30px}
+    .feature-grid,.steps,.quotes,.price-grid{grid-template-columns:1fr}
+    .plan.feat{transform:none}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#" aria-label="Doodlebug home">
+      <span class="mark" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3c4 0 7 3 7 7 0 5-7 11-7 11S5 15 5 10c0-4 3-7 7-7z" fill="#fff"/><circle cx="9.5" cy="9" r="1.4" fill="#9a6bff"/><circle cx="14.5" cy="9" r="1.4" fill="#9a6bff"/><path d="M9 12c1 1.4 5 1.4 6 0" stroke="#9a6bff" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </span>
+      Doodlebug
+    </a>
+    <nav class="nav-links" id="navlinks" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#loved">Loved by parents</a>
+      <a href="#pricing">Pricing</a>
+      <a class="btn btn-primary" href="#pricing">Start free trial</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill">🌈 Ages 3 to 9 · Screen-time you'll feel good about</span>
+      <h1>Learning that feels like <span class="hl">play</span>, growth you can <span class="hl2">see</span>.</h1>
+      <p class="lead">Doodlebug turns letters, numbers and big feelings into squishy little adventures. Hundreds of hand-crafted games, zero ads, all joy.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#pricing">Try 14 days free</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+      <div class="trust">
+        <div class="avatars" aria-hidden="true">
+          <span style="background:linear-gradient(135deg,#ff9ecf,#f56fb0)"></span>
+          <span style="background:linear-gradient(135deg,#9be8c8,#4fcf9f)"></span>
+          <span style="background:linear-gradient(135deg,#9ec8ff,#5b9bff)"></span>
+          <span style="background:linear-gradient(135deg,#ffe08a,#ffc83d)"></span>
+        </div>
+        <div>
+          <div class="stars" aria-hidden="true">★★★★★</div>
+          <small>Loved by 240,000+ families worldwide</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <span class="blob" style="width:230px;height:230px;background:#ffd9f0;top:10px;left:0"></span>
+      <span class="blob" style="width:170px;height:170px;background:#d6ecff;bottom:0;right:10px"></span>
+      <div class="mascot-card">
+        <svg width="220" height="240" viewBox="0 0 220 240" aria-label="Doodlebug clay mascot" role="img">
+          <defs>
+            <radialGradient id="body" cx="40%" cy="32%" r="75%">
+              <stop offset="0%" stop-color="#bfa0ff"/><stop offset="100%" stop-color="#9a6bff"/>
+            </radialGradient>
+            <radialGradient id="belly" cx="50%" cy="40%" r="70%">
+              <stop offset="0%" stop-color="#fff3fb"/><stop offset="100%" stop-color="#ffd9f0"/>
+            </radialGradient>
+          </defs>
+          <!-- antennae -->
+          <path d="M85 52 Q70 18 58 22" stroke="#9a6bff" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M135 52 Q150 18 162 22" stroke="#9a6bff" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <circle cx="56" cy="20" r="10" fill="#ffc83d"/>
+          <circle cx="164" cy="20" r="10" fill="#4fcf9f"/>
+          <!-- body -->
+          <ellipse cx="110" cy="138" rx="86" ry="92" fill="url(#body)"/>
+          <ellipse cx="110" cy="150" rx="58" ry="62" fill="url(#belly)"/>
+          <!-- cheeks -->
+          <circle cx="64" cy="128" r="15" fill="#ff9ecf" opacity=".85"/>
+          <circle cx="156" cy="128" r="15" fill="#ff9ecf" opacity=".85"/>
+          <!-- eyes -->
+          <circle cx="86" cy="112" r="16" fill="#fff"/><circle cx="89" cy="115" r="8" fill="#4a3f63"/><circle cx="92" cy="112" r="3" fill="#fff"/>
+          <circle cx="134" cy="112" r="16" fill="#fff"/><circle cx="137" cy="115" r="8" fill="#4a3f63"/><circle cx="140" cy="112" r="3" fill="#fff"/>
+          <!-- smile -->
+          <path d="M92 150 q18 22 36 0" stroke="#4a3f63" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- feet -->
+          <ellipse cx="80" cy="222" rx="20" ry="13" fill="#7d52e0"/>
+          <ellipse cx="140" cy="222" rx="20" ry="13" fill="#7d52e0"/>
+        </svg>
+      </div>
+      <div class="float a" aria-hidden="true">ABC</div>
+      <div class="float b" aria-hidden="true">123<br>count!</div>
+      <div class="float c" aria-hidden="true">★</div>
+      <div class="float d" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5C19 16.6 12 21 12 21z" fill="#fff"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="pill">✨ Why kids click with it</span>
+      <h2>Big skills, bite-sized and squishy</h2>
+      <p>Every activity is designed with early-childhood teachers, so play always has a purpose.</p>
+    </div>
+    <div class="feature-grid">
+      <article class="feature">
+        <div class="ico i-pink" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 0 1 2-2h5v15H6a2 2 0 0 0-2 2zM20 19V6a2 2 0 0 0-2-2h-5v15h5a2 2 0 0 1 2 2z" fill="#fff"/></svg></div>
+        <h3>Phonics &amp; reading</h3>
+        <p>From first sounds to first sentences with friendly, voice-guided story quests.</p>
+      </article>
+      <article class="feature">
+        <div class="ico i-mint" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#fff"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#4fcf9f" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Numbers &amp; logic</h3>
+        <p>Counting, shapes and patterns become tasty treats in our bakery mini-games.</p>
+      </article>
+      <article class="feature">
+        <div class="ico i-sky" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5C19 16.6 12 21 12 21z" fill="#fff"/></svg></div>
+        <h3>Feelings &amp; kindness</h3>
+        <p>Gentle stories help little ones name emotions and practice being a good friend.</p>
+      </article>
+      <article class="feature">
+        <div class="ico i-lemon" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5 5.6.7-4 3.9 1 5.4L12 20l-5 2.9 1-5.4-4-3.9 5.6-.7z" fill="#fff"/></svg></div>
+        <h3>Reward worlds</h3>
+        <p>Earn squishy stickers and unlock new islands — motivation that never feels like a chore.</p>
+      </article>
+      <article class="feature">
+        <div class="ico i-grape" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4z" fill="#fff"/></svg></div>
+        <h3>Talk &amp; record</h3>
+        <p>Kids practice speaking out loud and play back their own silly voices. Confidence boost!</p>
+      </article>
+      <article class="feature">
+        <div class="ico i-peach" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 2a7 7 0 0 1 7 7c0 3-2 4.5-2 7H7c0-2.5-2-4-2-7a7 7 0 0 1 7-7z" fill="#fff"/><path d="M9 20h6M10 22h4" stroke="#ff8f6b" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Grown-up insights</h3>
+        <p>A weekly progress card shows you exactly what your child is mastering — no jargon.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="pill">🍭 How it works</span>
+      <h2>Up and giggling in three steps</h2>
+      <p>No tutorials, no fuss. Hand them the tablet and watch the magic.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num" style="background:linear-gradient(135deg,#ff9ecf,#f56fb0)">1</div>
+        <h3>Make a profile</h3>
+        <p>Pick your child's age and a squishy buddy. We tune the difficulty automatically.</p>
+      </div>
+      <div class="step">
+        <div class="num" style="background:linear-gradient(135deg,#9ec8ff,#5b9bff)">2</div>
+        <h3>Play &amp; explore</h3>
+        <p>Hop between worlds of reading, math and feelings. Lessons adapt as they grow.</p>
+      </div>
+      <div class="step">
+        <div class="num" style="background:linear-gradient(135deg,#9be8c8,#4fcf9f)">3</div>
+        <h3>Celebrate wins</h3>
+        <p>Get a friendly weekly recap, then high-five your little learner. Repeat!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="loved">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="pill">💜 Loved by parents</span>
+      <h2>Grown-ups give it five stars too</h2>
+      <p>Real notes from real families in our community.</p>
+    </div>
+    <div class="quotes">
+      <figure class="quote">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <p>"My daughter asks for 'bug time' instead of cartoons now. She sounded out her first whole word last week and I actually cried."</p>
+        <figcaption class="who">
+          <span class="av" style="background:linear-gradient(135deg,#ff9ecf,#f56fb0)"></span>
+          <span><b>Priya M.</b><small>Mum of Anaya, 5</small></span>
+        </figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <p>"Finally a kids app with no creepy ads and no sneaky purchases. The weekly progress card tells me exactly where to help."</p>
+        <figcaption class="who">
+          <span class="av" style="background:linear-gradient(135deg,#9ec8ff,#5b9bff)"></span>
+          <span><b>Daniel R.</b><small>Dad of twins, 6</small></span>
+        </figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <p>"The feelings stories are a hidden gem. Our son now has words for big emotions, which has made tantrums so much shorter."</p>
+        <figcaption class="who">
+          <span class="av" style="background:linear-gradient(135deg,#9be8c8,#4fcf9f)"></span>
+          <span><b>Sofia &amp; Lena</b><small>Parents of Théo, 4</small></span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="pill">🎈 Simple pricing for parents</span>
+      <h2>One family, every kid, one price</h2>
+      <p>Up to four child profiles on every plan. Cancel anytime, keep the giggles.</p>
+    </div>
+    <div class="price-grid">
+      <div class="plan">
+        <span class="ptag" style="background:linear-gradient(135deg,#9ec8ff,#5b9bff)">Nibble</span>
+        <h3>Free Forever</h3>
+        <div class="price">$0</div>
+        <ul>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>One child profile</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>20 starter games</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ad-free, always</li>
+        </ul>
+        <a class="btn btn-ghost" href="#">Get started</a>
+      </div>
+      <div class="plan feat">
+        <span class="ptag">Most loved</span>
+        <h3>Doodlebug Plus</h3>
+        <div class="price">$9<small>/mo</small></div>
+        <ul>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 4 child profiles</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>800+ games &amp; new worlds weekly</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Weekly progress cards</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Offline play for trips</li>
+        </ul>
+        <a class="btn btn-primary" href="#">Start 14-day free trial</a>
+      </div>
+      <div class="plan">
+        <span class="ptag" style="background:linear-gradient(135deg,#9be8c8,#4fcf9f);color:#0e4d36">Family</span>
+        <h3>Yearly Bundle</h3>
+        <div class="price">$69<small>/yr</small></div>
+        <ul>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Everything in Plus</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Save 36% vs monthly</li>
+          <li><span class="ck" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0e4d36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Printable activity packs</li>
+        </ul>
+        <a class="btn btn-mint" href="#">Choose yearly</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <div class="cta-box">
+      <span class="puff" style="width:140px;height:140px;top:-40px;left:-30px"></span>
+      <span class="puff" style="width:90px;height:90px;bottom:-20px;right:40px"></span>
+      <span class="puff" style="width:60px;height:60px;top:30px;right:80px"></span>
+      <h2>Ready for learning that giggles back?</h2>
+      <p>Join 240,000+ families. Start your free 14-day trial today — no card needed to begin.</p>
+      <a class="btn btn-mint" href="#pricing">Start free trial</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#" aria-label="Doodlebug home">
+          <span class="mark" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3c4 0 7 3 7 7 0 5-7 11-7 11S5 15 5 10c0-4 3-7 7-7z" fill="#fff"/><circle cx="9.5" cy="9" r="1.4" fill="#9a6bff"/><circle cx="14.5" cy="9" r="1.4" fill="#9a6bff"/><path d="M9 12c1 1.4 5 1.4 6 0" stroke="#9a6bff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </span>
+          Doodlebug
+        </a>
+        <p class="desc">Playful, screen-time-you-trust learning for curious kids aged 3 to 9. Made by parents and teachers.</p>
+        <div class="socials" style="margin-top:16px">
+          <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="6" stroke="#6c6088" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="#6c6088" stroke-width="2"/><circle cx="17" cy="7" r="1.4" fill="#6c6088"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="4" stroke="#6c6088" stroke-width="2"/><path d="M11 9.5l4 2.5-4 2.5z" fill="#6c6088"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 8h2V5h-2c-2 0-3 1.3-3 3v2H9v3h2v6h3v-6h2l1-3h-3V8z" fill="#6c6088"/></svg></a>
+        </div>
+      </div>
+      <div class="col">
+        <h4>Explore</h4>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#loved">Reviews</a>
+      </div>
+      <div class="col">
+        <h4>For grown-ups</h4>
+        <a href="#">Parent guide</a>
+        <a href="#">Curriculum</a>
+        <a href="#">Privacy &amp; safety</a>
+        <a href="#">Help center</a>
+      </div>
+      <div class="col">
+        <h4>Company</h4>
+        <a href="#">About us</a>
+        <a href="#">Careers</a>
+        <a href="#">Press kit</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Doodlebug Learning Co. Made with 💜 for little humans.</span>
+      <span>COPPA &amp; GDPR-K compliant · Privacy · Terms</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var mb=document.getElementById('menuBtn'),nl=document.getElementById('navlinks');
+  mb.addEventListener('click',function(){
+    var open=nl.classList.toggle('open');
+    mb.setAttribute('aria-expanded',open);
+  });
+  nl.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nl.classList.remove('open');mb.setAttribute('aria-expanded',false);});});
+</script>
+</body>
+</html>

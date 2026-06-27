@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pip Marlowe — Illustrator &amp; 3D Motion Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fff7ec;
+    --cream:#fff7ec;
+    --ink:#1c1230;
+    --ink-soft:#4a3a5e;
+    --muted:#6b5a82;
+    --line:#1c1230;
+    --pink:#ff5da2;
+    --tang:#ff8a3d;
+    --lime:#b8e62f;
+    --sky:#5ad6ff;
+    --grape:#8b5cf6;
+    --yellow:#ffd23f;
+    --maxw:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:800;line-height:1}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--pink);color:#fff}
+  :focus-visible{outline:3px solid var(--grape);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .pill{display:inline-block;font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;padding:7px 16px;border-radius:40px;border:2.5px solid var(--ink)}
+
+  /* NAV */
+  header.nav{position:fixed;inset:14px 14px auto 14px;z-index:60;background:var(--cream);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);transition:.3s}
+  .nav-inner{padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:'Fraunces',serif;font-weight:800;font-size:1.5rem;display:flex;align-items:center;gap:.5rem}
+  .brand .blob{width:26px;height:26px;border-radius:48% 52% 60% 40%/55% 45% 55% 45%;background:linear-gradient(135deg,var(--pink),var(--tang));display:inline-block;animation:wob 5s ease-in-out infinite}
+  @keyframes wob{0%,100%{border-radius:48% 52% 60% 40%/55% 45% 55% 45%}50%{border-radius:60% 40% 45% 55%/40% 60% 50% 50%}}
+  .nav-links{display:flex;gap:.4rem;align-items:center}
+  .nav-links a{font-weight:600;font-size:.92rem;padding:8px 14px;border-radius:30px;transition:.2s}
+  .nav-links a:hover{background:var(--yellow)}
+  .nav-cta{background:var(--ink);color:var(--cream)!important;border-radius:30px;padding:8px 18px!important;font-weight:700!important}
+  .nav-cta:hover{background:var(--pink)!important}
+  .burger{display:none;background:var(--yellow);border:2.5px solid var(--ink);border-radius:12px;cursor:pointer;width:42px;height:42px;flex-direction:column;justify-content:center;align-items:center;gap:4px}
+  .burger span{display:block;width:18px;height:2.5px;background:var(--ink);transition:.3s}
+
+  /* HERO */
+  .hero{padding:9.5rem 0 4rem;position:relative;overflow:hidden}
+  .hero-deco{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .blobby{position:absolute;border-radius:50%;filter:blur(2px);opacity:.85}
+  .b1{width:380px;height:380px;background:radial-gradient(circle at 35% 35%,var(--pink),var(--grape));top:-90px;right:-60px;border-radius:46% 54% 62% 38%/52% 48% 52% 48%;animation:float 9s ease-in-out infinite}
+  .b2{width:240px;height:240px;background:radial-gradient(circle at 40% 40%,var(--lime),var(--sky));bottom:-40px;left:-60px;border-radius:60% 40% 50% 50%/45% 55% 45% 55%;animation:float 11s ease-in-out infinite reverse}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-26px) rotate(8deg)}}
+  .hero-inner{position:relative;z-index:2}
+  .hero .pill{background:var(--lime)}
+  .hero h1{font-size:clamp(3rem,11vw,9rem);letter-spacing:-.02em;margin:1.4rem 0 .4rem}
+  .hero h1 .word{display:inline-block}
+  .hero h1 .pink{color:var(--pink)}
+  .hero h1 .grape{color:var(--grape);font-style:italic;font-weight:700}
+  .hero h1 .out{color:transparent;-webkit-text-stroke:3px var(--ink)}
+  .hero-sub{display:flex;flex-wrap:wrap;gap:2rem;align-items:flex-end;justify-content:space-between;margin-top:1.8rem}
+  .hero-sub p{font-size:1.15rem;max-width:42ch;color:var(--ink-soft);font-weight:500}
+  .hero-roles{display:flex;gap:.6rem;flex-wrap:wrap}
+  .hero-roles span{font-weight:600;font-size:.82rem;padding:6px 14px;border-radius:30px;border:2px solid var(--ink)}
+  .hero-roles span:nth-child(1){background:var(--sky)}
+  .hero-roles span:nth-child(2){background:var(--tang)}
+  .hero-roles span:nth-child(3){background:var(--yellow)}
+
+  /* sticker */
+  .sticker{position:absolute;font-family:'Fraunces',serif;font-weight:800;font-size:.85rem;background:var(--yellow);border:2.5px solid var(--ink);border-radius:50%;width:96px;height:96px;display:grid;place-items:center;text-align:center;line-height:1.05;box-shadow:4px 4px 0 var(--ink);transform:rotate(-12deg);z-index:5}
+  .sticker.s1{top:120px;right:8%;background:var(--pink);color:#fff}
+  @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  /* MARQUEE */
+  .marquee{background:var(--ink);color:var(--cream);overflow:hidden;padding:.8rem 0;transform:rotate(-1.5deg);margin:2rem 0;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+  .mq-track{display:flex;gap:2.5rem;white-space:nowrap;width:max-content;animation:scroll 22s linear infinite;font-family:'Fraunces',serif;font-weight:700;font-size:1.6rem}
+  .mq-track span{display:flex;align-items:center;gap:2.5rem}
+  .mq-track span::after{content:"★";color:var(--lime)}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* SECTION HEAD */
+  .sec{padding:5rem 0}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:2.6rem}
+  .sec-head h2{font-size:clamp(2.4rem,6vw,4.5rem);letter-spacing:-.02em}
+  .sec-head h2 em{font-style:italic;font-weight:700;color:var(--pink)}
+  .sec-head .pill{background:var(--sky)}
+
+  /* WORK TILES */
+  .tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:1.4rem}
+  .tile{border:3px solid var(--ink);border-radius:24px;overflow:hidden;position:relative;box-shadow:6px 6px 0 var(--ink);transition:.25s;cursor:pointer;display:flex;flex-direction:column;background:#fff}
+  .tile:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+  .tile .art{position:relative;flex:1;min-height:240px;overflow:hidden}
+  .tile.big{grid-column:span 4}
+  .tile.med{grid-column:span 2}
+  .tile.sm{grid-column:span 2}
+  .tile.big .art{min-height:340px}
+  .tile .meta{padding:1rem 1.2rem;border-top:3px solid var(--ink);background:var(--cream);display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  .tile .meta h3{font-size:1.35rem;letter-spacing:-.01em}
+  .tile .meta small{font-weight:600;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+  .tile .meta .go{width:38px;height:38px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;flex-shrink:0;transition:.2s}
+  .tile:hover .meta .go{background:var(--lime);transform:rotate(-45deg)}
+  .tile .meta .go svg{width:18px;height:18px}
+
+  /* CSS-ART SCENES */
+  .scene-fruit{background:radial-gradient(circle at 30% 25%,var(--yellow),var(--tang) 55%,var(--pink));position:relative}
+  .scene-fruit .ball{position:absolute;border-radius:50%}
+  .scene-fruit .b-a{width:46%;height:46%;left:12%;top:18%;background:radial-gradient(circle at 35% 30%,#fff,var(--lime) 70%);box-shadow:8px 12px 0 rgba(28,18,48,.18)}
+  .scene-fruit .b-b{width:34%;height:34%;right:10%;bottom:14%;background:radial-gradient(circle at 35% 30%,#fff,var(--grape) 75%);box-shadow:6px 9px 0 rgba(28,18,48,.18)}
+
+  .scene-orbit{background:linear-gradient(160deg,var(--grape),var(--ink));position:relative}
+  .scene-orbit .ring{position:absolute;border:3px solid rgba(255,255,255,.35);border-radius:50%}
+  .scene-orbit .r1{width:70%;height:70%;left:15%;top:15%;transform:rotate(18deg)}
+  .scene-orbit .r2{width:46%;height:46%;left:27%;top:27%;transform:rotate(-30deg);border-color:rgba(255,210,63,.6)}
+  .scene-orbit .planet{position:absolute;width:30%;height:30%;left:35%;top:35%;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--sky),var(--pink));box-shadow:0 0 40px rgba(90,214,255,.6)}
+  .scene-orbit .moon{position:absolute;width:11%;height:11%;border-radius:50%;background:var(--yellow);top:18%;right:20%;box-shadow:0 0 20px var(--yellow)}
+
+  .scene-face{background:linear-gradient(150deg,var(--sky),var(--grape));position:relative}
+  .scene-face .head{position:absolute;width:54%;height:64%;left:23%;top:14%;border-radius:46% 46% 50% 50%/40% 40% 60% 60%;background:radial-gradient(circle at 40% 30%,var(--tang),var(--pink))}
+  .scene-face .eye{position:absolute;width:9%;height:13%;border-radius:50%;background:var(--ink);top:38%}
+  .scene-face .eye.l{left:38%}.scene-face .eye.r{left:54%}
+  .scene-face .smile{position:absolute;width:20%;height:12%;left:40%;top:54%;border:3px solid var(--ink);border-top:none;border-radius:0 0 40px 40px}
+  .scene-face .cheek{position:absolute;width:8%;height:6%;border-radius:50%;background:rgba(255,93,162,.6);top:50%}
+  .scene-face .cheek.l{left:34%}.scene-face .cheek.r{left:58%}
+
+  .scene-stack{background:linear-gradient(160deg,var(--lime),var(--sky));position:relative;display:grid;place-items:center}
+  .scene-stack .box{position:absolute;border:3px solid var(--ink);border-radius:14px}
+  .scene-stack .x1{width:40%;height:30%;background:var(--pink);left:18%;top:20%;transform:rotate(-8deg)}
+  .scene-stack .x2{width:36%;height:28%;background:var(--yellow);right:14%;top:34%;transform:rotate(10deg)}
+  .scene-stack .x3{width:44%;height:30%;background:var(--grape);left:28%;bottom:14%;transform:rotate(-4deg)}
+
+  .scene-wave{background:linear-gradient(180deg,var(--yellow),var(--tang));position:relative;overflow:hidden}
+  .scene-wave .w{position:absolute;left:-10%;width:120%;height:40%;border-radius:50%}
+  .scene-wave .w1{background:var(--pink);bottom:-18%}
+  .scene-wave .w2{background:var(--grape);bottom:-26%;opacity:.85}
+  .scene-wave .sun{position:absolute;width:30%;height:30%;border-radius:50%;background:radial-gradient(circle,#fff,var(--yellow));left:35%;top:18%;box-shadow:0 0 50px rgba(255,210,63,.8)}
+
+  /* MARQUEE 2 / CLIENTS */
+  .clients{padding:4rem 0;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);background:var(--cream)}
+  .clients .lead{font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:.85rem;color:var(--muted);margin-bottom:2rem;text-align:center}
+  .logo-row{display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center;align-items:center}
+  .logo{display:flex;align-items:center;gap:.6rem;font-family:'Fraunces',serif;font-weight:800;font-size:1.4rem;border:2.5px solid var(--ink);border-radius:40px;padding:10px 22px;transition:.2s}
+  .logo:hover{background:var(--ink);color:var(--cream)}
+  .logo .mk{width:22px;height:22px;border-radius:50%}
+
+  /* ABOUT */
+  .about{position:relative}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
+  .avatar{position:relative;border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);aspect-ratio:1/1;overflow:hidden;background:radial-gradient(circle at 30% 25%,var(--yellow),var(--tang) 50%,var(--pink))}
+  .avatar .face{position:absolute;width:58%;height:64%;left:21%;top:16%;border-radius:46% 46% 50% 50%/42% 42% 58% 58%;background:radial-gradient(circle at 40% 32%,#ffe0c2,#f3b58a)}
+  .avatar .hair{position:absolute;width:66%;height:40%;left:17%;top:8%;border-radius:50% 50% 40% 40%/70% 70% 30% 30%;background:linear-gradient(160deg,var(--grape),var(--ink))}
+  .avatar .eye{position:absolute;width:7%;height:10%;border-radius:50%;background:var(--ink);top:40%}
+  .avatar .eye.l{left:38%}.avatar .eye.r{left:55%}
+  .avatar .smile{position:absolute;width:18%;height:10%;left:41%;top:56%;border:3px solid var(--ink);border-top:none;border-radius:0 0 30px 30px}
+  .avatar .glasses{position:absolute;left:34%;top:36%;width:32%;height:14%;border:3px solid var(--ink);border-radius:30px;background:rgba(90,214,255,.25)}
+  .avatar .badge{position:absolute;right:-12px;bottom:24px;background:var(--lime);border:2.5px solid var(--ink);border-radius:50%;width:80px;height:80px;display:grid;place-items:center;font-family:'Fraunces';font-weight:800;font-size:.78rem;text-align:center;line-height:1.05;box-shadow:3px 3px 0 var(--ink);transform:rotate(10deg);animation:spin 14s linear infinite}
+  .about-text .pill{background:var(--tang);margin-bottom:1.4rem}
+  .about-text h2{font-size:clamp(2rem,4.5vw,3.4rem);letter-spacing:-.02em;margin-bottom:1.2rem}
+  .about-text h2 em{font-style:italic;font-weight:700;color:var(--pink)}
+  .about-text p{font-size:1.08rem;color:var(--ink-soft);font-weight:500;margin-bottom:1rem;max-width:50ch}
+  .about-text p b{color:var(--ink)}
+  .funfacts{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.4rem}
+  .funfacts span{border:2px solid var(--ink);border-radius:30px;padding:6px 14px;font-weight:600;font-size:.85rem}
+  .funfacts span:nth-child(odd){background:var(--yellow)}
+  .funfacts span:nth-child(even){background:var(--sky)}
+
+  /* CONTACT */
+  .contact{position:relative;border:3px solid var(--ink);border-radius:32px;background:var(--grape);color:var(--cream);padding:5rem 3rem;text-align:center;overflow:hidden;box-shadow:10px 10px 0 var(--ink)}
+  .contact .blobby.c1{width:300px;height:300px;background:radial-gradient(circle at 40% 40%,var(--pink),var(--tang));top:-100px;left:-80px;opacity:.5}
+  .contact .blobby.c2{width:260px;height:260px;background:radial-gradient(circle at 40% 40%,var(--lime),var(--sky));bottom:-110px;right:-70px;opacity:.5}
+  .contact h2{font-size:clamp(2.4rem,7vw,5.5rem);letter-spacing:-.02em;position:relative;margin-bottom:1rem}
+  .contact h2 .y{color:var(--yellow);font-style:italic;font-weight:700}
+  .contact p{position:relative;max-width:46ch;margin:0 auto 2.2rem;font-size:1.1rem;font-weight:500;color:rgba(255,247,236,.92)}
+  .btn{display:inline-flex;align-items:center;gap:.6rem;background:var(--yellow);color:var(--ink);border:3px solid var(--ink);font-weight:700;padding:14px 30px;border-radius:40px;font-size:1rem;transition:.2s;position:relative;box-shadow:4px 4px 0 var(--ink)}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);background:var(--pink);color:#fff}
+  .btn svg{width:18px;height:18px}
+  .btn.ghost{background:var(--cream)}
+
+  /* FOOTER */
+  footer{padding:3.5rem 0 2.5rem}
+  .foot-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2rem;align-items:flex-start;border-top:3px solid var(--ink);padding-top:2.5rem}
+  .foot-grid h4{font-size:2rem}
+  .foot-grid .col{display:flex;flex-direction:column;gap:.4rem}
+  .foot-grid .col h5{font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;color:var(--muted);margin-bottom:.4rem}
+  .foot-grid .col a{font-weight:600;transition:.2s}
+  .foot-grid .col a:hover{color:var(--pink)}
+  .foot-bottom{margin-top:2.5rem;font-weight:500;font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.8rem;justify-content:space-between}
+
+  @media(max-width:960px){
+    .tiles{grid-template-columns:repeat(4,1fr)}
+    .tile.big{grid-column:span 4}.tile.med,.tile.sm{grid-column:span 2}
+    .about-grid{grid-template-columns:1fr;gap:2.4rem}
+  }
+  @media(max-width:680px){
+    .nav-links{position:fixed;inset:78px 14px auto 14px;background:var(--cream);border:3px solid var(--ink);border-radius:20px;flex-direction:column;align-items:stretch;padding:1rem;box-shadow:5px 5px 0 var(--ink);transform:scale(.95);opacity:0;pointer-events:none;transition:.2s}
+    .nav-links.open{transform:none;opacity:1;pointer-events:auto}
+    .nav-links a{text-align:center;font-size:1.05rem}
+    .burger{display:flex}
+    .tiles{grid-template-columns:1fr}
+    .tile.big,.tile.med,.tile.sm{grid-column:span 1}
+    .sticker.s1{right:4%;top:96px;width:78px;height:78px;font-size:.72rem}
+    .contact{padding:3rem 1.4rem}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="blob"></span>Pip Marlowe</a>
+    <nav class="nav-links" id="menu" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#clients">Clients</a>
+      <a class="nav-cta" href="#contact">Let's talk</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-deco">
+      <span class="blobby b1"></span>
+      <span class="blobby b2"></span>
+    </div>
+    <span class="sticker s1">NEW<br>REEL '26</span>
+    <div class="wrap hero-inner">
+      <span class="pill">Illustrator · 3D &amp; Motion</span>
+      <h1>
+        <span class="word pink">Big</span> <span class="word">ideas,</span><br>
+        <span class="word grape">bouncy</span> <span class="word out">pixels.</span>
+      </h1>
+      <div class="hero-sub">
+        <p>I make playful illustration, squishy 3D characters and motion that makes people smile, scroll back, and click.</p>
+        <div class="hero-roles">
+          <span>Illustration</span>
+          <span>3D &amp; CGI</span>
+          <span>Motion design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="mq-track">
+      <span>brand mascots</span><span>title sequences</span><span>app illustration</span><span>squishy 3D</span><span>looping gifs</span>
+      <span>brand mascots</span><span>title sequences</span><span>app illustration</span><span>squishy 3D</span><span>looping gifs</span>
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <section id="work" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="pill">Selected work</span>
+          <h2 style="margin-top:1rem">Things I made &amp; <em>loved</em></h2>
+        </div>
+      </div>
+      <div class="tiles">
+
+        <article class="tile big">
+          <div class="art scene-orbit">
+            <span class="ring r1"></span><span class="ring r2"></span>
+            <span class="planet"></span><span class="moon"></span>
+          </div>
+          <div class="meta">
+            <div><h3>Cosmic Cargo</h3><small>3D · Title sequence</small></div>
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+          </div>
+        </article>
+
+        <article class="tile med">
+          <div class="art scene-face">
+            <span class="head"></span>
+            <span class="eye l"></span><span class="eye r"></span>
+            <span class="cheek l"></span><span class="cheek r"></span>
+            <span class="smile"></span>
+          </div>
+          <div class="meta">
+            <div><h3>Mochi Mascot</h3><small>Character</small></div>
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+          </div>
+        </article>
+
+        <article class="tile sm">
+          <div class="art scene-fruit">
+            <span class="ball b-a"></span><span class="ball b-b"></span>
+          </div>
+          <div class="meta">
+            <div><h3>Juicy</h3><small>Illustration</small></div>
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+          </div>
+        </article>
+
+        <article class="tile med">
+          <div class="art scene-stack">
+            <span class="box x1"></span><span class="box x2"></span><span class="box x3"></span>
+          </div>
+          <div class="meta">
+            <div><h3>Block Party</h3><small>3D · App icons</small></div>
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+          </div>
+        </article>
+
+        <article class="tile med">
+          <div class="art scene-wave">
+            <span class="sun"></span><span class="w w2"></span><span class="w w1"></span>
+          </div>
+          <div class="meta">
+            <div><h3>Sunset Loop</h3><small>Motion · Looping</small></div>
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+          </div>
+        </article>
+
+        <article class="tile big">
+          <div class="art scene-fruit" style="background:radial-gradient(circle at 70% 30%,var(--sky),var(--grape) 60%,var(--ink))">
+            <span class="ball b-a" style="background:radial-gradient(circle at 35% 30%,#fff,var(--pink) 72%)"></span>
+            <span class="ball b-b" style="background:radial-gradient(circle at 35% 30%,#fff,var(--yellow) 72%)"></span>
+            <span class="ball" style="width:24%;height:24%;left:46%;top:50%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--lime) 72%);box-shadow:5px 8px 0 rgba(28,18,48,.18)"></span>
+          </div>
+          <div class="meta">
+            <div><h3>Bubble Bath</h3><small>3D · Brand world</small></div>
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section id="clients" class="clients">
+    <div class="wrap">
+      <p class="lead">Trusted by playful brands &amp; studios</p>
+      <div class="logo-row">
+        <span class="logo"><span class="mk" style="background:var(--pink)"></span>Noodle</span>
+        <span class="logo"><span class="mk" style="background:var(--sky)"></span>Pixelpop</span>
+        <span class="logo"><span class="mk" style="background:var(--lime)"></span>Boba&amp;Co</span>
+        <span class="logo"><span class="mk" style="background:var(--tang)"></span>Hopscotch</span>
+        <span class="logo"><span class="mk" style="background:var(--grape)"></span>Marshmallow</span>
+        <span class="logo"><span class="mk" style="background:var(--yellow)"></span>Sundae</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="sec about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div class="avatar">
+          <span class="hair"></span>
+          <span class="face"></span>
+          <span class="glasses"></span>
+          <span class="eye l"></span><span class="eye r"></span>
+          <span class="smile"></span>
+          <span class="badge">SAYS<br>HELLO!</span>
+        </div>
+        <div class="about-text">
+          <span class="pill">About me</span>
+          <h2>Hi, I'm Pip — I draw <em>happy little worlds</em> for a living.</h2>
+          <p>For the past eight years I've been making characters squishy, gradients loud, and brand mascots impossible to forget. I work somewhere between <b>2D illustration and 3D motion</b>, and I genuinely cannot stop fiddling with color.</p>
+          <p>When I'm not animating a bouncing blob, I'm probably teaching workshops, doodling on receipts, or naming my Blender files after snacks.</p>
+          <div class="funfacts">
+            <span>🎨 200+ projects</span>
+            <span>🍡 Blender obsessive</span>
+            <span>✦ Awwwards mentor</span>
+            <span>🌈 Color maximalist</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="sec">
+    <div class="wrap">
+      <div class="contact">
+        <span class="blobby c1"></span>
+        <span class="blobby c2"></span>
+        <h2>Let's make<br>something <span class="y">silly.</span></h2>
+        <p>Got a mascot that needs a personality or a launch that needs some bounce? I'd love to hear about it.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative">
+          <a class="btn" href="#contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 5h16v14H4z"/><path d="M4 7l8 6 8-6"/></svg>
+            hi@pipmarlowe.studio
+          </a>
+          <a class="btn ghost" href="#work">See the reel</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Pip Marlowe</h4>
+        <p style="max-width:30ch;color:var(--ink-soft);font-weight:500;margin-top:.5rem">Illustrator &amp; 3D motion designer making the internet a little more fun.</p>
+      </div>
+      <div class="col">
+        <h5>Menu</h5>
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#clients">Clients</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="col">
+        <h5>Elsewhere</h5>
+        <a href="#contact">Instagram</a>
+        <a href="#contact">Dribbble</a>
+        <a href="#contact">Behance</a>
+        <a href="#contact">Vimeo</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Pip Marlowe Studio — made with too much color.</span>
+      <span>Hand-coded · no stock images were harmed</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var burger=document.getElementById('burger'),menu=document.getElementById('menu');
+  burger.addEventListener('click',function(){
+    var open=menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
+    burger.querySelectorAll('span').forEach(function(s,i){
+      s.style.transform=open?(i===0?'translateY(6.5px) rotate(45deg)':i===2?'translateY(-6.5px) rotate(-45deg)':'scaleX(0)'):'';
+    });
+  });
+  menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){
+    menu.classList.remove('open');burger.setAttribute('aria-expanded','false');
+    burger.querySelectorAll('span').forEach(function(s){s.style.transform=''});
+  })});
+</script>
+</body>
+</html>

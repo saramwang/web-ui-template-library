@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wayfarer — Find Your Next Horizon</title>
+<meta name="description" content="Wayfarer curates unforgettable journeys to the world's most breathtaking destinations. Search, compare, and book handpicked stays and experiences in minutes." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@600;700&family=Sora:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0f1d2e;
+    --soft:#3c4a5c;
+    --mute:#6b7787;
+    --cream:#fbf7f0;
+    --white:#ffffff;
+    --line:#e7e1d6;
+    --sunset-1:#ff7a59;
+    --sunset-2:#ff5277;
+    --sunset-3:#ffb454;
+    --ocean-1:#1b6ca8;
+    --ocean-2:#2aa9b8;
+    --teal:#159d8f;
+    --gold:#f2a93b;
+    --deep:#102a43;
+    --radius:24px;
+    --shadow:0 30px 70px -28px rgba(16,42,67,.5);
+    --shadow-sm:0 16px 40px -22px rgba(16,42,67,.45);
+    --display:"Sora","Outfit",sans-serif;
+    --sans:"Outfit",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  svg{display:block}
+  h1,h2,h3{font-family:var(--display);line-height:1.05;letter-spacing:-.02em}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 26px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:700;font-size:.96rem;padding:15px 28px;border-radius:100px;cursor:pointer;border:0;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;font-family:var(--sans);white-space:nowrap}
+  .btn-primary{color:#fff;background:linear-gradient(120deg,var(--sunset-1),var(--sunset-2));box-shadow:0 16px 32px -12px rgba(255,82,119,.6)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 40px -12px rgba(255,82,119,.7)}
+  .btn-light{background:#fff;color:var(--ink)}
+  .btn-light:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+  .btn-outline{background:rgba(255,255,255,.12);color:#fff;border:1.6px solid rgba(255,255,255,.5);backdrop-filter:blur(6px)}
+  .btn-outline:hover{transform:translateY(-2px);background:rgba(255,255,255,.2)}
+  :focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:6px}
+
+  /* nav */
+  header.nav{position:absolute;top:0;left:0;right:0;z-index:60}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:84px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:800;font-size:1.34rem;color:#fff}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--sunset-3),var(--sunset-2));display:grid;place-items:center;box-shadow:0 8px 18px -6px rgba(255,82,119,.7)}
+  .nav-links{display:flex;align-items:center;gap:32px}
+  .nav-links a{font-weight:600;font-size:.96rem;color:rgba(255,255,255,.92)}
+  .nav-links a:hover{color:#fff}
+  .nav-cta{display:flex;align-items:center;gap:16px}
+  .menu-btn{display:none;background:none;border:0;cursor:pointer;padding:8px}
+  .menu-btn span{display:block;width:24px;height:2.4px;background:#fff;border-radius:3px;margin:5px 0}
+  .mobile-menu{display:none;position:absolute;top:84px;left:16px;right:16px;flex-direction:column;gap:4px;padding:16px 20px 22px;background:var(--deep);border-radius:18px;box-shadow:var(--shadow);z-index:70}
+  .mobile-menu a{padding:11px 0;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.12)}
+  .mobile-menu .btn{margin-top:14px}
+
+  /* HERO */
+  .hero{position:relative;min-height:108vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:120px 0 60px;color:#fff}
+  .sky{position:absolute;inset:0;z-index:0;background:
+    radial-gradient(120% 80% at 50% 14%, #ffd98a 0%, #ffb454 16%, #ff7a59 38%, #ff5277 58%, #a83b7a 78%, #5b2f6e 100%);}
+  .sun{position:absolute;z-index:1;top:20%;left:50%;transform:translateX(-50%);width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,#fff7e0 0%,#ffe39a 40%,rgba(255,210,120,.4) 70%,transparent 72%);filter:blur(2px)}
+  .stars-sky{position:absolute;inset:0;z-index:1;opacity:.7}
+  .layers{position:absolute;left:0;right:0;bottom:0;z-index:2;line-height:0}
+  .layers svg{width:100%;height:auto;display:block}
+  .l-mtn-3{opacity:.55}
+  .hero-content{position:relative;z-index:5;text-align:center;max-width:880px;margin:0 auto}
+  .hero .kicker{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(6px);padding:8px 16px;border-radius:100px;font-weight:600;font-size:.86rem;margin-bottom:22px}
+  .hero h1{font-size:clamp(2.8rem,7vw,5.6rem);font-weight:800;text-shadow:0 6px 30px rgba(16,20,40,.3);margin-bottom:18px}
+  .hero h1 .it{font-family:"Sora";font-style:normal;background:linear-gradient(100deg,#fff,#ffe39a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{font-size:1.22rem;max-width:560px;margin:0 auto 36px;color:rgba(255,255,255,.94);text-shadow:0 2px 16px rgba(16,20,40,.25)}
+
+  /* search bar */
+  .search{position:relative;z-index:6;max-width:920px;margin:6px auto 0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-radius:22px;box-shadow:var(--shadow);padding:12px;display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:6px;align-items:stretch;text-align:left}
+  .sf{display:flex;align-items:center;gap:11px;padding:12px 16px;border-radius:14px;transition:background .15s}
+  .sf:hover{background:var(--cream)}
+  .sf .si{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--ocean-1),var(--teal))}
+  .sf:nth-child(2) .si{background:linear-gradient(135deg,var(--sunset-1),var(--gold))}
+  .sf:nth-child(3) .si{background:linear-gradient(135deg,var(--sunset-2),var(--ocean-2))}
+  .sf label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+  .sf .val{font-weight:700;color:var(--ink);font-size:.98rem}
+  .sf .val small{font-weight:500;color:var(--mute);font-size:.85rem}
+  .search .btn{border-radius:16px;padding:0 30px;font-size:1rem}
+
+  /* trust strip under hero */
+  .hero-trust{position:relative;z-index:5;margin-top:30px;display:flex;gap:34px;justify-content:center;flex-wrap:wrap;color:rgba(255,255,255,.92);font-weight:600;font-size:.92rem}
+  .hero-trust span{display:flex;align-items:center;gap:9px}
+
+  section{position:relative}
+  .pad{padding:96px 0}
+  .sec-head{max-width:680px;margin:0 auto 52px;text-align:center}
+  .sec-head .eyebrow{color:var(--sunset-2);justify-content:center}
+  .sec-head h2{font-size:clamp(2.1rem,4vw,3.1rem);margin:14px 0 14px}
+  .sec-head p{color:var(--soft);font-size:1.1rem}
+
+  /* destinations grid (CSS-art cards) */
+  .dest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .dest{position:relative;border-radius:var(--radius);overflow:hidden;min-height:340px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:26px;box-shadow:var(--shadow-sm);transition:transform .25s ease,box-shadow .25s ease}
+  .dest:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .dest .scene{position:absolute;inset:0;z-index:0}
+  .dest .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 30%,rgba(8,16,30,.72) 100%)}
+  .dest .tag{position:absolute;top:18px;left:18px;z-index:2;background:rgba(255,255,255,.92);color:var(--ink);font-weight:700;font-size:.76rem;padding:6px 12px;border-radius:100px}
+  .dest .fav{position:absolute;top:16px;right:16px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);display:grid;place-items:center;border:1px solid rgba(255,255,255,.4)}
+  .dest .info{position:relative;z-index:2}
+  .dest h3{font-size:1.5rem;margin-bottom:4px}
+  .dest .loc{font-size:.88rem;opacity:.92;display:flex;align-items:center;gap:6px;margin-bottom:12px}
+  .dest .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .dest .price b{font-size:1.2rem}
+  .dest .price small{opacity:.85;font-weight:500}
+  .dest .rate{display:flex;align-items:center;gap:5px;font-weight:700;font-size:.9rem;background:rgba(255,255,255,.18);padding:5px 11px;border-radius:100px}
+  /* big featured dest */
+  .dest.wide{grid-column:span 2;min-height:340px}
+
+  /* CSS scene helpers */
+  .sc-santorini{background:linear-gradient(180deg,#5aa9e0 0%,#a9d8f0 48%,#1b6ca8 100%)}
+  .sc-bali{background:linear-gradient(180deg,#ffd98a 0%,#ff9e6b 40%,#159d8f 100%)}
+  .sc-alps{background:linear-gradient(180deg,#bfe3ff 0%,#7fb6e6 45%,#3a6ea5 100%)}
+  .sc-kyoto{background:linear-gradient(180deg,#ffd6e0 0%,#ff9ab0 45%,#a83b7a 100%)}
+  .sc-sahara{background:linear-gradient(180deg,#ffd98a 0%,#ffb454 45%,#c9742e 100%)}
+  .scene .sun-s{position:absolute;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#fff6dd,#ffe39a 60%,rgba(255,210,120,.3) 75%,transparent)}
+  .scene svg{position:absolute;bottom:0;left:0;width:100%;height:auto;display:block}
+
+  /* experiences */
+  .exp{background:linear-gradient(180deg,#fff,#fbf3e8)}
+  .exp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .exp-card{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:28px 24px;transition:transform .2s ease,box-shadow .2s ease}
+  .exp-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-sm)}
+  .exp-card .ic{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;color:#fff;margin-bottom:18px}
+  .e1{background:linear-gradient(135deg,var(--ocean-1),var(--teal))}
+  .e2{background:linear-gradient(135deg,var(--sunset-1),var(--gold))}
+  .e3{background:linear-gradient(135deg,var(--sunset-2),var(--sunset-1))}
+  .e4{background:linear-gradient(135deg,var(--teal),var(--ocean-2))}
+  .exp-card h3{font-size:1.18rem;margin-bottom:8px}
+  .exp-card p{color:var(--soft);font-size:.95rem}
+  .exp-card .cnt{display:block;margin-top:14px;font-weight:700;color:var(--sunset-2);font-size:.9rem}
+
+  /* testimonials */
+  .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .test{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+  .test .stars{color:var(--gold);letter-spacing:2px;margin-bottom:14px}
+  .test p{font-size:1.04rem;color:var(--ink);flex:1}
+  .test .who{display:flex;align-items:center;gap:12px;margin-top:20px}
+  .test .ava{width:46px;height:46px;border-radius:50%;flex-shrink:0}
+  .av-a{background:linear-gradient(135deg,var(--ocean-1),var(--teal))}
+  .av-b{background:linear-gradient(135deg,var(--sunset-1),var(--gold))}
+  .av-c{background:linear-gradient(135deg,var(--sunset-2),var(--sunset-1))}
+  .test .who b{display:block;font-size:.98rem}
+  .test .who small{color:var(--mute);font-size:.84rem}
+
+  /* CTA */
+  .cta{position:relative;overflow:hidden}
+  .cta-card{position:relative;border-radius:34px;overflow:hidden;padding:74px 48px;text-align:center;color:#fff;box-shadow:var(--shadow)}
+  .cta-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(120% 100% at 50% 0%, #ffb454 0%, #ff7a59 30%, #ff5277 56%, #1b6ca8 100%)}
+  .cta-card svg.waves{position:absolute;bottom:0;left:0;width:100%;z-index:1}
+  .cta-card .inner{position:relative;z-index:3}
+  .cta-card h2{font-size:clamp(2.1rem,4.4vw,3.3rem);margin-bottom:14px}
+  .cta-card p{font-size:1.16rem;opacity:.95;max-width:540px;margin:0 auto 28px}
+
+  /* footer */
+  footer{background:var(--deep);color:#a9b7c6;padding:66px 0 30px;margin-top:96px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .foot-brand .brand{color:#fff}
+  .foot-brand p{margin-top:16px;font-size:.94rem;max-width:300px;color:#8497ac}
+  .foot-col h5{color:#fff;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;font-family:var(--display)}
+  .foot-col a{display:block;padding:6px 0;font-size:.94rem;color:#8497ac}
+  .foot-col a:hover{color:#fff}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;font-size:.88rem;color:#71839a;flex-wrap:wrap;gap:14px}
+  .soc{display:flex;gap:12px}
+  .soc a{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.07);display:grid;place-items:center;color:#a9b7c6}
+  .soc a:hover{background:rgba(255,255,255,.15);color:#fff}
+
+  @media(max-width:980px){
+    .search{grid-template-columns:1fr 1fr;gap:8px}
+    .search .btn{grid-column:span 2}
+    .dest-grid{grid-template-columns:1fr 1fr}
+    .dest.wide{grid-column:span 2}
+    .exp-grid{grid-template-columns:1fr 1fr}
+    .test-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:680px){
+    .nav-links,.nav-cta .btn{display:none}
+    .menu-btn{display:block}
+    .search{grid-template-columns:1fr}
+    .search .btn{grid-column:span 1}
+    .dest-grid{grid-template-columns:1fr}
+    .dest.wide{grid-column:span 1}
+    .exp-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .pad{padding:66px 0}
+    .cta-card{padding:54px 26px}
+    .hero{min-height:100vh}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="brand" aria-label="Wayfarer home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11l18-8-8 18-2-8-8-2z" fill="#fff"/></svg>
+      </span>
+      Wayfarer
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#destinations">Destinations</a>
+      <a href="#experiences">Experiences</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#">Deals</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#" class="nav-links" style="font-weight:600;color:#fff">Sign in</a>
+      <a href="#search" class="btn btn-light">Plan a trip</a>
+    </div>
+    <button class="menu-btn" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="mobile-menu" id="mmenu" aria-label="Mobile">
+    <a href="#destinations">Destinations</a><a href="#experiences">Experiences</a><a href="#reviews">Reviews</a><a href="#">Deals</a>
+    <a href="#search" class="btn btn-primary">Plan a trip</a>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="sky" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <svg class="stars-sky" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="#fff">
+        <circle cx="120" cy="70" r="1.6"/><circle cx="300" cy="40" r="1.2"/><circle cx="520" cy="80" r="1.4"/>
+        <circle cx="900" cy="50" r="1.5"/><circle cx="1080" cy="90" r="1.2"/><circle cx="1010" cy="150" r="1.4"/>
+        <circle cx="200" cy="150" r="1.2"/><circle cx="700" cy="40" r="1.3"/><circle cx="60" cy="180" r="1.1"/>
+      </g>
+    </svg>
+
+    <!-- layered mountains -->
+    <div class="layers" aria-hidden="true">
+      <svg class="l-mtn-3" viewBox="0 0 1440 220" preserveAspectRatio="none"><path fill="#7a3e7e" d="M0 200L220 90l180 80 200-120 220 130 200-90 220 110V220H0z"/></svg>
+      <svg style="margin-top:-110px" viewBox="0 0 1440 240" preserveAspectRatio="none"><path fill="#5e3470" d="M0 220L260 110l200 70 220-90 240 110 260-70 0 130H0z"/></svg>
+      <svg style="margin-top:-120px" viewBox="0 0 1440 260" preserveAspectRatio="none"><path fill="#3a2456" d="M0 240L300 120l260 80 220-60 260 90 240-50 0 140H0z"/></svg>
+      <svg style="margin-top:-90px" viewBox="0 0 1440 120" preserveAspectRatio="none"><path fill="#1b1336" d="M0 60C220 10 360 90 600 60s420-70 700-30 140 30 140 30v60H0z"/></svg>
+    </div>
+
+    <div class="wrap">
+      <div class="hero-content">
+        <span class="kicker">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/><circle cx="12" cy="10" r="2.4" stroke="#fff" stroke-width="2"/></svg>
+          1,200+ handpicked destinations
+        </span>
+        <h1>Find your next <span class="it">horizon.</span></h1>
+        <p class="lead">Curated journeys to the world's most breathtaking places — search, compare, and book extraordinary stays and experiences in minutes.</p>
+      </div>
+
+      <!-- SEARCH BAR -->
+      <form id="search" class="search" onsubmit="return false" aria-label="Search trips">
+        <div class="sf">
+          <span class="si" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/><circle cx="12" cy="10" r="2.4" stroke="#fff" stroke-width="2"/></svg></span>
+          <div><label for="dest-in">Destination</label><div class="val"><span id="dest-in">Santorini, Greece</span></div></div>
+        </div>
+        <div class="sf">
+          <span class="si" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="16" rx="2" stroke="#fff" stroke-width="2"/><path d="M4 9h16M8 3v4M16 3v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <div><label for="when-in">When</label><div class="val"><span id="when-in">Jun 14 <small>– Jun 21</small></span></div></div>
+        </div>
+        <div class="sf">
+          <span class="si" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.4" stroke="#fff" stroke-width="2"/><path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5M16 6a3 3 0 010 6M21 20c0-2.6-1.6-4-3.5-4.6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <div><label for="who-in">Guests</label><div class="val"><span id="who-in">2 adults</span></div></div>
+        </div>
+        <button class="btn btn-primary" type="submit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2.2"/><path d="M20 20l-3.5-3.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Search
+        </button>
+      </form>
+
+      <div class="hero-trust">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2l.9-5.5-4-3.9L9.5 7 12 2z" fill="#ffe39a"/></svg> 4.9 average from 80k reviews</span>
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Free cancellation on most stays</span>
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" stroke="#fff" stroke-width="2"/></svg> Local guides in 90+ countries</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTINATIONS -->
+  <section id="destinations" class="pad">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Where to next</span>
+        <h2>Destinations worth the journey</h2>
+        <p>From cliffside sunsets to misty mountain peaks — handpicked places our travelers can't stop raving about.</p>
+      </div>
+      <div class="dest-grid">
+
+        <!-- Santorini wide -->
+        <article class="dest wide">
+          <div class="scene sc-santorini" aria-hidden="true">
+            <span class="sun-s" style="top:34px;right:60px;width:60px;height:60px"></span>
+            <svg viewBox="0 0 800 200" preserveAspectRatio="none"><path fill="#1b6ca8" d="M0 130C160 100 280 150 440 120s260-60 360-20v100H0z"/><g fill="#f4efe6"><rect x="60" y="92" width="44" height="40" rx="4"/><rect x="120" y="84" width="50" height="48" rx="4"/><rect x="186" y="96" width="40" height="36" rx="4"/></g><g fill="#2a6db5"><circle cx="82" cy="84" r="11"/><circle cx="145" cy="74" r="13"/><circle cx="206" cy="88" r="10"/></g></svg>
+          </div>
+          <div class="veil" aria-hidden="true"></div>
+          <span class="tag">Editor's pick</span>
+          <button class="fav" aria-label="Save Santorini"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fff" stroke-width="2"/></svg></button>
+          <div class="info">
+            <h3>Santorini</h3>
+            <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/></svg> Cyclades, Greece</div>
+            <div class="row">
+              <div class="price"><b>$1,290</b> <small>/ 7 nights</small></div>
+              <span class="rate"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ffe39a" aria-hidden="true"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2l.9-5.5-4-3.9L9.5 7 12 2z"/></svg> 4.9</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bali -->
+        <article class="dest">
+          <div class="scene sc-bali" aria-hidden="true">
+            <span class="sun-s" style="top:30px;left:36px"></span>
+            <svg viewBox="0 0 400 200" preserveAspectRatio="none"><path fill="#0f7a6e" d="M0 150C80 120 140 160 220 130s160-30 180-10v90H0z"/><g fill="#1c5e4f"><path d="M70 150c-4-24 2-40 8-50 4 10 8 28 6 50z"/><path d="M120 150c-4-30 4-50 12-62 4 14 8 34 4 62z"/></g></svg>
+          </div>
+          <div class="veil" aria-hidden="true"></div>
+          <span class="tag">Trending</span>
+          <button class="fav" aria-label="Save Bali"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fff" stroke-width="2"/></svg></button>
+          <div class="info">
+            <h3>Ubud</h3>
+            <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/></svg> Bali, Indonesia</div>
+            <div class="row">
+              <div class="price"><b>$840</b> <small>/ 7 nights</small></div>
+              <span class="rate"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ffe39a" aria-hidden="true"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2l.9-5.5-4-3.9L9.5 7 12 2z"/></svg> 4.8</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Alps -->
+        <article class="dest">
+          <div class="scene sc-alps" aria-hidden="true">
+            <svg viewBox="0 0 400 200" preserveAspectRatio="none"><path fill="#3a6ea5" d="M0 200L110 70l70 60 90-90 130 120V200z"/><path fill="#fff" d="M110 70l24 22-24 8-22-10zM270 40l28 26-28 9-24-12z"/></svg>
+          </div>
+          <div class="veil" aria-hidden="true"></div>
+          <span class="tag">Adventure</span>
+          <button class="fav" aria-label="Save Swiss Alps"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fff" stroke-width="2"/></svg></button>
+          <div class="info">
+            <h3>Zermatt</h3>
+            <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/></svg> Valais, Switzerland</div>
+            <div class="row">
+              <div class="price"><b>$1,560</b> <small>/ 7 nights</small></div>
+              <span class="rate"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ffe39a" aria-hidden="true"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2l.9-5.5-4-3.9L9.5 7 12 2z"/></svg> 4.9</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Kyoto -->
+        <article class="dest">
+          <div class="scene sc-kyoto" aria-hidden="true">
+            <span class="sun-s" style="top:28px;right:40px;width:62px;height:62px;background:radial-gradient(circle,#fff,#ffd6e0 60%,transparent 75%)"></span>
+            <svg viewBox="0 0 400 200" preserveAspectRatio="none"><path fill="#7a2e57" d="M0 160C90 140 150 165 230 150s150-20 170-5v55H0z"/><g fill="#c23b5e"><rect x="150" y="96" width="10" height="64"/><path d="M132 96h46l-8-14h-30z"/></g></svg>
+          </div>
+          <div class="veil" aria-hidden="true"></div>
+          <span class="tag">Culture</span>
+          <button class="fav" aria-label="Save Kyoto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fff" stroke-width="2"/></svg></button>
+          <div class="info">
+            <h3>Kyoto</h3>
+            <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/></svg> Kansai, Japan</div>
+            <div class="row">
+              <div class="price"><b>$1,120</b> <small>/ 7 nights</small></div>
+              <span class="rate"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ffe39a" aria-hidden="true"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2l.9-5.5-4-3.9L9.5 7 12 2z"/></svg> 4.9</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sahara wide -->
+        <article class="dest wide">
+          <div class="scene sc-sahara" aria-hidden="true">
+            <span class="sun-s" style="top:30px;left:50%;transform:translateX(-50%);width:72px;height:72px;background:radial-gradient(circle,#fff7e0,#ffd98a 60%,transparent 74%)"></span>
+            <svg viewBox="0 0 800 200" preserveAspectRatio="none"><path fill="#c9742e" d="M0 150C160 120 280 160 440 140s260-40 360-10v80H0z"/><path fill="#a85e20" d="M0 180C200 150 360 185 560 165s200-20 240-5v40H0z"/></svg>
+          </div>
+          <div class="veil" aria-hidden="true"></div>
+          <span class="tag">Once in a lifetime</span>
+          <button class="fav" aria-label="Save Sahara"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fff" stroke-width="2"/></svg></button>
+          <div class="info">
+            <h3>Merzouga Dunes</h3>
+            <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z" stroke="#fff" stroke-width="2"/></svg> Sahara, Morocco</div>
+            <div class="row">
+              <div class="price"><b>$980</b> <small>/ 5 nights</small></div>
+              <span class="rate"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ffe39a" aria-hidden="true"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2l.9-5.5-4-3.9L9.5 7 12 2z"/></svg> 4.8</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCES -->
+  <section id="experiences" class="pad exp">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Beyond the stay</span>
+        <h2>Experiences that stay with you</h2>
+        <p>Hand-curated activities led by local experts — the moments you'll be telling stories about for years.</p>
+      </div>
+      <div class="exp-grid">
+        <div class="exp-card">
+          <span class="ic e1" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 18c2-1 4-1 6 0s4 1 6 0 4-1 6 0M3 13c2-1 4-1 6 0s4 1 6 0 4-1 6 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 3v6M9 6l3-3 3 3" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <h3>Ocean &amp; sailing</h3>
+          <p>Catamaran sunsets, secret coves, and snorkeling over coral gardens.</p>
+          <span class="cnt">320+ experiences</span>
+        </div>
+        <div class="exp-card">
+          <span class="ic e2" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 20L9 8l4 7 3-5 5 10z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="17" cy="6" r="2.4" stroke="#fff" stroke-width="2"/></svg></span>
+          <h3>Peaks &amp; trails</h3>
+          <p>Guided summit treks, alpine lakes, and wildlife at golden hour.</p>
+          <span class="cnt">410+ experiences</span>
+        </div>
+        <div class="exp-card">
+          <span class="ic e3" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 21V9l7-5 7 5v12M9 21v-6h6v6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <h3>Culture &amp; food</h3>
+          <p>Market tours, temple ceremonies, and tables you'd never find alone.</p>
+          <span class="cnt">560+ experiences</span>
+        </div>
+        <div class="exp-card">
+          <span class="ic e4" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <h3>Slow escapes</h3>
+          <p>Hot springs, desert nights under the stars, and digital-detox retreats.</p>
+          <span class="cnt">280+ experiences</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="reviews" class="pad">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Traveler stories</span>
+        <h2>Journeys our guests never forget</h2>
+        <p>More than 80,000 travelers have found their horizon with Wayfarer. Here are a few of their stories.</p>
+      </div>
+      <div class="test-grid">
+        <div class="test">
+          <div class="stars" aria-hidden="true">★★★★★</div>
+          <p>"Booking took five minutes and the whole trip felt designed just for us. The Santorini sunset cruise alone was worth it."</p>
+          <div class="who"><span class="ava av-a" aria-hidden="true"></span><div><b>Priya R.</b><small>Mumbai → Greece</small></div></div>
+        </div>
+        <div class="test">
+          <div class="stars" aria-hidden="true">★★★★★</div>
+          <p>"Our guide in Kyoto knew every hidden garden. This is the first booking app that actually made me feel like a traveler, not a tourist."</p>
+          <div class="who"><span class="ava av-b" aria-hidden="true"></span><div><b>Daniel O.</b><small>Berlin → Japan</small></div></div>
+        </div>
+        <div class="test">
+          <div class="stars" aria-hidden="true">★★★★★</div>
+          <p>"A night in the Sahara watching the stars is something I'll never forget. Flawless from search to check-out. We're already planning the next one."</p>
+          <div class="who"><span class="ava av-c" aria-hidden="true"></span><div><b>Sofia M.</b><small>Lisbon → Morocco</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="wrap cta">
+    <div class="cta-card">
+      <div class="cta-bg" aria-hidden="true"></div>
+      <svg class="waves" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path fill="rgba(255,255,255,.18)" d="M0 80c200-50 400 30 600 10s400-60 600-20v90H0z"/><path fill="rgba(255,255,255,.12)" d="M0 110c220-30 420 20 620 5s380-40 580-15v75H0z"/></svg>
+      <div class="inner">
+        <h2>Your next horizon is waiting</h2>
+        <p>Create a free account and unlock member-only fares, flexible cancellation, and trips designed around you.</p>
+        <a href="#search" class="btn btn-light">Start planning — it's free</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="brand">
+          <span class="logo-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11l18-8-8 18-2-8-8-2z" fill="#fff"/></svg></span>
+          Wayfarer
+        </a>
+        <p>Curated journeys to the world's most breathtaking destinations. Travel further, wander deeper.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Explore</h5>
+        <a href="#destinations">Destinations</a><a href="#experiences">Experiences</a><a href="#">Trip ideas</a><a href="#">Deals</a>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="#">About</a><a href="#">Careers</a><a href="#">Partners</a><a href="#">Press</a>
+      </div>
+      <div class="foot-col">
+        <h5>Support</h5>
+        <a href="#">Help center</a><a href="#">Cancellation</a><a href="#">Travel insurance</a><a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Wayfarer Travel Co. Adventure responsibly.</span>
+      <div class="soc">
+        <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 8a3 3 0 00-2.1-2.1C18 5.4 12 5.4 12 5.4s-6 0-7.9.5A3 3 0 002 8a31 31 0 000 8 3 3 0 002.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5A3 3 0 0022 16a31 31 0 000-8zM10 15V9l5 3-5 3z"/></svg></a>
+        <a href="#" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.8c-.7.3-1.5.6-2.3.7.8-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1a4 4 0 00-6.8 3.7A11.4 11.4 0 013 4.8a4 4 0 001.2 5.4c-.6 0-1.2-.2-1.8-.5a4 4 0 003.2 4 4 4 0 01-1.8.1 4 4 0 003.7 2.8A8 8 0 012 18.3a11.3 11.3 0 006.3 1.8c7.5 0 11.6-6.2 11.6-11.6v-.5c.8-.6 1.5-1.3 2.1-2.2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu(btn){
+    var m=document.getElementById('mmenu');
+    var open=m.style.display==='flex';
+    m.style.display=open?'none':'flex';
+    btn.setAttribute('aria-expanded',String(!open));
+  }
+  document.querySelectorAll('#mmenu a').forEach(function(a){
+    a.addEventListener('click',function(){
+      document.getElementById('mmenu').style.display='none';
+      document.querySelector('.menu-btn').setAttribute('aria-expanded','false');
+    });
+  });
+</script>
+</body>
+</html>

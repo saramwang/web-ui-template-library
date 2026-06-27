@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>devstack — Engineering blog for builders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --surface:#ffffff;
+    --ink:#10141c;
+    --muted:#5a6473;
+    --faint:#8b94a3;
+    --line:#e6e9f0;
+    --brand:#5b54f0;
+    --brand-soft:#eceaff;
+    --accent:#0fb3a4;
+    --code-bg:#0d1220;
+    --code-ink:#cfd6e6;
+    --warn:#e8650f;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(16,20,28,.04),0 8px 28px rgba(16,20,28,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  code,kbd,.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  :focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+
+  /* Header */
+  header.site{position:sticky;top:0;z-index:50;background:rgba(247,248,251,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:24px;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em}
+  .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--brand),#8d76ff);display:grid;place-items:center;flex:0 0 auto}
+  .nav-links{display:flex;gap:6px;margin-left:6px}
+  .nav-links a{padding:8px 12px;border-radius:9px;color:var(--muted);font-weight:500;font-size:14.5px}
+  .nav-links a:hover{background:var(--surface);color:var(--ink)}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);padding:8px 12px;border-radius:10px;color:var(--faint);font-size:14px;min-width:180px}
+  .search input{border:0;background:transparent;font-family:inherit;font-size:14px;width:100%;color:var(--ink)}
+  .search input:focus{outline:none}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+  .btn-primary{background:var(--brand);color:#fff}
+  .btn-primary:hover{background:#4a43d8}
+  .btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+  .menu-toggle{display:none;background:var(--surface);border:1px solid var(--line);border-radius:9px;width:40px;height:40px;cursor:pointer}
+  .menu-toggle span{display:block;width:18px;height:2px;background:var(--ink);margin:3px auto;border-radius:2px}
+
+  /* Hero strip */
+  .hero{padding:46px 0 26px}
+  .hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1.08}
+  .hero p{color:var(--muted);margin-top:12px;max-width:560px;font-size:17px}
+  .topic-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .topic{padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer}
+  .topic:hover{border-color:var(--brand);color:var(--brand)}
+  .topic.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:36px;padding:14px 0 70px;align-items:start}
+
+  /* Feed */
+  .feed{display:flex;flex-direction:column;gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(16,20,28,.05),0 16px 40px rgba(16,20,28,.09)}
+  .author{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted)}
+  .avatar{width:32px;height:32px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px}
+  .a1{background:linear-gradient(135deg,#5b54f0,#a78bfa)}
+  .a2{background:linear-gradient(135deg,#0fb3a4,#34d399)}
+  .a3{background:linear-gradient(135deg,#e8650f,#f59e0b)}
+  .a4{background:linear-gradient(135deg,#ec4899,#f472b6)}
+  .author b{color:var(--ink);font-weight:600}
+  .dot{color:var(--faint)}
+  .card h2{font-size:21px;line-height:1.25;letter-spacing:-.02em;margin:14px 0 8px;font-weight:700}
+  .card h2 a:hover{color:var(--brand)}
+  .excerpt{color:var(--muted);font-size:15px}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+  .tag{font-size:12.5px;color:var(--muted);background:var(--bg);border:1px solid var(--line);padding:4px 10px;border-radius:7px;font-weight:500}
+  .tag::before{content:"#";color:var(--brand);font-weight:700;margin-right:1px}
+  .meta{display:flex;align-items:center;gap:18px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+  .react{display:flex;align-items:center;gap:6px;cursor:pointer;border:0;background:transparent;font-family:inherit;font-size:13.5px;color:var(--muted);padding:4px 6px;border-radius:7px}
+  .react:hover{background:var(--bg);color:var(--brand)}
+  .react.on{color:var(--brand)}
+  .read{margin-left:auto;display:flex;align-items:center;gap:6px}
+
+  /* Featured / code card */
+  .card.feat{padding:0;overflow:hidden}
+  .feat-body{padding:22px}
+  .codecard{background:var(--code-bg);color:var(--code-ink);font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;padding:18px 20px}
+  .codecard .cbar{display:flex;align-items:center;gap:7px;margin-bottom:12px}
+  .cdot{width:11px;height:11px;border-radius:50%}
+  .cfile{margin-left:8px;font-size:12px;color:#7e88a3}
+  .codecard pre{white-space:pre;overflow-x:auto}
+  .tk-key{color:#c792ea}.tk-fn{color:#82aaff}.tk-str{color:#c3e88d}.tk-com{color:#5c6478}.tk-num{color:#f78c6c}.tk-pn{color:#89ddff}
+
+  /* Sidebar */
+  .side{display:flex;flex-direction:column;gap:20px;position:sticky;top:88px}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+  .panel h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:700;margin-bottom:14px}
+  .trend{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
+  .trend:last-child{border-bottom:0;padding-bottom:0}
+  .trend a{font-weight:600;font-size:14.5px}
+  .trend a:hover{color:var(--brand)}
+  .trend .cnt{font-size:12.5px;color:var(--faint);font-family:'JetBrains Mono',monospace}
+  .about-card{background:linear-gradient(160deg,#fff,var(--brand-soft))}
+  .about-avatar{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--brand),#8d76ff);display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px}
+  .about-card p{font-size:14px;color:var(--muted);margin-top:12px}
+  .stat-row{display:flex;gap:18px;margin-top:14px}
+  .stat b{display:block;font-size:18px;font-weight:800}
+  .stat span{font-size:12px;color:var(--faint)}
+  .nl{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .nl input{padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px}
+  .nl input:focus{outline:none;border-color:var(--brand)}
+  .nl-ok{font-size:13px;color:var(--accent);font-weight:600;display:none}
+
+  footer.site{border-top:1px solid var(--line);background:var(--surface)}
+  .foot{display:flex;flex-wrap:wrap;gap:20px;align-items:center;padding:28px 0;font-size:14px;color:var(--muted)}
+  .foot .brand{font-size:16px}
+  .foot-links{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap}
+  .foot-links a:hover{color:var(--brand)}
+
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr}
+    .side{position:static}
+    .nav-links{display:none}
+    .search{display:none}
+    .menu-toggle{display:block}
+    .mobile-nav{display:none;flex-direction:column;gap:4px;padding:10px 0 14px}
+    .mobile-nav.open{display:flex}
+    .mobile-nav a{padding:10px 12px;border-radius:9px;color:var(--muted);font-weight:500}
+    .mobile-nav a:hover{background:var(--bg);color:var(--ink)}
+  }
+  @media(min-width:901px){.mobile-nav{display:none}}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#">
+        <span class="logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        devstack
+      </a>
+      <div class="nav-links">
+        <a href="#">Latest</a>
+        <a href="#">Frontend</a>
+        <a href="#">Backend</a>
+        <a href="#">DevOps</a>
+        <a href="#">AI</a>
+      </div>
+      <div class="nav-right">
+        <label class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" placeholder="Search articles" aria-label="Search articles">
+        </label>
+        <a href="#write" class="btn btn-primary">Write a post</a>
+        <button class="menu-toggle" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#">Latest</a><a href="#">Frontend</a><a href="#">Backend</a><a href="#">DevOps</a><a href="#">AI</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Where engineers think out loud.</h1>
+    <p>Deep dives, postmortems and practical patterns from people shipping real software. No fluff, lots of code.</p>
+    <div class="topic-row" role="tablist" aria-label="Filter topics">
+      <button class="topic active">All</button>
+      <button class="topic">TypeScript</button>
+      <button class="topic">Rust</button>
+      <button class="topic">React</button>
+      <button class="topic">Postgres</button>
+      <button class="topic">Kubernetes</button>
+      <button class="topic">LLMs</button>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <main class="feed">
+
+      <article class="card feat">
+        <div class="codecard">
+          <div class="cbar">
+            <span class="cdot" style="background:#ff5f57"></span><span class="cdot" style="background:#febc2e"></span><span class="cdot" style="background:#28c840"></span>
+            <span class="cfile">useDebounce.ts</span>
+          </div>
+<pre><span class="tk-key">export function</span> <span class="tk-fn">useDebounce</span>&lt;T&gt;(value: T, ms = <span class="tk-num">300</span>) {
+  <span class="tk-key">const</span> [v, setV] = <span class="tk-fn">useState</span>(value)
+  <span class="tk-fn">useEffect</span>(() =&gt; {
+    <span class="tk-key">const</span> id = <span class="tk-fn">setTimeout</span>(() =&gt; <span class="tk-fn">setV</span>(value), ms)
+    <span class="tk-key">return</span> () =&gt; <span class="tk-fn">clearTimeout</span>(id)   <span class="tk-com">// cleanup on change</span>
+  }, [value, ms])
+  <span class="tk-key">return</span> v
+}</pre>
+        </div>
+        <div class="feat-body">
+          <div class="author">
+            <span class="avatar a1">MR</span>
+            <b>Mara Reyes</b><span class="dot">·</span><span>Jun 24</span><span class="dot">·</span><span>Featured</span>
+          </div>
+          <h2><a href="#">Stop reaching for useEffect: a field guide to derived state in React 19</a></h2>
+          <p class="excerpt">Most effects in a typical codebase are doing work that belongs in render. Here's how to spot them, the three patterns that replace them, and the one case where an effect is still the right call.</p>
+          <div class="tags"><span class="tag">react</span><span class="tag">typescript</span><span class="tag">hooks</span><span class="tag">performance</span></div>
+          <div class="meta">
+            <button class="react on" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.6 8.8 2 5.5 5 5.5c1.9 0 3.2 1 4 2.2C9.8 6.5 11.1 5.5 13 5.5c3 0 4.4 3.3 3 6.2C18.5 16.4 12 21 12 21z"/></svg> 482</button>
+            <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 56</button>
+            <span class="read"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 11 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="author"><span class="avatar a2">KO</span><b>Kenji Ono</b><span class="dot">·</span><span>Jun 22</span></div>
+        <h2><a href="#">We cut our Postgres p99 from 1.2s to 40ms — here's the query plan story</a></h2>
+        <p class="excerpt">A walkthrough of the EXPLAIN ANALYZE output that finally made the problem obvious: a missing partial index and a sort that never needed to spill to disk.</p>
+        <div class="tags"><span class="tag">postgres</span><span class="tag">database</span><span class="tag">performance</span></div>
+        <div class="meta">
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.6 8.8 2 5.5 5 5.5c1.9 0 3.2 1 4 2.2C9.8 6.5 11.1 5.5 13 5.5c3 0 4.4 3.3 3 6.2C18.5 16.4 12 21 12 21z"/></svg> 314</button>
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 41</button>
+          <span class="read"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 8 min read</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="author"><span class="avatar a3">SD</span><b>Sasha Dunn</b><span class="dot">·</span><span>Jun 20</span></div>
+        <h2><a href="#">Rust ownership clicked for me the day I stopped fighting the borrow checker</a></h2>
+        <p class="excerpt">If you keep sprinkling <code>.clone()</code> to make errors go away, this post is for you. A mental model that turns the compiler from adversary into pair programmer.</p>
+        <div class="tags"><span class="tag">rust</span><span class="tag">systems</span><span class="tag">beginners</span></div>
+        <div class="meta">
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.6 8.8 2 5.5 5 5.5c1.9 0 3.2 1 4 2.2C9.8 6.5 11.1 5.5 13 5.5c3 0 4.4 3.3 3 6.2C18.5 16.4 12 21 12 21z"/></svg> 627</button>
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 88</button>
+          <span class="read"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 14 min read</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="author"><span class="avatar a4">PL</span><b>Priya Laghari</b><span class="dot">·</span><span>Jun 18</span></div>
+        <h2><a href="#">A pragmatic guide to streaming LLM responses without losing your mind</a></h2>
+        <p class="excerpt">Server-sent events, backpressure, partial JSON, and the retry logic nobody tells you about. Includes a tiny framework-agnostic client you can drop into any app.</p>
+        <div class="tags"><span class="tag">llms</span><span class="tag">node</span><span class="tag">streaming</span><span class="tag">ai</span></div>
+        <div class="meta">
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.6 8.8 2 5.5 5 5.5c1.9 0 3.2 1 4 2.2C9.8 6.5 11.1 5.5 13 5.5c3 0 4.4 3.3 3 6.2C18.5 16.4 12 21 12 21z"/></svg> 401</button>
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 73</button>
+          <span class="read"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 10 min read</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="author"><span class="avatar a1">TV</span><b>Theo Vance</b><span class="dot">·</span><span>Jun 15</span></div>
+        <h2><a href="#">Zero-downtime migrations: the boring checklist that saved our launch</a></h2>
+        <p class="excerpt">Expand-contract, dual writes, and feature flags. The unglamorous discipline that lets you change a hot table in production while users are typing into it.</p>
+        <div class="tags"><span class="tag">devops</span><span class="tag">database</span><span class="tag">reliability</span></div>
+        <div class="meta">
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.6 8.8 2 5.5 5 5.5c1.9 0 3.2 1 4 2.2C9.8 6.5 11.1 5.5 13 5.5c3 0 4.4 3.3 3 6.2C18.5 16.4 12 21 12 21z"/></svg> 256</button>
+          <button class="react"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 34</button>
+          <span class="read"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 9 min read</span>
+        </div>
+      </article>
+
+    </main>
+
+    <aside class="side">
+      <div class="panel about-card">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="about-avatar">ds</span>
+          <div><b style="font-size:15px">devstack</b><div style="font-size:13px;color:var(--muted)">Engineering blog</div></div>
+        </div>
+        <p>A community-run publication for engineers who like the messy, real details. Written by practitioners, edited by peers.</p>
+        <div class="stat-row">
+          <div class="stat"><b>1.2k</b><span>writers</span></div>
+          <div class="stat"><b>9.8k</b><span>posts</span></div>
+          <div class="stat"><b>340k</b><span>readers</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Trending tags</h3>
+        <div class="trend"><a href="#">#typescript</a><span class="cnt">2,418</span></div>
+        <div class="trend"><a href="#">#rust</a><span class="cnt">1,902</span></div>
+        <div class="trend"><a href="#">#postgres</a><span class="cnt">1,544</span></div>
+        <div class="trend"><a href="#">#kubernetes</a><span class="cnt">1,210</span></div>
+        <div class="trend"><a href="#">#webassembly</a><span class="cnt">876</span></div>
+        <div class="trend"><a href="#">#observability</a><span class="cnt">691</span></div>
+      </div>
+
+      <div class="panel" id="write">
+        <h3>The weekly digest</h3>
+        <p style="font-size:14px;color:var(--muted)">One email, every Friday. The five posts worth your time and nothing else.</p>
+        <form class="nl" id="nlForm">
+          <input type="email" required placeholder="you@company.dev" aria-label="Email address">
+          <button class="btn btn-primary" type="submit" style="justify-content:center">Subscribe</button>
+          <span class="nl-ok" id="nlOk">Done — check your inbox to confirm.</span>
+        </form>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap foot">
+    <a class="brand" href="#"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>devstack</a>
+    <span>© 2026 devstack collective</span>
+    <div class="foot-links">
+      <a href="#">RSS</a><a href="#">GitHub</a><a href="#">Code of conduct</a><a href="#">Privacy</a><a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuBtn=document.getElementById('menuBtn');
+  const mobileNav=document.getElementById('mobileNav');
+  menuBtn.addEventListener('click',()=>{
+    const open=mobileNav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded',open);
+  });
+  document.querySelectorAll('.topic').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.topic').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.react').forEach(b=>{
+    b.addEventListener('click',()=>{
+      b.classList.toggle('on');
+      const pressed=b.classList.contains('on');
+      if(b.hasAttribute('aria-pressed'))b.setAttribute('aria-pressed',pressed);
+    });
+  });
+  document.getElementById('nlForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    document.getElementById('nlOk').style.display='block';
+    e.target.querySelector('input').value='';
+  });
+</script>
+</body>
+</html>

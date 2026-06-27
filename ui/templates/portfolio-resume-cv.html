@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Okafor — Senior Product Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f7;
+    --card:#ffffff;
+    --ink:#1a1d24;
+    --muted:#5b6270;
+    --faint:#8a909d;
+    --line:#e7e9ee;
+    --brand:#2f5fe6;
+    --brand-soft:#eaf0ff;
+    --accent:#13b27a;
+    --sidebar:#1c2230;
+    --sidebar-ink:#e8ebf2;
+    --sidebar-muted:#9aa3b6;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(20,24,34,.04),0 10px 30px rgba(20,24,34,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .head{font-family:'Sora',system-ui,sans-serif}
+  :focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+  .shell{max-width:1080px;margin:32px auto;padding:0 20px}
+
+  /* Top bar */
+  .topbar{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .mono{font-family:'Sora',sans-serif;font-weight:700;letter-spacing:-.02em}
+  .topbar .name{font-size:15px}
+  .topbar .dl{margin-left:auto;display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-weight:600;font-size:14px;font-family:'Sora',sans-serif}
+  .topbar .dl:hover{background:#0e1118}
+  .print{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;font-family:'Sora',sans-serif;color:var(--ink)}
+  .print:hover{border-color:var(--brand);color:var(--brand)}
+
+  .page{display:grid;grid-template-columns:300px 1fr;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+
+  /* Sidebar */
+  .sidebar{background:var(--sidebar);color:var(--sidebar-ink);padding:38px 30px}
+  .avatar{width:96px;height:96px;border-radius:22px;background:linear-gradient(135deg,var(--brand),#7aa0ff);display:grid;place-items:center;font-family:'Sora',sans-serif;font-weight:700;font-size:34px;color:#fff;margin-bottom:20px}
+  .sidebar h1{font-family:'Sora',sans-serif;font-size:25px;line-height:1.15;letter-spacing:-.02em;font-weight:700}
+  .role{color:#8fb0ff;font-weight:500;font-size:15px;margin-top:4px;font-family:'Sora',sans-serif}
+  .side-block{margin-top:28px}
+  .side-block h2{font-family:'Sora',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--sidebar-muted);margin-bottom:14px}
+  .contact-item{display:flex;align-items:center;gap:11px;font-size:14px;color:var(--sidebar-ink);padding:6px 0}
+  .contact-item svg{flex:0 0 auto;color:#8fb0ff}
+  .contact-item a:hover{color:#8fb0ff}
+  .skills .bar{margin-bottom:14px}
+  .skills .bar .row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+  .skills .bar .row span:last-child{color:var(--sidebar-muted);font-family:'Sora',sans-serif;font-size:12px}
+  .track{height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+  .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--brand),#7aa0ff)}
+  .tagcloud{display:flex;flex-wrap:wrap;gap:7px}
+  .tagcloud span{font-size:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:5px 11px;border-radius:8px;color:var(--sidebar-ink)}
+  .lang-row{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;color:var(--sidebar-ink)}
+  .lang-row b{color:var(--sidebar-muted);font-weight:500;font-family:'Sora',sans-serif;font-size:12.5px}
+
+  /* Main */
+  .main{padding:40px 44px}
+  .sec{margin-bottom:36px}
+  .sec:last-child{margin-bottom:0}
+  .sec-title{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .sec-title .ic{width:34px;height:34px;border-radius:10px;background:var(--brand-soft);display:grid;place-items:center;color:var(--brand);flex:0 0 auto}
+  .sec-title h2{font-family:'Sora',sans-serif;font-size:18px;font-weight:600;letter-spacing:-.01em}
+  .summary{color:var(--muted);font-size:15.5px}
+
+  /* Timeline */
+  .timeline{position:relative;padding-left:28px}
+  .timeline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .tl-item{position:relative;padding-bottom:26px}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-28px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--card);border:3px solid var(--brand)}
+  .tl-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px}
+  .tl-head h3{font-family:'Sora',sans-serif;font-size:16.5px;font-weight:600}
+  .tl-head .when{font-size:13px;color:var(--faint);font-family:'Sora',sans-serif;white-space:nowrap}
+  .tl-co{color:var(--brand);font-weight:600;font-size:14.5px;margin:2px 0 8px}
+  .tl-item ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .tl-item li{position:relative;padding-left:18px;color:var(--muted);font-size:14.5px}
+  .tl-item li::before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+  /* Projects */
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .proj{border:1px solid var(--line);border-radius:var(--radius);padding:18px;transition:border-color .15s,transform .15s}
+  .proj:hover{border-color:var(--brand);transform:translateY(-2px)}
+  .proj .ptop{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .proj .badge{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;font-family:'Sora',sans-serif;font-weight:700;font-size:15px}
+  .pb1{background:linear-gradient(135deg,#2f5fe6,#7aa0ff)}
+  .pb2{background:linear-gradient(135deg,#13b27a,#5fe0b0)}
+  .pb3{background:linear-gradient(135deg,#e6792f,#f5b15f)}
+  .pb4{background:linear-gradient(135deg,#9b3fe6,#c98bff)}
+  .proj .yr{font-size:12.5px;color:var(--faint);font-family:'Sora',sans-serif}
+  .proj h4{font-family:'Sora',sans-serif;font-size:15.5px;font-weight:600;margin-bottom:5px}
+  .proj p{color:var(--muted);font-size:13.5px}
+  .proj .stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+  .proj .stack span{font-size:11.5px;color:var(--brand);background:var(--brand-soft);padding:3px 8px;border-radius:6px;font-weight:500}
+
+  /* Education */
+  .edu-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .edu-item:last-child{border-bottom:0;padding-bottom:0}
+  .edu-item .cap{width:38px;height:38px;border-radius:10px;background:var(--brand-soft);display:grid;place-items:center;color:var(--brand);flex:0 0 auto}
+  .edu-item h3{font-family:'Sora',sans-serif;font-size:15.5px;font-weight:600}
+  .edu-item .sch{color:var(--muted);font-size:14px}
+  .edu-item .yr{font-size:13px;color:var(--faint);font-family:'Sora',sans-serif;margin-left:auto;white-space:nowrap}
+
+  footer.foot{text-align:center;color:var(--faint);font-size:13px;margin-top:20px}
+
+  @media(max-width:840px){
+    .page{grid-template-columns:1fr}
+    .proj-grid{grid-template-columns:1fr}
+    .main{padding:32px 26px}
+  }
+  @media print{
+    body{background:#fff}
+    .topbar{display:none}
+    .page{box-shadow:none;border:0;border-radius:0}
+    .shell{margin:0;padding:0;max-width:none}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <span class="mono">DO</span>
+    <span class="name head" style="font-weight:600">Daniel Okafor</span>
+    <button class="print" id="printBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+      Print
+    </button>
+    <a href="#" class="dl head">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download CV
+    </a>
+  </div>
+
+  <div class="page">
+    <aside class="sidebar">
+      <div class="avatar">DO</div>
+      <h1>Daniel Okafor</h1>
+      <p class="role">Senior Product Engineer</p>
+
+      <div class="side-block">
+        <h2>Contact</h2>
+        <div class="contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg><a href="mailto:daniel@okafor.dev">daniel@okafor.dev</a></div>
+        <div class="contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-3 2a14 14 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A18 18 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+44 7700 900 821</span></div>
+        <div class="contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Manchester, UK</span></div>
+        <div class="contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><a href="#">okafor.dev</a></div>
+      </div>
+
+      <div class="side-block skills">
+        <h2>Core skills</h2>
+        <div class="bar"><div class="row"><span>TypeScript / React</span><span>Expert</span></div><div class="track"><div class="fill" style="width:95%"></div></div></div>
+        <div class="bar"><div class="row"><span>Node &amp; APIs</span><span>Expert</span></div><div class="track"><div class="fill" style="width:90%"></div></div></div>
+        <div class="bar"><div class="row"><span>Systems design</span><span>Advanced</span></div><div class="track"><div class="fill" style="width:82%"></div></div></div>
+        <div class="bar"><div class="row"><span>Cloud / DevOps</span><span>Advanced</span></div><div class="track"><div class="fill" style="width:76%"></div></div></div>
+        <div class="bar"><div class="row"><span>Product &amp; UX</span><span>Strong</span></div><div class="track"><div class="fill" style="width:70%"></div></div></div>
+      </div>
+
+      <div class="side-block">
+        <h2>Tools</h2>
+        <div class="tagcloud">
+          <span>React</span><span>Next.js</span><span>TypeScript</span><span>Node</span><span>PostgreSQL</span><span>GraphQL</span><span>AWS</span><span>Docker</span><span>Terraform</span><span>Figma</span>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <h2>Languages</h2>
+        <div class="lang-row"><span>English</span><b>Native</b></div>
+        <div class="lang-row"><span>French</span><b>Fluent</b></div>
+        <div class="lang-row"><span>Yoruba</span><b>Native</b></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="sec">
+        <div class="sec-title">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+          <h2>Summary</h2>
+        </div>
+        <p class="summary">Product-minded engineer with 9 years building and scaling web applications used by millions. I bridge design and engineering, ship pragmatically, and care deeply about the craft on both sides of the API. Recently led the platform team behind a 0-to-$20M ARR product. Looking for a staff-level role where I can own architecture and mentor a growing team.</p>
+      </section>
+
+      <section class="sec">
+        <div class="sec-title">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+          <h2>Experience</h2>
+        </div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-head"><h3>Senior Product Engineer</h3><span class="when">2022 — Present</span></div>
+            <div class="tl-co">Northbeam · Manchester</div>
+            <ul>
+              <li>Led the platform team (5 engineers) that took our core product from launch to $20M ARR in 18 months.</li>
+              <li>Designed an event-driven architecture that cut p99 latency by 64% while tripling traffic.</li>
+              <li>Built the design system now used across 40+ surfaces, reducing UI bug reports by 41%.</li>
+            </ul>
+          </div>
+          <div class="tl-item">
+            <div class="tl-head"><h3>Full-stack Engineer</h3><span class="when">2019 — 2022</span></div>
+            <div class="tl-co">Cartwheel Labs · Remote</div>
+            <ul>
+              <li>Shipped the checkout rewrite that lifted conversion by 23% across 12 international markets.</li>
+              <li>Introduced end-to-end type safety, eliminating an entire class of production incidents.</li>
+              <li>Mentored four junior engineers, two of whom were promoted within a year.</li>
+            </ul>
+          </div>
+          <div class="tl-item">
+            <div class="tl-head"><h3>Frontend Developer</h3><span class="when">2017 — 2019</span></div>
+            <div class="tl-co">Pixel &amp; Pulp · Leeds</div>
+            <ul>
+              <li>Delivered 30+ client web projects, from marketing sites to data-heavy dashboards.</li>
+              <li>Established the agency's first component library and accessibility standards.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="sec-title">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg></span>
+          <h2>Selected projects</h2>
+        </div>
+        <div class="proj-grid">
+          <div class="proj">
+            <div class="ptop"><span class="badge pb1">QS</span><span class="yr">2025</span></div>
+            <h4>QuerySmith</h4>
+            <p>Open-source SQL playground with AI-assisted query building. 8k GitHub stars.</p>
+            <div class="stack"><span>React</span><span>WASM</span><span>SQLite</span></div>
+          </div>
+          <div class="proj">
+            <div class="ptop"><span class="badge pb2">LF</span><span class="yr">2024</span></div>
+            <h4>LeafFlow</h4>
+            <p>A calm task manager for makers. Featured on Product Hunt, 12k active users.</p>
+            <div class="stack"><span>Next.js</span><span>tRPC</span><span>Postgres</span></div>
+          </div>
+          <div class="proj">
+            <div class="ptop"><span class="badge pb3">MT</span><span class="yr">2023</span></div>
+            <h4>MetricTrace</h4>
+            <p>Lightweight self-hosted analytics with a privacy-first design.</p>
+            <div class="stack"><span>Go</span><span>ClickHouse</span><span>Svelte</span></div>
+          </div>
+          <div class="proj">
+            <div class="ptop"><span class="badge pb4">DK</span><span class="yr">2022</span></div>
+            <h4>devkit/ui</h4>
+            <p>Accessible React component library with 60+ primitives and full keyboard support.</p>
+            <div class="stack"><span>React</span><span>a11y</span><span>Storybook</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="sec-title">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11v5c0 1 2 2 5 2s5-1 5-2v-5"/></svg></span>
+          <h2>Education</h2>
+        </div>
+        <div class="edu-item">
+          <span class="cap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11v5c0 1 2 2 5 2s5-1 5-2v-5"/></svg></span>
+          <div><h3>BSc Computer Science, First Class</h3><div class="sch">University of Manchester</div></div>
+          <span class="yr">2013 — 2016</span>
+        </div>
+        <div class="edu-item">
+          <span class="cap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg></span>
+          <div><h3>AWS Certified Solutions Architect</h3><div class="sch">Amazon Web Services · Professional</div></div>
+          <span class="yr">2023</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="foot">References available on request · Last updated June 2026</footer>
+</div>
+
+<script>
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+</script>
+</body>
+</html>

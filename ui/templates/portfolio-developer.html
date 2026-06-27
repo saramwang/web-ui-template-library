@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dane Okafor — Software Engineer | Systems &amp; Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f0e;
+    --bg-2:#0f1513;
+    --panel:#111815;
+    --panel-2:#0d1311;
+    --line:rgba(120,255,180,.10);
+    --line-2:rgba(255,255,255,.07);
+    --ink:#e6f0ea;
+    --muted:#8aa399;
+    --faint:#5a716a;
+    --green:#3ddc84;
+    --green-dim:#2bb56c;
+    --green-glow:rgba(61,220,132,.5);
+    --amber:#e7b04c;
+    --pink:#ff7b9c;
+    --blue:#6cb8ff;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    background-image:radial-gradient(60% 50% at 80% -5%,rgba(61,220,132,.08),transparent 60%),radial-gradient(40% 40% at 0% 30%,rgba(61,220,132,.05),transparent 60%)}
+  .mono{font-family:'JetBrains Mono',monospace}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--green);color:#04130b}
+  :focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:3px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .tag-line{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--green);letter-spacing:.02em}
+  .tag-line::before{content:"// "}
+  h1,h2,h3{letter-spacing:-.02em;line-height:1.1;font-weight:700}
+
+  /* NAV */
+  header.nav{position:fixed;inset:0 0 auto 0;z-index:50;background:rgba(11,15,14,.7);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.3s}
+  header.nav.scrolled{border-bottom:1px solid var(--line);background:rgba(11,15,14,.9)}
+  .nav-inner{max-width:var(--maxw);margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:'JetBrains Mono',monospace;font-weight:700;display:flex;align-items:center;gap:.5rem;font-size:1rem}
+  .brand .blink{color:var(--green);animation:blink 1.1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .nav-links{display:flex;gap:1.8rem;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.84rem}
+  .nav-links a{color:var(--muted);transition:.2s}
+  .nav-links a:hover{color:var(--green)}
+  .nav-links a .c{color:var(--green)}
+  .nav-cta{border:1px solid var(--green-dim);color:var(--green)!important;padding:7px 16px;border-radius:6px;transition:.2s}
+  .nav-cta:hover{background:var(--green);color:#04130b!important;box-shadow:0 0 24px var(--green-glow)}
+  .burger{display:none;background:none;border:none;cursor:pointer;width:34px;height:34px;flex-direction:column;justify-content:center;gap:5px}
+  .burger span{display:block;height:2px;background:var(--green);transition:.3s}
+
+  /* HERO */
+  .hero{padding:11rem 0 5rem}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:center}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.4rem);margin:1.2rem 0}
+  .hero h1 .g{color:var(--green);text-shadow:0 0 30px var(--green-glow)}
+  .hero p.lead{color:var(--muted);font-size:1.1rem;max-width:46ch;margin-bottom:2rem}
+  .hero-cta{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.2rem}
+  .btn{display:inline-flex;align-items:center;gap:.55rem;background:var(--green);color:#04130b;font-weight:600;padding:12px 22px;border-radius:8px;font-size:.92rem;transition:.25s;font-family:'JetBrains Mono',monospace}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px var(--green-glow)}
+  .btn svg{width:16px;height:16px}
+  .btn-ghost{background:none;border:1px solid var(--line-2);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--green-dim);box-shadow:none;background:rgba(61,220,132,.06)}
+  .hero-meta{display:flex;gap:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--faint);flex-wrap:wrap}
+  .hero-meta span .d{color:var(--green);margin-right:.4rem}
+
+  /* TERMINAL CARD */
+  .terminal{background:linear-gradient(180deg,#0e1512,#0a0f0d);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .term-bar{display:flex;align-items:center;gap:.5rem;padding:11px 14px;background:#0a100e;border-bottom:1px solid var(--line-2)}
+  .term-bar .dots{display:flex;gap:6px}
+  .term-bar .dots i{width:11px;height:11px;border-radius:50%;display:block}
+  .term-bar .dots i:nth-child(1){background:#ff5f57}.term-bar .dots i:nth-child(2){background:#febc2e}.term-bar .dots i:nth-child(3){background:#28c840}
+  .term-bar .title{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--faint);margin-left:.6rem}
+  .term-body{padding:1.3rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.84rem;line-height:1.85}
+  .term-body .ln{display:block;white-space:pre-wrap}
+  .term-body .prompt{color:var(--green)}
+  .term-body .key{color:var(--pink)}.term-body .str{color:var(--amber)}.term-body .num{color:var(--blue)}
+  .term-body .cmt{color:var(--faint)}.term-body .fn{color:var(--green)}
+  .term-body .cursor{display:inline-block;width:8px;height:1.05em;background:var(--green);vertical-align:-2px;animation:blink 1.1s step-end infinite}
+
+  /* SECTION */
+  section{position:relative}
+  .sec{padding:5.5rem 0;border-top:1px solid var(--line-2)}
+  .sec-head{margin-bottom:2.6rem}
+  .sec-head h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-top:.5rem}
+  .sec-head h2 .g{color:var(--green)}
+  .sec-head p{color:var(--muted);max-width:54ch;margin-top:.6rem}
+
+  /* STACK CHIPS */
+  .stack{display:flex;flex-wrap:wrap;gap:.7rem}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:.8rem;border:1px solid var(--line-2);background:var(--panel);color:var(--muted);padding:8px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:.5rem;transition:.25s;cursor:default}
+  .chip:hover{border-color:var(--green-dim);color:var(--ink);box-shadow:0 0 0 1px var(--green-dim),0 6px 20px rgba(0,0,0,.3);transform:translateY(-2px)}
+  .chip .d{width:8px;height:8px;border-radius:2px;background:var(--green);box-shadow:0 0 8px var(--green-glow)}
+  .chip.b .d{background:var(--blue);box-shadow:0 0 8px rgba(108,184,255,.5)}
+  .chip.a .d{background:var(--amber);box-shadow:0 0 8px rgba(231,176,76,.5)}
+  .chip.p .d{background:var(--pink);box-shadow:0 0 8px rgba(255,123,156,.5)}
+
+  /* PROJECTS */
+  .proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line-2);border-radius:14px;padding:1.6rem;transition:.3s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 100% 0%,rgba(61,220,132,.07),transparent 60%);opacity:0;transition:.3s}
+  .card:hover{border-color:var(--green-dim);transform:translateY(-4px)}
+  .card:hover::before{opacity:1}
+  .card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+  .card .ic{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
+  .card .ic svg{width:22px;height:22px;color:#04130b}
+  .card h3{font-family:'JetBrains Mono',monospace;font-size:1.05rem;font-weight:700;margin-bottom:.1rem}
+  .card .repo{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--faint)}
+  .card p{color:var(--muted);font-size:.94rem;margin:.4rem 0 1.1rem;flex:1}
+  .card .langs{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
+  .card .langs span{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);background:rgba(255,255,255,.04);padding:3px 9px;border-radius:20px}
+  .card .stats{display:flex;gap:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--faint);align-items:center;border-top:1px solid var(--line-2);padding-top:1rem}
+  .card .stats .st{display:flex;align-items:center;gap:.4rem}
+  .card .stats .st svg{width:14px;height:14px}
+  .card .stats .lang-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .card .stats a{margin-left:auto;color:var(--green);display:flex;align-items:center;gap:.35rem}
+  .card .stats a:hover{text-decoration:underline}
+
+  /* CONTRIB GRID */
+  .contrib-wrap{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line-2);border-radius:14px;padding:1.6rem}
+  .contrib-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:.5rem}
+  .contrib-top h3{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:500;color:var(--muted)}
+  .contrib-top h3 b{color:var(--ink)}
+  .contrib{display:grid;grid-template-columns:repeat(53,1fr);gap:3px;overflow-x:auto;padding-bottom:.5rem}
+  .contrib .cell{aspect-ratio:1;border-radius:2px;min-width:9px}
+  .legend{display:flex;align-items:center;gap:.5rem;justify-content:flex-end;margin-top:.9rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--faint)}
+  .legend .cell{width:11px;height:11px;border-radius:2px;display:inline-block}
+
+  /* TIMELINE */
+  .timeline{position:relative;margin-left:.5rem}
+  .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--green-dim),transparent)}
+  .tl-item{position:relative;padding:0 0 2rem 2.4rem}
+  .tl-item::before{content:"";position:absolute;left:0;top:5px;width:15px;height:15px;border-radius:50%;background:var(--bg);border:2px solid var(--green);box-shadow:0 0 12px var(--green-glow)}
+  .tl-item .when{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--green);margin-bottom:.3rem}
+  .tl-item h3{font-size:1.15rem;font-weight:600}
+  .tl-item .co{color:var(--muted);font-size:.92rem;margin-bottom:.5rem}
+  .tl-item .co b{color:var(--ink)}
+  .tl-item p{color:var(--muted);font-size:.92rem;max-width:60ch}
+
+  /* CONTACT */
+  .contact{background:linear-gradient(160deg,#0f1714,#0a0f0d);border:1px solid var(--line);border-radius:16px;padding:3.5rem;text-align:center;position:relative;overflow:hidden}
+  .contact::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 50% 0%,rgba(61,220,132,.12),transparent 60%)}
+  .contact h2{font-size:clamp(1.8rem,5vw,3rem);position:relative;margin-bottom:1rem}
+  .contact h2 .g{color:var(--green)}
+  .contact p{color:var(--muted);max-width:46ch;margin:0 auto 2rem;position:relative}
+  .contact .cmd{position:relative;display:inline-flex;align-items:center;gap:.6rem;font-family:'JetBrains Mono',monospace;background:#0a100e;border:1px solid var(--line-2);border-radius:8px;padding:10px 16px;color:var(--muted);margin-bottom:1.6rem;font-size:.85rem}
+  .contact .cmd .green{color:var(--green)}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line-2);padding:2.6rem 0;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--faint)}
+  .foot-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;align-items:center}
+  .foot-inner .links{display:flex;gap:1.4rem}
+  .foot-inner .links a{color:var(--muted);transition:.2s}
+  .foot-inner .links a:hover{color:var(--green)}
+
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:2.4rem}
+    .proj-grid{grid-template-columns:1fr}
+    .contrib{grid-template-columns:repeat(27,1fr)}
+  }
+  @media(max-width:680px){
+    .nav-links{position:fixed;inset:0 0 0 auto;width:78%;max-width:300px;background:var(--bg-2);flex-direction:column;justify-content:center;gap:1.5rem;padding:2rem;transform:translateX(100%);transition:.35s;border-left:1px solid var(--line);font-size:1rem}
+    .nav-links.open{transform:none}
+    .burger{display:flex}
+    .hero{padding:8rem 0 3rem}
+    .contact{padding:2.4rem 1.4rem}
+    .contrib{grid-template-columns:repeat(20,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">dane<span class="blink">_</span>okafor</a>
+    <nav class="nav-links" id="menu" aria-label="Primary">
+      <a href="#stack"><span class="c">~/</span>stack</a>
+      <a href="#projects"><span class="c">~/</span>projects</a>
+      <a href="#experience"><span class="c">~/</span>experience</a>
+      <a class="nav-cta" href="#contact">./contact.sh</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="tag-line">backend &amp; distributed systems engineer</p>
+        <h1>I build the <span class="g">infrastructure</span> nobody sees but everyone relies on.</h1>
+        <p class="lead">Senior software engineer focused on resilient APIs, data pipelines and developer tooling. I care about latency budgets, clean abstractions, and shipping things that stay up.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#projects">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>
+            View projects
+          </a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+        <div class="hero-meta">
+          <span><span class="d">●</span>Available for contract</span>
+          <span><span class="d">◆</span>Berlin / Remote (UTC+1)</span>
+          <span><span class="d">▲</span>8 yrs shipping prod</span>
+        </div>
+      </div>
+
+      <div class="terminal" aria-label="Terminal showing an introduction">
+        <div class="term-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="title">~/dane — zsh — 80×24</span>
+        </div>
+        <div class="term-body">
+<span class="ln"><span class="prompt">dane@core</span>:~$ whoami --verbose</span>
+<span class="ln"><span class="cmt"># resolving identity...</span></span>
+<span class="ln">{</span>
+<span class="ln">  <span class="key">"name"</span>: <span class="str">"Dane Okafor"</span>,</span>
+<span class="ln">  <span class="key">"role"</span>: <span class="str">"Software Engineer"</span>,</span>
+<span class="ln">  <span class="key">"focus"</span>: [<span class="str">"distributed"</span>, <span class="str">"reliability"</span>],</span>
+<span class="ln">  <span class="key">"uptime"</span>: <span class="num">99.98</span>,</span>
+<span class="ln">  <span class="key">"coffee_per_day"</span>: <span class="num">3</span></span>
+<span class="ln">}</span>
+<span class="ln"><span class="prompt">dane@core</span>:~$ <span class="fn">deploy</span> --env prod<span class="cursor"></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="tag-line">tools of the trade</p>
+        <h2>Tech <span class="g">stack</span></h2>
+      </div>
+      <div class="stack">
+        <span class="chip"><i class="d"></i>Go</span>
+        <span class="chip"><i class="d"></i>Rust</span>
+        <span class="chip b"><i class="d"></i>TypeScript</span>
+        <span class="chip a"><i class="d"></i>Python</span>
+        <span class="chip"><i class="d"></i>PostgreSQL</span>
+        <span class="chip b"><i class="d"></i>Kubernetes</span>
+        <span class="chip a"><i class="d"></i>Kafka</span>
+        <span class="chip p"><i class="d"></i>gRPC</span>
+        <span class="chip"><i class="d"></i>Redis</span>
+        <span class="chip b"><i class="d"></i>Terraform</span>
+        <span class="chip a"><i class="d"></i>AWS</span>
+        <span class="chip p"><i class="d"></i>OpenTelemetry</span>
+        <span class="chip"><i class="d"></i>ClickHouse</span>
+        <span class="chip b"><i class="d"></i>GraphQL</span>
+        <span class="chip a"><i class="d"></i>Docker</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="tag-line">git log --selected</p>
+        <h2>Featured <span class="g">projects</span></h2>
+        <p>Open-source tools and systems I've designed, built and maintained. Stars are real, bugs are mostly fixed.</p>
+      </div>
+      <div class="proj-grid">
+
+        <article class="card">
+          <div class="top">
+            <div class="ic" style="background:linear-gradient(135deg,#3ddc84,#1f9c5a)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10l8 4 8-4V7l-8-4-8 4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>
+            </div>
+          </div>
+          <h3>helmsman</h3>
+          <p class="repo">github.com/daneok/helmsman</p>
+          <p>A declarative deployment orchestrator for multi-cluster Kubernetes. Rollouts, canaries and instant rollbacks from a single manifest.</p>
+          <div class="langs"><span>Go</span><span>Helm</span><span>gRPC</span></div>
+          <div class="stats">
+            <span class="st"><span class="lang-dot" style="background:#3ddc84"></span>Go</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>4.2k</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12M6 21a3 3 0 100-6 3 3 0 000 6zM6 6a3 3 0 100-6 3 3 0 000 6zM18 9a3 3 0 100-6 3 3 0 000 6zM18 9c0 4-6 3-6 9"/></svg>318</span>
+            <a href="#projects">View<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top">
+            <div class="ic" style="background:linear-gradient(135deg,#6cb8ff,#3a72d8)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v6H4zM4 14h16v6H4zM8 7h.01M8 17h.01"/></svg>
+            </div>
+          </div>
+          <h3>tracehound</h3>
+          <p class="repo">github.com/daneok/tracehound</p>
+          <p>Low-overhead distributed tracing agent. Tail-based sampling, OTLP-native, and ships under 12&nbsp;MB. Built for high-cardinality workloads.</p>
+          <div class="langs"><span>Rust</span><span>OTLP</span><span>WASM</span></div>
+          <div class="stats">
+            <span class="st"><span class="lang-dot" style="background:#e7b04c"></span>Rust</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>2.7k</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12M6 21a3 3 0 100-6 3 3 0 000 6zM6 6a3 3 0 100-6 3 3 0 000 6zM18 9a3 3 0 100-6 3 3 0 000 6zM18 9c0 4-6 3-6 9"/></svg>164</span>
+            <a href="#projects">View<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top">
+            <div class="ic" style="background:linear-gradient(135deg,#ff7b9c,#d8425f)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0zM12 7v5l3 3"/></svg>
+            </div>
+          </div>
+          <h3>cronwise</h3>
+          <p class="repo">github.com/daneok/cronwise</p>
+          <p>A drop-in distributed job scheduler with at-least-once guarantees, backpressure, and a clean TS SDK. Powers 40M+ jobs/day in prod.</p>
+          <div class="langs"><span>TypeScript</span><span>Redis</span><span>Postgres</span></div>
+          <div class="stats">
+            <span class="st"><span class="lang-dot" style="background:#6cb8ff"></span>TypeScript</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>5.9k</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12M6 21a3 3 0 100-6 3 3 0 000 6zM6 6a3 3 0 100-6 3 3 0 000 6zM18 9a3 3 0 100-6 3 3 0 000 6zM18 9c0 4-6 3-6 9"/></svg>521</span>
+            <a href="#projects">View<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top">
+            <div class="ic" style="background:linear-gradient(135deg,#e7b04c,#c98a22)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            </div>
+          </div>
+          <h3>quill-cli</h3>
+          <p class="repo">github.com/daneok/quill-cli</p>
+          <p>A terminal-first changelog generator that reads your git history and writes release notes humans actually want to read. Zero config.</p>
+          <div class="langs"><span>Go</span><span>Cobra</span><span>git</span></div>
+          <div class="stats">
+            <span class="st"><span class="lang-dot" style="background:#3ddc84"></span>Go</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>1.4k</span>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12M6 21a3 3 0 100-6 3 3 0 000 6zM6 6a3 3 0 100-6 3 3 0 000 6zM18 9a3 3 0 100-6 3 3 0 000 6zM18 9c0 4-6 3-6 9"/></svg>92</span>
+            <a href="#projects">View<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTRIBUTIONS -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="tag-line">commit history</p>
+        <h2>1,284 contributions <span class="g">this year</span></h2>
+      </div>
+      <div class="contrib-wrap">
+        <div class="contrib-top">
+          <h3>Activity over the last <b>53 weeks</b></h3>
+          <span class="mono" style="font-size:.78rem;color:var(--faint)">Longest streak: 41 days</span>
+        </div>
+        <div class="contrib" id="contrib" aria-label="Contribution activity grid"></div>
+        <div class="legend">
+          Less
+          <span class="cell" style="background:#16201b"></span>
+          <span class="cell" style="background:#0e6b3b"></span>
+          <span class="cell" style="background:#1ea35a"></span>
+          <span class="cell" style="background:#2bd478"></span>
+          <span class="cell" style="background:#5dffa0"></span>
+          More
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="tag-line">career.log</p>
+        <h2>Experience <span class="g">timeline</span></h2>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="when">2023 — Present</div>
+          <h3>Staff Software Engineer</h3>
+          <p class="co"><b>Northwind Data</b> · Platform Infrastructure</p>
+          <p>Lead the streaming platform team. Re-architected the ingestion path to cut p99 latency by 62% and rolled out a multi-region failover that's held through three real outages.</p>
+        </div>
+        <div class="tl-item">
+          <div class="when">2020 — 2023</div>
+          <h3>Senior Backend Engineer</h3>
+          <p class="co"><b>Lattice Cloud</b> · Developer Tooling</p>
+          <p>Built the internal CI/CD orchestration layer used by 300+ engineers. Owned the migration from monolith to gRPC services without a single hour of planned downtime.</p>
+        </div>
+        <div class="tl-item">
+          <div class="when">2018 — 2020</div>
+          <h3>Software Engineer</h3>
+          <p class="co"><b>Vexa Labs</b> · Payments</p>
+          <p>Shipped the idempotent payments ledger handling €40M/month. Wrote the reconciliation engine that's still running, still balanced.</p>
+        </div>
+        <div class="tl-item">
+          <div class="when">2016 — 2018</div>
+          <h3>Junior Developer</h3>
+          <p class="co"><b>Bitfold</b> · Web Services</p>
+          <p>Cut my teeth on a high-traffic API, learned to love observability the hard way, and discovered that boring code is a feature.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="sec">
+    <div class="wrap">
+      <div class="contact">
+        <span class="cmd"><span class="green">$</span> ssh dane@okafor.dev</span>
+        <h2>Let's <span class="g">ship</span> something solid.</h2>
+        <p>Open to staff-level roles and select contract work in distributed systems, reliability and developer tooling.</p>
+        <div style="display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;position:relative">
+          <a class="btn" href="#contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 6 8-6"/></svg>
+            dane@okafor.dev
+          </a>
+          <a class="btn btn-ghost" href="#contact">Download résumé</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>// built from scratch · no frameworks · © 2026 Dane Okafor</span>
+    <div class="links">
+      <a href="#contact">github</a>
+      <a href="#contact">linkedin</a>
+      <a href="#contact">rss</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var nav=document.getElementById('nav');
+  addEventListener('scroll',function(){nav.classList.toggle('scrolled',scrollY>30)});
+  var burger=document.getElementById('burger'),menu=document.getElementById('menu');
+  burger.addEventListener('click',function(){
+    var open=menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
+  });
+  menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')})});
+  // build contribution grid (deterministic pseudo-random for a believable pattern)
+  (function(){
+    var grid=document.getElementById('contrib');if(!grid)return;
+    var palette=['#16201b','#0e6b3b','#1ea35a','#2bd478','#5dffa0'];
+    var seed=1337;
+    function rnd(){seed=(seed*9301+49297)%233280;return seed/233280;}
+    for(var i=0;i<53*7;i++){
+      var v=rnd();var lvl=0;
+      if(v>0.55)lvl=1; if(v>0.72)lvl=2; if(v>0.85)lvl=3; if(v>0.94)lvl=4;
+      var cell=document.createElement('span');
+      cell.className='cell';
+      cell.style.background=palette[lvl];
+      grid.appendChild(cell);
+    }
+  })();
+</script>
+</body>
+</html>

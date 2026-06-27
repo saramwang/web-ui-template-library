@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier — Members</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --panel:#ffffff; --ink:#111111; --ink-2:#3a3a3a; --muted:#6b6b6b; --faint:#9a9a9a;
+    --line:#ededed; --line-2:#e2e2e2; --hair:#f2f2f2; --accent:#e4572e;
+    --accent-soft:#fdf0eb; --green:#1f8a4c; --green-soft:#eaf5ee; --amber:#9a6a00; --amber-soft:#f7f1e3;
+    --gray-soft:#f3f3f3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+
+  .sidebar{border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:11px;padding:24px 24px 22px}
+  .brand .mark{width:30px;height:30px;border:1.6px solid var(--ink);border-radius:50%;display:grid;place-items:center;flex:none}
+  .brand b{font-size:15px;font-weight:700;letter-spacing:.02em}
+  .nav{padding:6px 14px;flex:1}
+  .nav-label{font-size:10px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.14em;color:var(--faint);padding:18px 10px 8px}
+  .nav a{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:7px;color:var(--muted);font-weight:500;font-size:13.5px;margin-bottom:1px;transition:.12s}
+  .nav a svg{width:17px;height:17px;flex:none}
+  .nav a:hover{background:var(--hair);color:var(--ink)}
+  .nav a.active{color:var(--ink);font-weight:600}
+  .nav a.active{position:relative}
+  .nav a.active::before{content:"";position:absolute;left:-14px;top:7px;bottom:7px;width:2.5px;background:var(--accent);border-radius:2px}
+  .nav a .ct{margin-left:auto;font-size:11px;color:var(--faint);font-family:'IBM Plex Mono',monospace}
+  .side-foot{padding:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:11px}
+  .side-foot .av{width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:600;font-size:12px;flex:none}
+  .side-foot .nm{font-size:12.5px;font-weight:600;line-height:1.2}
+  .side-foot .nm small{display:block;color:var(--faint);font-weight:400;font-size:11px}
+
+  .main{display:flex;flex-direction:column;min-width:0}
+  .topbar{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 32px;position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(6px);z-index:20}
+  .menu-btn{display:none;background:none;border:1px solid var(--line-2);border-radius:7px;width:36px;height:36px;cursor:pointer;color:var(--ink)}
+  .crumb{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .crumb b{color:var(--ink);font-weight:600}
+  .crumb .sep{color:var(--faint)}
+  .search{margin-left:auto;position:relative;width:240px;max-width:34vw}
+  .search svg{position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--faint);width:16px;height:16px}
+  .search input{width:100%;background:none;border:0;border-bottom:1px solid var(--line-2);padding:8px 0 8px 24px;font-family:inherit;font-size:13px;color:var(--ink)}
+  .search input::placeholder{color:var(--faint)}
+  .search input:focus{border-color:var(--ink);outline:none}
+  .kbd{position:absolute;right:0;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--faint);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px}
+  .icon-btn{width:36px;height:36px;border:1px solid var(--line-2);border-radius:7px;background:none;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+  .icon-btn:hover{color:var(--ink);border-color:var(--ink)}
+
+  .content{padding:34px 32px 48px;max-width:1180px;width:100%}
+  .head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:4px}
+  .head .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .head h1{font-size:30px;font-weight:700;letter-spacing:-.025em;margin:9px 0 6px}
+  .head p{color:var(--muted);max-width:48ch}
+  .head-actions{display:flex;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:#fff;color:var(--ink);font-family:inherit;font-weight:600;font-size:13px;padding:9px 16px;border-radius:8px;cursor:pointer}
+  .btn svg{width:15px;height:15px}
+  .btn:hover{border-color:var(--ink)}
+  .btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.dark:hover{background:#000}
+
+  /* Stat row */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:30px 0}
+  .stat{padding:22px 24px;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0}
+  .stat .l{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+  .stat .v{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:11px 0 6px;font-variant-numeric:tabular-nums}
+  .stat .d{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .stat .d b{color:var(--green);font-weight:600}
+  .stat .d b.dn{color:var(--accent)}
+
+  /* Toolbar */
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .tabs{display:flex;gap:2px}
+  .tabs button{border:0;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--muted);padding:7px 13px;border-radius:7px;cursor:pointer}
+  .tabs button.on{background:var(--ink);color:#fff;font-weight:600}
+  .tabs button .n{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.6;margin-left:5px}
+  .tools-r{margin-left:auto;display:flex;gap:10px}
+  .filter{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;background:#fff}
+  .filter svg{width:14px;height:14px;color:var(--faint)}
+  .filter:hover{border-color:var(--ink)}
+
+  /* Table */
+  .table-wrap{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:500;padding:13px 22px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fcfcfc}
+  thead th.c{text-align:center}
+  thead th.r{text-align:right}
+  tbody td{padding:15px 22px;border-bottom:1px solid var(--hair);font-size:13.5px;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fcfcfc}
+  .chk{width:16px;height:16px;border:1.4px solid var(--line-2);border-radius:4px;display:inline-block;cursor:pointer}
+  .person{display:flex;align-items:center;gap:12px}
+  .person .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:12.5px;flex:none;color:#fff}
+  .person .nm{font-weight:600}
+  .person .em{color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace}
+  .role{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:6px;border:1px solid transparent}
+  .role.owner{color:var(--accent);background:var(--accent-soft)}
+  .role.admin{color:var(--ink);background:var(--gray-soft)}
+  .role.member{color:var(--ink-2);border-color:var(--line-2)}
+  .role.viewer{color:var(--faint);border-color:var(--line-2)}
+  .stat-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500}
+  .stat-pill::before{content:"";width:7px;height:7px;border-radius:50%}
+  .stat-pill.active::before{background:var(--green)}
+  .stat-pill.pending::before{background:var(--amber)}
+  .stat-pill.inactive::before{background:var(--faint)}
+  td.mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted)}
+  .row-act{display:flex;gap:6px;justify-content:flex-end}
+  .ra{width:30px;height:30px;border:1px solid transparent;border-radius:7px;background:none;display:grid;place-items:center;cursor:pointer;color:var(--faint)}
+  .ra:hover{border-color:var(--line-2);color:var(--ink)}
+
+  .table-foot{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-top:1px solid var(--line);flex-wrap:wrap;gap:12px}
+  .table-foot .info{font-size:12.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+  .pager{display:flex;gap:4px;align-items:center}
+  .pager button{min-width:32px;height:32px;border:1px solid var(--line-2);background:#fff;border-radius:7px;font-family:inherit;font-size:13px;color:var(--ink-2);cursor:pointer;padding:0 8px}
+  .pager button:hover:not(:disabled){border-color:var(--ink)}
+  .pager button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pager button:disabled{opacity:.4;cursor:default}
+  .pager .gap{color:var(--faint);padding:0 2px}
+
+  @media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}}
+  @media(max-width:820px){
+    .app{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:0;top:0;z-index:60;width:230px;background:#fff;transform:translateX(-100%);transition:transform .25s}
+    .sidebar.open{transform:translateX(0)}
+    .menu-btn{display:grid;place-items:center}
+    .scrim{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:55;display:none}
+    .scrim.show{display:block}
+    .hide-sm{display:none}
+  }
+  @media(max-width:560px){.stats{grid-template-columns:1fr}.stat{border-right:0!important;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:0}.search{display:none}.head h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 16H4L12 3z" stroke="#111" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <b>Atelier</b>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Workspace</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 9h18M9 21V9" stroke="currentColor" stroke-width="1.7"/></svg>Overview</a>
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 5.5a3 3 0 010 5.6M18.5 20c0-2.4-1-4.4-2.5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Members<span class="ct">248</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14M5 12h14M5 17h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Orders<span class="ct">1.2k</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16v13H4zM4 7l3-4h10l3 4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 11h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Products</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9M9 19V5M14 19v-7M19 19V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Reports</a>
+      <div class="nav-label">System</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M17.7 6.3l-1.4 1.4M7.7 16.3l-1.4 1.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Settings</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Security</a>
+    </nav>
+    <div class="side-foot">
+      <div class="av">EV</div>
+      <div class="nm">Elise Vance<small>elise@atelier.co</small></div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <div class="crumb"><span>Workspace</span><span class="sep">/</span><b>Members</b></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="Search members" aria-label="Search">
+        <span class="kbd">⌘K</span>
+      </div>
+      <button class="icon-btn" aria-label="Notifications"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 20a2 2 0 004 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+    </header>
+
+    <main class="content">
+      <div class="head">
+        <div>
+          <div class="eyebrow">Directory</div>
+          <h1>Members</h1>
+          <p>Manage who has access to the Atelier workspace, their roles and permissions.</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Export</button>
+          <button class="btn dark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Invite member</button>
+        </div>
+      </div>
+
+      <section class="stats">
+        <div class="stat"><div class="l">Total members</div><div class="v">248</div><div class="d"><b>+12</b> this month</div></div>
+        <div class="stat"><div class="l">Active now</div><div class="v">186</div><div class="d"><b>75%</b> of seats used</div></div>
+        <div class="stat"><div class="l">Pending invites</div><div class="v">14</div><div class="d"><b class="dn">3</b> expiring soon</div></div>
+        <div class="stat"><div class="l">Admins</div><div class="v">9</div><div class="d">Across 4 teams</div></div>
+      </section>
+
+      <div class="toolbar">
+        <div class="tabs">
+          <button class="on">All<span class="n">248</span></button>
+          <button>Active<span class="n">186</span></button>
+          <button>Pending<span class="n">14</span></button>
+          <button>Inactive<span class="n">48</span></button>
+        </div>
+        <div class="tools-r">
+          <button class="filter"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Role: All</button>
+          <button class="filter"><svg viewBox="0 0 24 24" fill="none"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Sort: Recent</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:42px"><span class="chk"></span></th>
+            <th>Member</th>
+            <th>Role</th>
+            <th class="hide-sm">Status</th>
+            <th class="hide-sm">Joined</th>
+            <th class="hide-sm">Last active</th>
+            <th class="r">Actions</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#e4572e">EV</span><div><div class="nm">Elise Vance</div><div class="em">elise@atelier.co</div></div></div></td>
+              <td><span class="role owner">Owner</span></td>
+              <td class="hide-sm"><span class="stat-pill active">Active</span></td>
+              <td class="hide-sm mono">2021-03-14</td>
+              <td class="hide-sm">2 min ago</td>
+              <td><div class="row-act"><button class="ra" aria-label="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#2c3e50">MJ</span><div><div class="nm">Marcus Jung</div><div class="em">marcus.j@atelier.co</div></div></div></td>
+              <td><span class="role admin">Admin</span></td>
+              <td class="hide-sm"><span class="stat-pill active">Active</span></td>
+              <td class="hide-sm mono">2021-08-02</td>
+              <td class="hide-sm">1 hour ago</td>
+              <td><div class="row-act"><button class="ra" aria-label="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#1f8a4c">PA</span><div><div class="nm">Priya Anand</div><div class="em">priya@atelier.co</div></div></div></td>
+              <td><span class="role admin">Admin</span></td>
+              <td class="hide-sm"><span class="stat-pill active">Active</span></td>
+              <td class="hide-sm mono">2022-01-19</td>
+              <td class="hide-sm">Yesterday</td>
+              <td><div class="row-act"><button class="ra" aria-label="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#7d5fff">LO</span><div><div class="nm">Liam Okonkwo</div><div class="em">liam.o@atelier.co</div></div></div></td>
+              <td><span class="role member">Member</span></td>
+              <td class="hide-sm"><span class="stat-pill active">Active</span></td>
+              <td class="hide-sm mono">2022-06-30</td>
+              <td class="hide-sm">3 hours ago</td>
+              <td><div class="row-act"><button class="ra" aria-label="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#9a6a00">SC</span><div><div class="nm">Sofia Castellano</div><div class="em">sofia.c@atelier.co</div></div></div></td>
+              <td><span class="role member">Member</span></td>
+              <td class="hide-sm"><span class="stat-pill pending">Pending</span></td>
+              <td class="hide-sm mono">2024-05-11</td>
+              <td class="hide-sm">Invite sent</td>
+              <td><div class="row-act"><button class="ra" aria-label="Resend"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 018-8 8 8 0 016 2.7L21 9M21 4v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#c0392b">RT</span><div><div class="nm">Ravi Thapa</div><div class="em">ravi.t@atelier.co</div></div></div></td>
+              <td><span class="role viewer">Viewer</span></td>
+              <td class="hide-sm"><span class="stat-pill inactive">Inactive</span></td>
+              <td class="hide-sm mono">2023-02-08</td>
+              <td class="hide-sm">28 days ago</td>
+              <td><div class="row-act"><button class="ra" aria-label="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td><span class="chk"></span></td>
+              <td><div class="person"><span class="av" style="background:#16a085">NB</span><div><div class="nm">Nora Bergström</div><div class="em">nora.b@atelier.co</div></div></div></td>
+              <td><span class="role member">Member</span></td>
+              <td class="hide-sm"><span class="stat-pill active">Active</span></td>
+              <td class="hide-sm mono">2023-11-22</td>
+              <td class="hide-sm">5 hours ago</td>
+              <td><div class="row-act"><button class="ra" aria-label="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button><button class="ra" aria-label="More"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-foot">
+          <div class="info">1–6 of 248 members</div>
+          <div class="pager">
+            <button disabled aria-label="Previous">‹</button>
+            <button class="on">1</button>
+            <button>2</button>
+            <button>3</button>
+            <span class="gap">…</span>
+            <button>42</button>
+            <button aria-label="Next">›</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const sb=document.getElementById('sidebar'),sc=document.getElementById('scrim');
+  document.getElementById('menuBtn').onclick=()=>{sb.classList.add('open');sc.classList.add('show')};
+  sc.onclick=()=>{sb.classList.remove('open');sc.classList.remove('show')};
+  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on')});
+</script>
+</body>
+</html>

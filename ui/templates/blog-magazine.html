@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Margin — Ideas, Craft & Slow Living</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#fcfbf8;
+    --surface:#ffffff;
+    --ink:#1c1b19;
+    --ink-soft:#56524c;
+    --muted:#8a857d;
+    --line:#e9e6df;
+    --accent:#c0392b;
+    --accent-soft:#fbeeed;
+    --teal:#1f6f6a;
+    --max:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Source Sans 3',system-ui,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit;text-decoration:none}
+  .serif{font-family:'Playfair Display',Georgia,serif}
+  :focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:3px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+
+  /* masthead */
+  .topbar{background:var(--ink);color:#e7e2d8;font-size:.78rem;letter-spacing:.04em}
+  .topbar .wrap{display:flex;justify-content:space-between;align-items:center;height:38px}
+  .topbar a{color:#cfc8bb;transition:color .2s}.topbar a:hover{color:#fff}
+  .topbar .tdate{color:#9a9388}
+  header.mast{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:40}
+  .mast-top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+  .logo{font-family:'Playfair Display',serif;font-weight:800;font-size:2rem;letter-spacing:-.01em;display:flex;align-items:center;gap:12px}
+  .logo .star{color:var(--accent)}
+  .search{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:30px;padding:8px 16px;color:var(--muted);font-size:.85rem;min-width:180px;cursor:text}
+  nav.cats{border-top:1px solid var(--line)}
+  nav.cats .wrap{display:flex;gap:30px;height:50px;align-items:center;overflow-x:auto;font-size:.83rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+  nav.cats a{color:var(--ink-soft);white-space:nowrap;transition:color .2s;position:relative}
+  nav.cats a:hover,nav.cats a.active{color:var(--accent)}
+  nav.cats a.active::after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:2px;background:var(--accent)}
+  .menu-btn{display:none}
+
+  /* chips */
+  .chip{display:inline-flex;align-items:center;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:30px}
+  .chip.teal{color:var(--teal);background:#e6f1f0}
+  .chip.ink{color:#fff;background:var(--ink)}
+
+  /* hero */
+  .hero{padding:54px 0 70px}
+  .hero-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:48px;align-items:stretch}
+  .feature{display:block;cursor:pointer}
+  .feature .cover{aspect-ratio:16/10;border-radius:10px;overflow:hidden;position:relative;border:1px solid rgba(0,0,0,.05)}
+  .feature .cover .art{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+  .feature:hover .cover .art{transform:scale(1.04)}
+  .feature h2{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(2rem,3.6vw,3.1rem);line-height:1.05;letter-spacing:-.015em;margin:22px 0 14px}
+  .feature:hover h2{color:var(--accent)}
+  .feature .dek{font-size:1.12rem;color:var(--ink-soft);max-width:54ch}
+  .byline{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:.85rem;color:var(--muted)}
+  .byline .who{width:30px;height:30px;border-radius:50%;overflow:hidden;flex-shrink:0}
+  .byline b{color:var(--ink);font-weight:600}
+  .hero-side{display:flex;flex-direction:column;gap:22px;border-left:1px solid var(--line);padding-left:30px}
+  .hero-side .sh{font-family:'Playfair Display',serif;font-size:.95rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+  .mini{display:grid;grid-template-columns:64px 1fr;gap:14px;cursor:pointer;align-items:start}
+  .mini .mc{aspect-ratio:1;border-radius:7px;overflow:hidden;position:relative}
+  .mini .mt{font-family:'Playfair Display',serif;font-weight:600;font-size:1.04rem;line-height:1.2}
+  .mini:hover .mt{color:var(--accent)}
+  .mini .mm{font-size:.76rem;color:var(--muted);margin-top:5px}
+
+  /* CSS-art covers */
+  .ca{position:absolute;inset:0}
+  .g-amber{background:linear-gradient(135deg,#e8a13c,#c0392b)}
+  .g-amber::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 25%,rgba(255,255,255,.35),transparent 45%)}
+  .g-teal{background:linear-gradient(150deg,#1f6f6a,#0e3b39)}
+  .g-dusk{background:linear-gradient(160deg,#5a4a7a,#2a2440)}
+  .g-clay{background:linear-gradient(135deg,#d68c5c,#9c4a32)}
+  .g-sage{background:linear-gradient(150deg,#8aa07a,#4f6a48)}
+  .g-rose{background:linear-gradient(140deg,#d98ca0,#8a3a52)}
+  .g-night{background:linear-gradient(160deg,#2c3340,#11151c)}
+  .g-gold{background:linear-gradient(135deg,#e6c66a,#b08a2c)}
+  .ca .sun{position:absolute;width:34%;aspect-ratio:1;border-radius:50%;right:14%;top:18%;background:radial-gradient(circle at 40% 38%,#fff5e0,#f2c44c)}
+  .ca .hill{position:absolute;left:0;right:0;bottom:0;height:42%;background:rgba(0,0,0,.18);border-radius:50% 50% 0 0/100% 100% 0 0}
+  .ca .lines{position:absolute;inset:0;opacity:.5;background:repeating-linear-gradient(transparent 0 16px,rgba(255,255,255,.12) 16px 17px)}
+  .ca .ring{position:absolute;border:2px solid rgba(255,255,255,.4);border-radius:50%}
+
+  /* divider */
+  .rule{display:flex;align-items:center;gap:18px;margin:8px 0 36px}
+  .rule h3{font-family:'Playfair Display',serif;font-weight:700;font-size:1.7rem;white-space:nowrap}
+  .rule .ln{flex:1;height:1px;background:var(--line)}
+  .rule a.more{font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--accent);white-space:nowrap}
+
+  /* body layout */
+  .main-grid{display:grid;grid-template-columns:1fr 320px;gap:54px;padding-bottom:80px}
+
+  /* post cards */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:36px 32px}
+  .card{cursor:pointer}
+  .card .cover{aspect-ratio:3/2;border-radius:9px;overflow:hidden;position:relative;border:1px solid rgba(0,0,0,.05)}
+  .card .cover .art{position:absolute;inset:0;transition:transform .6s}
+  .card:hover .cover .art{transform:scale(1.05)}
+  .card .meta{display:flex;align-items:center;gap:10px;margin:16px 0 9px;font-size:.78rem;color:var(--muted)}
+  .card h4{font-family:'Playfair Display',serif;font-weight:600;font-size:1.4rem;line-height:1.18;letter-spacing:-.01em}
+  .card:hover h4{color:var(--accent)}
+  .card p{font-size:.95rem;color:var(--ink-soft);margin-top:8px}
+  .card .foot{font-size:.78rem;color:var(--muted);margin-top:12px}
+
+  /* sidebar */
+  aside{display:flex;flex-direction:column;gap:34px}
+  .widget{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .widget.news{background:var(--ink);color:#f1ece2;border:none}
+  .news h4{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;line-height:1.2}
+  .news p{font-size:.92rem;color:#c5bfb3;margin:12px 0 18px}
+  .news form{display:flex;flex-direction:column;gap:10px}
+  .news input{background:#2a2823;border:1px solid #413e37;border-radius:8px;padding:12px 14px;color:#fff;font-family:inherit;font-size:.92rem}
+  .news input::placeholder{color:#928c80}
+  .news button{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px;font-family:inherit;font-weight:600;font-size:.92rem;cursor:pointer;transition:background .2s}
+  .news button:hover{background:#a82f23}
+  .news .fine{font-size:.74rem;color:#8a857a;margin-top:6px}
+  .widget .wh{font-family:'Playfair Display',serif;font-size:1.05rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding-bottom:12px;border-bottom:2px solid var(--ink);margin-bottom:6px}
+  .pop{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:15px 0;border-bottom:1px solid var(--line);align-items:start}
+  .pop:last-child{border-bottom:none}
+  .pop .rk{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--line);line-height:1;width:30px}
+  .pop .pt{font-weight:600;font-size:.98rem;line-height:1.25;cursor:pointer}
+  .pop:hover .pt{color:var(--accent)}
+  .pop .pm{font-size:.76rem;color:var(--muted);margin-top:4px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .tag{font-size:.8rem;color:var(--ink-soft);border:1px solid var(--line);border-radius:30px;padding:6px 13px;transition:all .2s;cursor:pointer}
+  .tag:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* footer */
+  footer{background:var(--ink);color:#cfc8bb}
+  .foot-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding:60px 0 44px;border-bottom:1px solid #34312b}
+  .foot-brand .logo{color:#fff;font-size:1.7rem}
+  .foot-brand .logo .star{color:var(--accent)}
+  .foot-brand p{font-size:.92rem;color:#9a9388;margin-top:14px;max-width:38ch}
+  .fcol h5{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:16px}
+  .fcol a{display:block;font-size:.9rem;color:#b5afa3;padding:6px 0;transition:color .2s}
+  .fcol a:hover{color:#fff}
+  .foot-bot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding:24px 0 40px;font-size:.82rem;color:#8a857a}
+
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr;gap:38px}
+    .hero-side{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:28px}
+    .main-grid{grid-template-columns:1fr;gap:50px}
+    .foot-top{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:620px){
+    .wrap{padding:0 18px}
+    .cards{grid-template-columns:1fr}
+    .search{display:none}
+    .foot-top{grid-template-columns:1fr}
+    .topbar .tlinks{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="tdate">Saturday, June 27, 2026 · Issue 142</span>
+    <span class="tlinks"><a href="#">Subscribe</a> &nbsp;·&nbsp; <a href="#">Archive</a> &nbsp;·&nbsp; <a href="#">Sign in</a></span>
+  </div>
+</div>
+
+<header class="mast">
+  <div class="wrap mast-top">
+    <a class="logo" href="#"><span class="star">✳</span> The&nbsp;Margin</a>
+    <div class="search" role="search">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Search essays &amp; ideas…
+    </div>
+  </div>
+  <nav class="cats" aria-label="Categories">
+    <div class="wrap">
+      <a href="#" class="active">Home</a>
+      <a href="#">Craft</a>
+      <a href="#">Slow Living</a>
+      <a href="#">Technology</a>
+      <a href="#">Reading</a>
+      <a href="#">Design</a>
+      <a href="#">Interviews</a>
+      <a href="#">Field Notes</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <a class="feature" href="#">
+        <div class="cover">
+          <div class="art ca g-amber"><span class="sun"></span><span class="hill"></span></div>
+        </div>
+        <span class="chip" style="margin-top:20px">Slow Living</span>
+        <h2 class="serif">The Lost Art of Doing One Thing at a Time</h2>
+        <p class="dek">We traded depth for breadth somewhere along the way. A meditation on attention, patience, and why the slow path is so often the truest one.</p>
+        <div class="byline">
+          <span class="who"><svg viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" fill="#d9b88a"/><circle cx="15" cy="12" r="6" fill="#7a5a3a"/><path d="M4 30q11-11 22 0Z" fill="#7a5a3a"/></svg></span>
+          By <b>Elena Marsh</b> · 12 min read · June 26
+        </div>
+      </a>
+
+      <div class="hero-side">
+        <div class="sh">Most Recent</div>
+        <a class="mini" href="#">
+          <span class="mc"><span class="art ca g-teal"><span class="ring" style="inset:22% 28%"></span></span></span>
+          <span><span class="chip teal" style="margin-bottom:6px">Technology</span><div class="mt serif">When the Algorithm Forgets You</div><div class="mm">9 min · June 25</div></span>
+        </a>
+        <a class="mini" href="#">
+          <span class="mc"><span class="art ca g-dusk"></span></span>
+          <span><span class="mt serif">A House Built From Borrowed Light</span><div class="mm">7 min · June 24</div></span>
+        </a>
+        <a class="mini" href="#">
+          <span class="mc"><span class="art ca g-clay"><span class="hill"></span></span></span>
+          <span><span class="mt serif">The Carpenter Who Wouldn't Hurry</span><div class="mm">11 min · June 23</div></span>
+        </a>
+        <a class="mini" href="#">
+          <span class="mc"><span class="art ca g-rose"><span class="sun" style="right:30%;top:26%;width:26%"></span></span></span>
+          <span><span class="mt serif">On Keeping a Commonplace Book</span><div class="mm">6 min · June 22</div></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BODY -->
+  <div class="wrap main-grid">
+    <div>
+      <div class="rule">
+        <h3 class="serif">Latest Essays</h3>
+        <span class="ln"></span>
+        <a class="more" href="#">View all →</a>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <a href="#"><div class="cover"><div class="art ca g-sage"><span class="hill"></span><span class="lines"></span></div></div></a>
+          <div class="meta"><span class="chip teal">Craft</span> · June 21</div>
+          <h4 class="serif">What Bookbinders Know About Time</h4>
+          <p>Every fold is a decision you can't take back. Lessons from a trade that refuses the shortcut.</p>
+          <div class="foot">By Tomas Hale · 8 min</div>
+        </article>
+
+        <article class="card">
+          <a href="#"><div class="cover"><div class="art ca g-night"><span class="ring" style="inset:18% 30%"></span><span class="ring" style="inset:34% 42%"></span></div></div></a>
+          <div class="meta"><span class="chip">Technology</span> · June 20</div>
+          <h4 class="serif">Software That Respects the Reader</h4>
+          <p>A short manifesto for tools that ask less of our attention and give more back.</p>
+          <div class="foot">By Ivo Renner · 10 min</div>
+        </article>
+
+        <article class="card">
+          <a href="#"><div class="cover"><div class="art ca g-gold"><span class="sun" style="right:20%;top:20%"></span><span class="hill"></span></div></div></a>
+          <div class="meta"><span class="chip ink">Reading</span> · June 18</div>
+          <h4 class="serif">The Case for Reading the Same Book Twice</h4>
+          <p>Return is not repetition. On the quiet rewards of going back to what shaped you.</p>
+          <div class="foot">By Elena Marsh · 7 min</div>
+        </article>
+
+        <article class="card">
+          <a href="#"><div class="cover"><div class="art ca g-clay"><span class="lines"></span></div></div></a>
+          <div class="meta"><span class="chip teal">Design</span> · June 16</div>
+          <h4 class="serif">In Praise of Boring, Durable Things</h4>
+          <p>The objects we keep longest are rarely the loudest. A defense of quiet design.</p>
+          <div class="foot">By Petra Soto · 6 min</div>
+        </article>
+
+        <article class="card">
+          <a href="#"><div class="cover"><div class="art ca g-dusk"><span class="sun" style="right:24%;top:22%;width:30%"></span></div></div></a>
+          <div class="meta"><span class="chip">Interviews</span> · June 14</div>
+          <h4 class="serif">A Conversation With a Slow Gardener</h4>
+          <p>Forty years tending one hillside. On patience, seasons, and the long view.</p>
+          <div class="foot">By Tomas Hale · 14 min</div>
+        </article>
+
+        <article class="card">
+          <a href="#"><div class="cover"><div class="art ca g-teal"><span class="hill"></span><span class="ring" style="inset:14% 36%"></span></div></div></a>
+          <div class="meta"><span class="chip teal">Field Notes</span> · June 12</div>
+          <h4 class="serif">Notes From a Week Without Notifications</h4>
+          <p>What returns to you when the pinging stops. A small, hopeful experiment.</p>
+          <div class="foot">By Elena Marsh · 5 min</div>
+        </article>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="widget news">
+        <h4 class="serif">The Margin, in your inbox</h4>
+        <p>One considered essay every Sunday morning. No noise, no tracking, ever.</p>
+        <form onsubmit="this.querySelector('.fine').textContent='Thank you — please check your inbox to confirm.';return false;">
+          <input type="email" placeholder="you@example.com" aria-label="Email address" required />
+          <button type="submit">Subscribe — it's free</button>
+          <span class="fine">Join 18,000 slow readers. Unsubscribe anytime.</span>
+        </form>
+      </div>
+
+      <div class="widget">
+        <div class="wh">Most Read</div>
+        <div class="pop"><span class="rk serif">01</span><div><div class="pt">The Quiet Cost of Frictionless Things</div><div class="pm">Technology · 14 min</div></div></div>
+        <div class="pop"><span class="rk serif">02</span><div><div class="pt">Why I Switched Back to Paper</div><div class="pm">Craft · 6 min</div></div></div>
+        <div class="pop"><span class="rk serif">03</span><div><div class="pt">Memory Is a Practice, Not a Drive</div><div class="pm">Reading · 11 min</div></div></div>
+        <div class="pop"><span class="rk serif">04</span><div><div class="pt">The Garden as a Way of Thinking</div><div class="pm">Slow Living · 9 min</div></div></div>
+        <div class="pop"><span class="rk serif">05</span><div><div class="pt">Interfaces That Disappear</div><div class="pm">Design · 6 min</div></div></div>
+      </div>
+
+      <div class="widget">
+        <div class="wh">Explore Topics</div>
+        <div class="tags">
+          <span class="tag">Attention</span><span class="tag">Craft</span><span class="tag">Typography</span>
+          <span class="tag">Reading</span><span class="tag">Gardens</span><span class="tag">Memory</span>
+          <span class="tag">Tools</span><span class="tag">Letters</span><span class="tag">Quiet</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="logo"><span class="star">✳</span> The Margin</div>
+        <p>An independent magazine about ideas, craft, and the deliberate life. Reader-supported, published since 2019.</p>
+      </div>
+      <div class="fcol"><h5>Sections</h5><a href="#">Craft</a><a href="#">Slow Living</a><a href="#">Technology</a><a href="#">Reading</a></div>
+      <div class="fcol"><h5>The Magazine</h5><a href="#">About</a><a href="#">Contributors</a><a href="#">Archive</a><a href="#">Submit</a></div>
+      <div class="fcol"><h5>Elsewhere</h5><a href="#">Newsletter</a><a href="#">Instagram</a><a href="#">RSS</a><a href="#">Contact</a></div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 The Margin Magazine. All rights reserved.</span>
+      <span>Privacy · Terms · Set in Playfair Display</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

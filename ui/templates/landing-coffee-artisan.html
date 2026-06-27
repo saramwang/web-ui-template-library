@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ember &amp; Oak — Craft Coffee Roastery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --espresso:#3a241a;
+    --espresso-d:#2a1810;
+    --cream:#f5ece0;
+    --cream-2:#efe2d0;
+    --terra:#c5683f;
+    --terra-d:#a8542f;
+    --olive:#7d7a4a;
+    --ink:#2a1c14;
+    --soft:#6b5446;
+    --line:#e0d2bf;
+    --maxw:1200px;
+    --gut:clamp(20px,5vw,56px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Nunito Sans',system-ui,sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;line-height:1.65;overflow-x:hidden;position:relative}
+  /* grain texture */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");}
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;letter-spacing:-.01em;line-height:1.05}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--terra);color:#fff}
+  :focus-visible{outline:2px solid var(--terra);outline-offset:3px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);position:relative;z-index:2}
+  .ey{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);font-weight:700}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:.92rem;padding:14px 26px;border-radius:40px;transition:.28s;cursor:pointer;border:2px solid transparent}
+  .btn-solid{background:var(--terra);color:#fff;box-shadow:0 8px 20px -8px rgba(168,84,47,.6)}
+  .btn-solid:hover{background:var(--terra-d);transform:translateY(-2px)}
+  .btn-out{border-color:var(--espresso);color:var(--espresso)}
+  .btn-out:hover{background:var(--espresso);color:var(--cream)}
+
+  /* NAV */
+  header{position:sticky;top:0;z-index:60;background:rgba(245,236,224,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces';font-weight:700;font-size:1.32rem;color:var(--espresso)}
+  .brand .mk{width:34px;height:34px;border-radius:50%;background:var(--espresso);display:flex;align-items:center;justify-content:center}
+  .navlinks{display:flex;gap:30px;align-items:center}
+  .navlinks a{font-weight:600;font-size:.92rem;color:var(--soft);transition:color .2s}
+  .navlinks a:hover{color:var(--espresso)}
+  .burger{display:none;background:none;border:2px solid var(--espresso);width:42px;height:40px;border-radius:8px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center}
+  .burger span{width:18px;height:1.8px;background:var(--espresso)}
+
+  /* HERO */
+  .hero{padding:clamp(40px,6vw,80px) 0 clamp(48px,7vw,90px);position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,64px);align-items:center}
+  .hero h1{font-size:clamp(2.8rem,7vw,5.4rem);font-weight:600;color:var(--espresso)}
+  .hero h1 em{font-style:italic;color:var(--terra)}
+  .hero p.lead{font-size:1.1rem;color:var(--soft);max-width:42ch;margin:24px 0 32px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-tags{display:flex;gap:18px;margin-top:36px;flex-wrap:wrap}
+  .htag{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;color:var(--soft)}
+  .htag svg{color:var(--terra)}
+  /* hero illustration */
+  .hero-art{position:relative;display:flex;justify-content:center}
+  .hero-art .blob{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .steam{transform-origin:center;animation:rise 3.5s ease-in-out infinite}
+  .steam:nth-child(2){animation-delay:.6s}.steam:nth-child(3){animation-delay:1.2s}
+  @keyframes rise{0%{opacity:.15;transform:translateY(6px) scaleY(.9)}50%{opacity:.6}100%{opacity:.1;transform:translateY(-10px) scaleY(1.1)}}
+
+  /* SECTION */
+  .sec{padding:clamp(60px,9vw,110px) 0}
+  .sec-head{max-width:600px}
+  .sec-head.center{margin:0 auto;text-align:center}
+  .sec-head h2{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:600;color:var(--espresso);margin:12px 0 14px}
+  .sec-head h2 em{font-style:italic;color:var(--terra)}
+  .sec-head p{color:var(--soft);font-size:1.05rem}
+
+  /* BEANS */
+  .beans{background:var(--cream-2)}
+  .bean-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+  .bean{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:30px;transition:.3s;position:relative;overflow:hidden}
+  .bean:hover{transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(58,36,26,.4)}
+  .bean .roast{position:absolute;top:22px;right:22px;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);background:rgba(197,104,63,.12);padding:4px 11px;border-radius:30px}
+  .bean .beanart{width:74px;height:74px;margin-bottom:20px}
+  .bean h3{font-size:1.4rem;font-weight:600;color:var(--espresso);margin-bottom:8px}
+  .bean .origin{font-size:.82rem;color:var(--terra);font-weight:700;letter-spacing:.04em;margin-bottom:12px}
+  .bean p{color:var(--soft);font-size:.94rem}
+  .bean .notes{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .bean .notes span{font-size:.72rem;font-weight:600;color:var(--soft);background:var(--cream-2);border:1px solid var(--line);padding:4px 11px;border-radius:30px}
+  .bean .price{display:flex;justify-content:space-between;align-items:center;margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+  .bean .price b{font-family:'Fraunces';font-size:1.3rem;color:var(--espresso)}
+  .bean .price a{font-weight:700;font-size:.86rem;color:var(--terra)}
+
+  /* PROCESS */
+  .proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:48px}
+  .step{position:relative;padding-top:18px}
+  .step .num{font-family:'Fraunces';font-size:2.6rem;font-weight:600;color:var(--terra);opacity:.85;line-height:1}
+  .step h3{font-size:1.25rem;font-weight:600;color:var(--espresso);margin:10px 0 8px}
+  .step p{color:var(--soft);font-size:.92rem}
+  .step::before{content:"";position:absolute;top:0;left:0;width:46px;height:3px;background:var(--terra);border-radius:3px}
+
+  /* MENU HIGHLIGHTS */
+  .menu{background:var(--espresso);color:var(--cream)}
+  .menu .sec-head h2{color:var(--cream)}
+  .menu .sec-head p{color:#cbb6a4}
+  .menu .ey{color:#e8a883}
+  .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 56px;margin-top:48px}
+  .mitem{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;padding:16px 0;border-bottom:1px dashed rgba(245,236,224,.22)}
+  .mitem .l h4{font-family:'Fraunces';font-size:1.22rem;font-weight:500;color:var(--cream)}
+  .mitem .l p{font-size:.86rem;color:#cbb6a4;margin-top:2px}
+  .mitem .dotfill{flex:1;border-bottom:1px dotted rgba(245,236,224,.3);margin-bottom:6px;min-width:20px}
+  .mitem .pr{font-family:'Fraunces';font-size:1.15rem;color:#e8a883;white-space:nowrap}
+
+  /* LOCATIONS */
+  .loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+  .loc{background:var(--cream);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:.3s}
+  .loc:hover{transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(58,36,26,.4)}
+  .loc .map{height:140px;position:relative;overflow:hidden}
+  .loc .body{padding:24px}
+  .loc .body h3{font-size:1.3rem;font-weight:600;color:var(--espresso);margin-bottom:6px}
+  .loc .body .addr{color:var(--soft);font-size:.92rem}
+  .loc .body .hrs{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:.86rem;color:var(--soft);font-weight:600}
+  .loc .body .hrs .open{color:#2f7a3f}
+
+  /* NEWSLETTER */
+  .news{position:relative;overflow:hidden}
+  .news-card{background:var(--terra);color:#fff;border-radius:28px;padding:clamp(40px,6vw,72px);display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative;overflow:hidden}
+  .news-card::after{content:"";position:absolute;right:-60px;bottom:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.1)}
+  .news-card h2{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:600;color:#fff;position:relative}
+  .news-card p{color:#ffe8db;margin-top:14px;position:relative;max-width:40ch}
+  .nl-form{display:flex;gap:10px;background:#fff;border-radius:40px;padding:6px;position:relative;box-shadow:0 16px 36px -18px rgba(0,0,0,.4)}
+  .nl-form input{flex:1;border:0;background:none;padding:12px 18px;font-family:'Nunito Sans';font-size:1rem;color:var(--ink)}
+  .nl-form input::placeholder{color:#9c8676}
+  .nl-form button{background:var(--espresso);color:#fff;border:0;border-radius:40px;padding:12px 24px;font-weight:700;cursor:pointer;font-family:'Nunito Sans';transition:.25s}
+  .nl-form button:hover{background:var(--espresso-d)}
+  .nl-note{font-size:.8rem;color:#ffe8db;margin-top:12px;position:relative}
+
+  /* FOOTER */
+  footer{background:var(--espresso-d);color:#d8c3b2;padding:clamp(56px,7vw,84px) 0 32px}
+  .f-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px;padding-bottom:42px;border-bottom:1px solid rgba(245,236,224,.12)}
+  .f-grid .brand{color:var(--cream)}
+  .f-grid p{color:#b7a08f;max-width:30ch;margin-top:14px;font-size:.92rem}
+  .f-grid h4{font-family:'Fraunces';font-size:1rem;color:var(--cream);margin-bottom:14px}
+  .f-grid a{display:block;color:#c4af9e;padding:5px 0;font-size:.92rem;transition:color .2s}
+  .f-grid a:hover{color:#e8a883}
+  .f-bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:32px;font-size:.82rem;color:#9c8676}
+
+  @media(max-width:920px){
+    .navlinks{display:none}
+    .nav .btn-solid{display:none}
+    .burger{display:flex}
+    .mobnav{display:none}
+    .mobnav.open{display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;background:var(--cream);border-bottom:1px solid var(--line);padding:8px var(--gut) 22px;z-index:5}
+    .mobnav.open a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:600;color:var(--soft)}
+    .mobnav.open .btn{margin-top:14px;justify-content:center}
+    .hero-grid,.news-card{grid-template-columns:1fr}
+    .bean-grid,.proc-grid,.loc-grid,.menu-grid{grid-template-columns:1fr}
+    .proc-grid{grid-template-columns:1fr 1fr}
+    .f-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){.proc-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand">
+      <span class="mk"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 8h9a3 3 0 010 6h-1M3 8v5a3 3 0 003 3h3a3 3 0 003-3" stroke="#f5ece0" stroke-width="1.4" stroke-linecap="round"/><path d="M5 3v2M8 2v3M11 3v2" stroke="#c5683f" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+      Ember &amp; Oak
+    </a>
+    <nav class="navlinks">
+      <a href="#beans">Our Beans</a>
+      <a href="#process">Process</a>
+      <a href="#menu">Menu</a>
+      <a href="#locations">Cafés</a>
+    </nav>
+    <a href="#newsletter" class="btn btn-solid">Order beans</a>
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="mobnav wrap" id="mobnav">
+    <a href="#beans">Our Beans</a><a href="#process">Process</a><a href="#menu">Menu</a><a href="#locations">Cafés</a>
+    <a href="#newsletter" class="btn btn-solid">Order beans</a>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="ey">Small-batch roastery · Est. 2014</span>
+        <h1>Coffee with a <em>warm</em> heart and an honest roast.</h1>
+        <p class="lead">We source green beans directly from growers we know by name, roast them in small batches each morning, and pour them with care across our three neighbourhood cafés.</p>
+        <div class="hero-cta">
+          <a href="#beans" class="btn btn-solid">Shop our beans <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+          <a href="#locations" class="btn btn-out">Find a café</a>
+        </div>
+        <div class="hero-tags">
+          <span class="htag"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2C6 6 6 8 9 11c3-3 3-5 0-9zM4 9c0 3 2 5 5 5s5-2 5-5"/></svg>Roasted daily</span>
+          <span class="htag"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/></svg>Direct trade</span>
+          <span class="htag"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15h12M5 3v8M9 3v8M13 3v8"/></svg>Compostable bags</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;height:auto" role="img" aria-label="Illustration of a steaming cup of coffee on a saucer">
+          <defs>
+            <radialGradient id="cbg" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="#efe2d0"/><stop offset="1" stop-color="#e3cfb5"/></radialGradient>
+            <linearGradient id="cup" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf6ee"/><stop offset="1" stop-color="#e9dcc8"/></linearGradient>
+            <radialGradient id="liq" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#7a4a30"/><stop offset="1" stop-color="#3a241a"/></radialGradient>
+          </defs>
+          <circle cx="230" cy="230" r="220" fill="url(#cbg)"/>
+          <circle cx="230" cy="230" r="180" fill="none" stroke="#d9c4a8" stroke-width="2" stroke-dasharray="2 10"/>
+          <!-- steam -->
+          <g stroke="#c5683f" stroke-width="6" stroke-linecap="round" fill="none" opacity=".5">
+            <path class="steam" d="M196 110 q-14 -22 0 -44 q14 -22 0 -44"/>
+            <path class="steam" d="M230 102 q-14 -22 0 -44 q14 -22 0 -44"/>
+            <path class="steam" d="M264 110 q-14 -22 0 -44 q14 -22 0 -44"/>
+          </g>
+          <!-- saucer -->
+          <ellipse cx="230" cy="370" rx="160" ry="34" fill="#d3a878"/>
+          <ellipse cx="230" cy="362" rx="160" ry="30" fill="#e4c79e"/>
+          <ellipse cx="230" cy="356" rx="120" ry="22" fill="#d3a878"/>
+          <!-- cup -->
+          <path d="M120 200 h220 l-18 130 a92 30 0 0 1 -184 0 Z" fill="url(#cup)"/>
+          <ellipse cx="230" cy="200" rx="110" ry="30" fill="#3a241a"/>
+          <ellipse cx="230" cy="198" rx="98" ry="25" fill="url(#liq)"/>
+          <ellipse cx="208" cy="190" rx="34" ry="8" fill="#8a5a3c" opacity=".5"/>
+          <!-- handle -->
+          <path d="M338 232 q56 4 52 56 q-4 46 -56 46" fill="none" stroke="#e9dcc8" stroke-width="20" stroke-linecap="round"/>
+          <path d="M338 232 q56 4 52 56 q-4 46 -56 46" fill="none" stroke="#d9c4a8" stroke-width="6" stroke-linecap="round"/>
+          <!-- beans accents -->
+          <g fill="#3a241a">
+            <ellipse cx="92" cy="300" rx="16" ry="10" transform="rotate(-30 92 300)"/><path d="M86 296 q6 8 12 0" stroke="#5a3a26" stroke-width="1.5" fill="none"/>
+            <ellipse cx="372" cy="150" rx="16" ry="10" transform="rotate(20 372 150)"/><path d="M366 146 q6 8 12 0" stroke="#5a3a26" stroke-width="1.5" fill="none"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEANS -->
+  <section class="sec beans" id="beans">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ey">Our Beans</span>
+        <h2>Three roasts we'll <em>always</em> have on the shelf</h2>
+        <p>Rotating single origins come and go, but these are the cups our regulars keep coming back for.</p>
+      </div>
+      <div class="bean-grid">
+        <article class="bean">
+          <span class="roast">Light roast</span>
+          <svg class="beanart" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#e9d8be"/><ellipse cx="40" cy="40" rx="20" ry="30" fill="#c89b6a"/><path d="M40 12 q-10 28 0 56" stroke="#a87c4a" stroke-width="3" fill="none"/></svg>
+          <div class="origin">Yirgacheffe · Ethiopia</div>
+          <h3>Morning Bloom</h3>
+          <p>Bright and floral with a clean, tea-like finish. The cup we reach for to start the day.</p>
+          <div class="notes"><span>Jasmine</span><span>Citrus</span><span>Honey</span></div>
+          <div class="price"><b>$19</b><a href="#newsletter">Add to bag →</a></div>
+        </article>
+        <article class="bean">
+          <span class="roast">Medium roast</span>
+          <svg class="beanart" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#d9b58a"/><ellipse cx="40" cy="40" rx="20" ry="30" fill="#9a6a40"/><path d="M40 12 q-10 28 0 56" stroke="#6e4423" stroke-width="3" fill="none"/></svg>
+          <div class="origin">Huila · Colombia</div>
+          <h3>Oak House Blend</h3>
+          <p>Balanced and comforting — caramel sweetness with a round, nutty body that loves a splash of milk.</p>
+          <div class="notes"><span>Caramel</span><span>Cocoa</span><span>Almond</span></div>
+          <div class="price"><b>$17</b><a href="#newsletter">Add to bag →</a></div>
+        </article>
+        <article class="bean">
+          <span class="roast">Dark roast</span>
+          <svg class="beanart" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#8a5a38"/><ellipse cx="40" cy="40" rx="20" ry="30" fill="#4a2c1a"/><path d="M40 12 q-10 28 0 56" stroke="#2a1810" stroke-width="3" fill="none"/></svg>
+          <div class="origin">Sumatra · Indonesia</div>
+          <h3>Ember Reserve</h3>
+          <p>Deep, smoky and full-bodied with a syrupy finish. Built for espresso and slow evenings.</p>
+          <div class="notes"><span>Dark chocolate</span><span>Molasses</span><span>Cedar</span></div>
+          <div class="price"><b>$21</b><a href="#newsletter">Add to bag →</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="sec" id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ey">From Farm to Cup</span>
+        <h2>Slow, honest, <em>small-batch</em></h2>
+        <p>No shortcuts and no anonymous middlemen — just four steps we obsess over every single day.</p>
+      </div>
+      <div class="proc-grid">
+        <div class="step"><div class="num">01</div><h3>Source</h3><p>We travel to origin and buy directly from growers, paying well above the commodity price for quality and trust.</p></div>
+        <div class="step"><div class="num">02</div><h3>Roast</h3><p>Small batches roasted fresh each morning on our 1950s drum roaster, profiled by ear and by nose.</p></div>
+        <div class="step"><div class="num">03</div><h3>Rest</h3><p>Beans rest two to four days to settle, so every bag pours at its sweet, balanced peak.</p></div>
+        <div class="step"><div class="num">04</div><h3>Brew</h3><p>Dialed in daily by our baristas, or shipped to your door in compostable bags within 48 hours of roasting.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="sec menu" id="menu">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ey">In the Café</span>
+        <h2>A menu made for <em>lingering</em></h2>
+        <p>Everything is made to order with our own roasts and locally baked pastries. Oat, almond and whole milk always available.</p>
+      </div>
+      <div class="menu-grid">
+        <div class="mitem"><div class="l"><h4>Filter Pour-Over</h4><p>Single origin, brewed by the cup</p></div><span class="dotfill"></span><span class="pr">$4.5</span></div>
+        <div class="mitem"><div class="l"><h4>Flat White</h4><p>Double ristretto, silky microfoam</p></div><span class="dotfill"></span><span class="pr">$5</span></div>
+        <div class="mitem"><div class="l"><h4>Cortado</h4><p>Espresso cut with warm milk</p></div><span class="dotfill"></span><span class="pr">$4</span></div>
+        <div class="mitem"><div class="l"><h4>Maple Oat Latte</h4><p>House syrup, oat milk, cinnamon</p></div><span class="dotfill"></span><span class="pr">$5.5</span></div>
+        <div class="mitem"><div class="l"><h4>Cold Brew</h4><p>18-hour steep, smooth &amp; sweet</p></div><span class="dotfill"></span><span class="pr">$5</span></div>
+        <div class="mitem"><div class="l"><h4>Cardamom Bun</h4><p>Baked fresh down the street</p></div><span class="dotfill"></span><span class="pr">$4.5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS -->
+  <section class="sec" id="locations">
+    <div class="wrap">
+      <div class="sec-head center">
+        <span class="ey">Visit Us</span>
+        <h2>Three corners of the <em>city</em></h2>
+        <p>Each café has its own character, but the welcome — and the roast — is the same everywhere.</p>
+      </div>
+      <div class="loc-grid">
+        <article class="loc">
+          <div class="map"><svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><rect width="400" height="160" fill="#e7d6bd"/><g stroke="#d3bd9c" stroke-width="6"><path d="M0 60h400M0 110h400M120 0v160M280 0v160"/></g><circle cx="200" cy="80" r="14" fill="#c5683f"/><circle cx="200" cy="80" r="26" fill="#c5683f" opacity=".2"/></svg></div>
+          <div class="body"><h3>The Roastery</h3><p class="addr">14 Kiln Lane, Old Town</p><div class="hrs"><span class="open">●</span> Open · 7am – 6pm</div></div>
+        </article>
+        <article class="loc">
+          <div class="map"><svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><rect width="400" height="160" fill="#e3d0b6"/><g stroke="#cdb695" stroke-width="6"><path d="M0 40h400M0 100h400M90 0v160M240 0v160M330 0v160"/></g><circle cx="240" cy="70" r="14" fill="#c5683f"/><circle cx="240" cy="70" r="26" fill="#c5683f" opacity=".2"/></svg></div>
+          <div class="body"><h3>Riverside</h3><p class="addr">3 Quay Walk, Harbour District</p><div class="hrs"><span class="open">●</span> Open · 8am – 5pm</div></div>
+        </article>
+        <article class="loc">
+          <div class="map"><svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><rect width="400" height="160" fill="#e9d8be"/><g stroke="#d6c09f" stroke-width="6"><path d="M0 80h400M150 0v160M260 0v160"/><path d="M0 0l200 100M400 0L200 100"/></g><circle cx="200" cy="100" r="14" fill="#c5683f"/><circle cx="200" cy="100" r="26" fill="#c5683f" opacity=".2"/></svg></div>
+          <div class="body"><h3>The Greenhouse</h3><p class="addr">88 Maple Row, Garden Quarter</p><div class="hrs"><span class="open">●</span> Open · 7:30am – 7pm</div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="sec news" id="newsletter">
+    <div class="wrap">
+      <div class="news-card">
+        <div>
+          <span class="ey" style="color:#ffe0cf">The Roast Note</span>
+          <h2>Fresh beans &amp; café stories, every Friday</h2>
+          <p>Join 8,000 coffee lovers for new single origins, brew guides and the occasional free bag. No spam, just good coffee.</p>
+        </div>
+        <div>
+          <form class="nl-form" onsubmit="return false">
+            <label for="cmail" style="position:absolute;left:-9999px">Email address</label>
+            <input id="cmail" type="email" placeholder="you@email.com" required>
+            <button type="submit">Subscribe</button>
+          </form>
+          <p class="nl-note">Get 10% off your first order of beans.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div>
+        <a href="#top" class="brand"><span class="mk"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 8h9a3 3 0 010 6h-1M3 8v5a3 3 0 003 3h3a3 3 0 003-3" stroke="#f5ece0" stroke-width="1.4" stroke-linecap="round"/><path d="M5 3v2M8 2v3M11 3v2" stroke="#c5683f" stroke-width="1.4" stroke-linecap="round"/></svg></span>Ember &amp; Oak</a>
+        <p>A small-batch roastery and three neighbourhood cafés, roasting honest coffee since 2014.</p>
+      </div>
+      <div>
+        <h4>Coffee</h4>
+        <a href="#beans">Our beans</a><a href="#process">Process</a><a href="#newsletter">Subscriptions</a><a href="#beans">Gift sets</a>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <a href="#locations">The Roastery</a><a href="#locations">Riverside</a><a href="#locations">The Greenhouse</a><a href="#menu">Café menu</a>
+      </div>
+      <div>
+        <h4>Say Hello</h4>
+        <a href="mailto:hello@emberandoak.coffee">hello@emberandoak.coffee</a><a href="tel:+15551112233">+1 (555) 111-2233</a><a href="#locations">@emberandoak</a>
+      </div>
+    </div>
+    <div class="f-bot">
+      <span>© 2026 Ember &amp; Oak Coffee Roasters. Brewed with care.</span>
+      <span>Privacy · Wholesale · Careers</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var b=document.getElementById('burger'),m=document.getElementById('mobnav');
+  b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o)});
+  m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){m.classList.remove('open');b.setAttribute('aria-expanded',false)})});
+</script>
+</body>
+</html>

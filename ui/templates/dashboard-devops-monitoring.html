@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel · Observability Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070a09; --surface:#0c100e; --surface-2:#11161300; --panel:#0e1311; --raise:#161d19;
+    --ink:#d6e4dc; --muted:#7f9488; --faint:#566459; --line:#1a221d; --line-2:#26312a;
+    --green:#3ef08a; --green-dim:#1f8f55; --green-soft:rgba(62,240,138,.1);
+    --amber:#f5b942; --amber-soft:rgba(245,185,66,.12);
+    --red:#ff5c5c; --red-soft:rgba(255,92,92,.12);
+    --cyan:#43d9e6; --radius:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'JetBrains Mono',ui-monospace,monospace;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:13px;line-height:1.5;font-variant-numeric:tabular-nums}
+  .ui{font-family:'Inter',system-ui,sans-serif}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:5px}
+  .app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+
+  .sidebar{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:40}
+  .brand{display:flex;align-items:center;gap:10px;padding:18px 18px}
+  .brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#0e1311,#161d19);border:1px solid var(--green-dim);display:grid;place-items:center;flex:none;box-shadow:0 0 18px rgba(62,240,138,.2)}
+  .brand b{font-size:15px;font-weight:800;letter-spacing:.02em;color:var(--green)}
+  .brand span{display:block;font-size:10px;color:var(--faint);letter-spacing:.04em}
+  .nav{padding:6px 10px;flex:1;overflow-y:auto}
+  .nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--faint);font-weight:700;padding:15px 10px 6px}
+  .nav a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:8px;color:var(--muted);font-weight:500;margin-bottom:2px;transition:.12s;font-size:12.5px}
+  .nav a svg{width:17px;height:17px;flex:none}
+  .nav a:hover{background:var(--panel);color:var(--ink)}
+  .nav a.active{background:var(--green-soft);color:var(--green);border:1px solid rgba(62,240,138,.2)}
+  .nav a .ct{margin-left:auto;font-size:10px;font-weight:700;color:var(--amber);background:var(--amber-soft);padding:1px 6px;border-radius:5px}
+  .nav a .ct.bad{color:var(--red);background:var(--red-soft)}
+  .side-foot{padding:12px}
+  .uptime{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px}
+  .uptime .l{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+  .uptime .v{font-size:20px;font-weight:800;color:var(--green);margin:4px 0 8px}
+  .upbar{display:flex;gap:2px;height:18px}
+  .upbar i{flex:1;border-radius:2px;background:var(--green-dim)}
+  .upbar i.w{background:var(--amber)} .upbar i.d{background:var(--red)}
+
+  .main{display:flex;flex-direction:column;min-width:0}
+  .topbar{height:62px;background:rgba(7,10,9,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px;padding:0 22px;position:sticky;top:0;z-index:30}
+  .menu-btn{display:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer;color:var(--ink)}
+  .topbar h1{font-size:14px;font-weight:700;letter-spacing:.01em}
+  .topbar h1 small{display:block;font-size:11px;color:var(--faint);font-weight:400}
+  .live{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--green);background:var(--green-soft);padding:5px 11px;border-radius:20px;font-weight:700;margin-left:auto}
+  .live .blip{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(62,240,138,.6);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,240,138,.5)}70%{box-shadow:0 0 0 7px rgba(62,240,138,0)}100%{box-shadow:0 0 0 0 rgba(62,240,138,0)}}
+  .icon-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;cursor:pointer;color:var(--muted);position:relative}
+  .icon-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  .icon-btn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--panel)}
+  .user{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+  .avatar{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:#06120c;font-weight:800;font-size:11px;flex:none;background:linear-gradient(135deg,#3ef08a,#1f8f55)}
+  .user .who{font-size:11.5px;font-weight:600;line-height:1.15;font-family:'Inter'}
+  .user .who small{color:var(--faint);font-weight:400;font-size:10.5px}
+
+  .content{padding:20px 22px 40px;display:flex;flex-direction:column;gap:18px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+  .card-h{display:flex;align-items:center;gap:11px;padding:15px 17px 0}
+  .card-h h3{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink)}
+  .card-h .sub{font-size:11px;color:var(--faint)}
+  .card-h .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .pill{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:5px}
+  .pill.ok{color:var(--green);background:var(--green-soft)}
+  .pill.warn{color:var(--amber);background:var(--amber-soft)}
+  .pill.err{color:var(--red);background:var(--red-soft)}
+
+  /* service health grid */
+  .svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;padding:14px 17px 18px}
+  .svc{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:13px;position:relative}
+  .svc .nm{font-size:12px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:7px}
+  .svc .st{width:8px;height:8px;border-radius:50%;flex:none}
+  .svc.up .st{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .svc.warn .st{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  .svc.down .st{background:var(--red);box-shadow:0 0 8px var(--red)}
+  .svc .meta{margin-top:8px;display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
+  .svc .meta b{color:var(--ink);font-weight:700}
+  .svc .sl{margin-top:8px;display:flex;gap:1.5px;height:22px;align-items:flex-end}
+  .svc .sl i{flex:1;background:var(--green-dim);border-radius:1px;opacity:.85}
+  .svc.warn .sl i{background:var(--amber)} .svc.down .sl i{background:var(--red)}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid-gauge{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+  .grid-low{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+
+  /* gauges */
+  .gauge{padding:16px 17px 20px;text-align:center}
+  .gauge svg{display:block;margin:4px auto 0}
+  .gauge .gv{font-size:26px;font-weight:800;letter-spacing:-.02em}
+  .gauge .gl{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+  .gauge .gx{font-size:10.5px;color:var(--muted);margin-top:8px}
+
+  /* incident table */
+  .tbl-wrap{padding:4px 6px 10px;overflow-x:auto}
+  table.data{width:100%;border-collapse:collapse;min-width:640px}
+  table.data th{text-align:left;font-size:10px;color:var(--faint);font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:10px 13px;border-bottom:1px solid var(--line)}
+  table.data td{padding:11px 13px;border-bottom:1px solid var(--line);font-size:12px}
+  table.data tr:last-child td{border-bottom:0}
+  table.data tr:hover td{background:var(--panel)}
+  .sev{font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;letter-spacing:.04em}
+  .sev.p1{color:var(--red);background:var(--red-soft)}
+  .sev.p2{color:var(--amber);background:var(--amber-soft)}
+  .sev.p3{color:var(--cyan);background:rgba(67,217,230,.12)}
+  .istat{font-size:11px;font-weight:700}
+  .istat.res{color:var(--green)} .istat.inv{color:var(--amber)} .istat.fir{color:var(--red)}
+
+  /* deploy timeline */
+  .deploys{padding:8px 17px 18px}
+  .dp{display:grid;grid-template-columns:18px 1fr;gap:12px;position:relative}
+  .dp .rail{display:flex;flex-direction:column;align-items:center}
+  .dp .dot{width:12px;height:12px;border-radius:50%;margin-top:4px;flex:none;border:2px solid var(--bg)}
+  .dp .line{width:2px;flex:1;background:var(--line-2);margin:2px 0}
+  .dp:last-child .line{display:none}
+  .dp .body{padding-bottom:16px}
+  .dp .t{font-size:12px;font-weight:700;color:var(--ink)}
+  .dp .d{font-size:11px;color:var(--muted);margin-top:2px}
+  .dp .ts{font-size:10px;color:var(--faint);margin-top:3px}
+  .ok-dot{background:var(--green)} .warn-dot{background:var(--amber)} .err-dot{background:var(--red)} .roll-dot{background:var(--cyan)}
+
+  @media(max-width:1100px){.svc-grid{grid-template-columns:1fr 1fr}.grid-gauge{grid-template-columns:1fr 1fr 1fr}.grid-2,.grid-low{grid-template-columns:1fr}}
+  @media(max-width:820px){
+    .app{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:0;top:0;width:256px;transform:translateX(-100%);transition:.25s;box-shadow:0 0 60px rgba(0,0,0,.7)}
+    .sidebar.open{transform:none}
+    .menu-btn{display:grid;place-items:center}
+    .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:35;display:none}
+    .scrim.on{display:block}
+    .svc-grid{grid-template-columns:1fr 1fr}.grid-gauge{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ef08a" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <div><b>SENTINEL</b><span>observability</span></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Monitor</div>
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12h4l3 8 4-16 3 8h6"/></svg>Services</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 5-6"/></svg>Metrics</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/></svg>Logs</a>
+      <div class="nav-label">Alerting</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.3 3.2L1 19h22L13.7 3.2a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>Incidents<span class="ct bad">3</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9z"/></svg>Alerts<span class="ct">7</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>SLOs</a>
+      <div class="nav-label">Ship</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M6 8.5v5a4 4 0 004 4h6"/></svg>Deploys</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="uptime">
+        <div class="l">30-day uptime</div>
+        <div class="v">99.982%</div>
+        <div class="upbar" id="upbar"></div>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <h1 class="ui">Production · us-east-1<small>Cluster orbit-prod-07</small></h1>
+      <span class="live"><span class="blip"></span>LIVE · 5s</span>
+      <button class="icon-btn" aria-label="Alerts"><span class="dot"></span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9zM10 21a2 2 0 004 0"/></svg></button>
+      <div class="user"><div class="avatar">RK</div><div class="who">Raj Kapoor<small>SRE on-call</small></div></div>
+    </header>
+
+    <div class="content">
+      <!-- SERVICE HEALTH -->
+      <section class="card">
+        <div class="card-h"><h3>Service Health</h3><span class="sub">12 services monitored</span><span class="right"><span class="pill ok">9 up</span><span class="pill warn">2 degraded</span><span class="pill err">1 down</span></span></div>
+        <div class="svc-grid" id="svcGrid"></div>
+      </section>
+
+      <!-- LATENCY + THROUGHPUT -->
+      <section class="grid-2">
+        <div class="card">
+          <div class="card-h"><h3>Request Latency</h3><span class="sub">p50 / p95 / p99 · ms</span><span class="right"><span class="pill ok">p99 212ms</span></span></div>
+          <svg width="100%" height="220" viewBox="0 0 560 220" preserveAspectRatio="none" style="display:block">
+            <g stroke="#1a221d" stroke-width="1"><line x1="34" y1="40" x2="546" y2="40"/><line x1="34" y1="90" x2="546" y2="90"/><line x1="34" y1="140" x2="546" y2="140"/><line x1="34" y1="180" x2="546" y2="180"/></g>
+            <g fill="#566459" font-size="9.5"><text x="6" y="44">300</text><text x="6" y="94">200</text><text x="6" y="144">100</text><text x="10" y="184">0</text></g>
+            <polyline points="34,178 110,176 186,174 262,177 338,173 414,176 490,174 546,175" fill="none" stroke="#3ef08a" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="34,150 110,144 186,152 262,138 338,146 414,134 490,142 546,136" fill="none" stroke="#43d9e6" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="34,110 110,96 186,118 262,88 338,104 414,76 490,98 546,82" fill="none" stroke="#f5b942" stroke-width="2" stroke-linecap="round"/>
+            <g font-size="9.5"><circle cx="42" cy="30" r="3.5" fill="#3ef08a"/><text x="50" y="33" fill="#7f9488">p50</text><circle cx="92" cy="30" r="3.5" fill="#43d9e6"/><text x="100" y="33" fill="#7f9488">p95</text><circle cx="142" cy="30" r="3.5" fill="#f5b942"/><text x="150" y="33" fill="#7f9488">p99</text></g>
+          </svg>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Throughput</h3><span class="sub">requests / sec</span><span class="right"><span class="pill ok">8.4k rps</span></span></div>
+          <svg width="100%" height="220" viewBox="0 0 560 220" preserveAspectRatio="none" style="display:block">
+            <defs><linearGradient id="tp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3ef08a" stop-opacity=".28"/><stop offset="1" stop-color="#3ef08a" stop-opacity="0"/></linearGradient></defs>
+            <g stroke="#1a221d" stroke-width="1"><line x1="34" y1="40" x2="546" y2="40"/><line x1="34" y1="90" x2="546" y2="90"/><line x1="34" y1="140" x2="546" y2="140"/><line x1="34" y1="180" x2="546" y2="180"/></g>
+            <g fill="#566459" font-size="9.5"><text x="2" y="44">10k</text><text x="6" y="94">7k</text><text x="6" y="144">4k</text><text x="6" y="184">1k</text></g>
+            <path d="M34,120 C90,110 120,96 186,90 C240,85 270,108 338,100 C400,93 430,72 490,66 C520,63 540,70 546,68 L546,180 L34,180 Z" fill="url(#tp)"/>
+            <path d="M34,120 C90,110 120,96 186,90 C240,85 270,108 338,100 C400,93 430,72 490,66 C520,63 540,70 546,68" fill="none" stroke="#3ef08a" stroke-width="2.4"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- GAUGES -->
+      <section class="grid-gauge">
+        <div class="card gauge">
+          <h3 class="card-h" style="padding:15px 17px 0;justify-content:center;border:0"></h3>
+          <svg width="150" height="92" viewBox="0 0 150 92"><path d="M15 85 A60 60 0 0 1 135 85" fill="none" stroke="#161d19" stroke-width="11" stroke-linecap="round"/><path d="M15 85 A60 60 0 0 1 121 40" fill="none" stroke="#3ef08a" stroke-width="11" stroke-linecap="round"/><text x="75" y="74" text-anchor="middle" font-size="24" font-weight="800" fill="#d6e4dc" font-family="JetBrains Mono">64%</text></svg>
+          <div class="gl">CPU utilization</div>
+          <div class="gx">avg across 18 nodes · 8 cores</div>
+        </div>
+        <div class="card gauge">
+          <svg width="150" height="92" viewBox="0 0 150 92"><path d="M15 85 A60 60 0 0 1 135 85" fill="none" stroke="#161d19" stroke-width="11" stroke-linecap="round"/><path d="M15 85 A60 60 0 0 1 131 64" fill="none" stroke="#f5b942" stroke-width="11" stroke-linecap="round"/><text x="75" y="74" text-anchor="middle" font-size="24" font-weight="800" fill="#d6e4dc" font-family="JetBrains Mono">78%</text></svg>
+          <div class="gl">Memory usage</div>
+          <div class="gx">112 GB of 144 GB allocated</div>
+        </div>
+        <div class="card gauge">
+          <svg width="150" height="92" viewBox="0 0 150 92"><path d="M15 85 A60 60 0 0 1 135 85" fill="none" stroke="#161d19" stroke-width="11" stroke-linecap="round"/><path d="M15 85 A60 60 0 0 1 75 25" fill="none" stroke="#43d9e6" stroke-width="11" stroke-linecap="round"/><text x="75" y="74" text-anchor="middle" font-size="24" font-weight="800" fill="#d6e4dc" font-family="JetBrains Mono">41%</text></svg>
+          <div class="gl">Disk I/O</div>
+          <div class="gx">3.2k IOPS · 1.4 GB/s read</div>
+        </div>
+      </section>
+
+      <!-- INCIDENTS + DEPLOYS -->
+      <section class="grid-low">
+        <div class="card">
+          <div class="card-h"><h3>Incident Log</h3><span class="sub">last 24h</span><span class="right"><span class="pill err">1 firing</span></span></div>
+          <div class="tbl-wrap">
+            <table class="data">
+              <thead><tr><th>Sev</th><th>Incident</th><th>Service</th><th>Started</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><span class="sev p1">P1</span></td><td>Elevated 5xx on checkout</td><td style="color:var(--muted)">payments-api</td><td style="color:var(--faint)">14:02</td><td><span class="istat fir">● Firing</span></td></tr>
+                <tr><td><span class="sev p2">P2</span></td><td>Queue backlog &gt; 5k</td><td style="color:var(--muted)">worker-pool</td><td style="color:var(--faint)">11:48</td><td><span class="istat inv">● Investigating</span></td></tr>
+                <tr><td><span class="sev p2">P2</span></td><td>Cache hit rate dropped</td><td style="color:var(--muted)">edge-cache</td><td style="color:var(--faint)">09:31</td><td><span class="istat inv">● Investigating</span></td></tr>
+                <tr><td><span class="sev p3">P3</span></td><td>Slow query on reports</td><td style="color:var(--muted)">db-replica-2</td><td style="color:var(--faint)">06:14</td><td><span class="istat res">● Resolved</span></td></tr>
+                <tr><td><span class="sev p3">P3</span></td><td>Cert expiring in 7d</td><td style="color:var(--muted)">ingress-lb</td><td style="color:var(--faint)">02:55</td><td><span class="istat res">● Resolved</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Deploy Timeline</h3><span class="sub">main</span></div>
+          <div class="deploys">
+            <div class="dp"><div class="rail"><span class="dot err-dot"></span><span class="line"></span></div><div class="body"><div class="t">v4.18.2 → prod</div><div class="d">checkout refactor · rollout 40%</div><div class="ts">14:01 · @raj · <span style="color:var(--red)">failing checks</span></div></div></div>
+            <div class="dp"><div class="rail"><span class="dot ok-dot"></span><span class="line"></span></div><div class="body"><div class="t">v4.18.1 → prod</div><div class="d">cache TTL tuning · 100%</div><div class="ts">10:22 · @mira · healthy</div></div></div>
+            <div class="dp"><div class="rail"><span class="dot roll-dot"></span><span class="line"></span></div><div class="body"><div class="t">v4.18.0 → rolled back</div><div class="d">worker concurrency bump</div><div class="ts">08:40 · @auto · reverted</div></div></div>
+            <div class="dp"><div class="rail"><span class="dot ok-dot"></span><span class="line"></span></div><div class="body"><div class="t">v4.17.9 → staging</div><div class="d">db index migration</div><div class="ts">Yesterday · @ko · passed</div></div></div>
+            <div class="dp"><div class="rail"><span class="dot ok-dot"></span><span class="line"></span></div><div class="body"><div class="t">v4.17.8 → prod</div><div class="d">observability agent update</div><div class="ts">Yesterday · @raj · healthy</div></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+  const mb=document.getElementById('menuBtn'),sb=document.getElementById('sidebar'),sc=document.getElementById('scrim');
+  function tog(){sb.classList.toggle('open');sc.classList.toggle('on');}
+  mb.addEventListener('click',tog);sc.addEventListener('click',tog);
+  // uptime bar
+  let ub='';for(let i=0;i<30;i++){const c=i===22?' w':(i===11?' d':'');ub+=`<i class="${c.trim()}"></i>`;}document.getElementById('upbar').innerHTML=ub;
+  // service grid
+  const svcs=[
+    {n:'api-gateway',s:'up',lat:'42ms',err:'0.01%'},{n:'payments-api',s:'down',lat:'—',err:'4.2%'},
+    {n:'auth-service',s:'up',lat:'31ms',err:'0.00%'},{n:'worker-pool',s:'warn',lat:'180ms',err:'0.3%'},
+    {n:'edge-cache',s:'warn',lat:'12ms',err:'0.1%'},{n:'search-index',s:'up',lat:'56ms',err:'0.02%'},
+    {n:'db-primary',s:'up',lat:'8ms',err:'0.00%'},{n:'notify-svc',s:'up',lat:'68ms',err:'0.04%'},
+  ];
+  function spark(s){let h='';for(let i=0;i<14;i++){let v=s==='down'?(i>9?6:60+Math.random()*30):s==='warn'?40+Math.random()*55:55+Math.random()*40;h+=`<i style="height:${Math.round(v)}%"></i>`;}return h;}
+  document.getElementById('svcGrid').innerHTML=svcs.map(o=>`<div class="svc ${o.s}"><div class="nm"><span class="st"></span>${o.n}</div><div class="meta"><span>p95 <b>${o.lat}</b></span><span>err <b>${o.err}</b></span></div><div class="sl">${spark(o.s)}</div></div>`).join('');
+</script>
+</body>
+</html>

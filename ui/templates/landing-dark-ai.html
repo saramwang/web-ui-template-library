@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nebula — The reasoning engine for real work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0a0f;
+    --bg-2:#0d0d16;
+    --panel:#13131f;
+    --panel-2:#171726;
+    --line:rgba(255,255,255,.08);
+    --line-2:rgba(255,255,255,.14);
+    --text:#eef0f7;
+    --muted:#9a9bb2;
+    --dim:#6c6d85;
+    --neon:#7c5cff;
+    --neon-2:#00e5a0;
+    --neon-glow:rgba(124,92,255,.55);
+    --green-glow:rgba(0,229,160,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Sora',system-ui,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  /* subtle grid + noise overlay */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:54px 54px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background:radial-gradient(circle at 50% -10%,rgba(124,92,255,.18),transparent 55%);
+  }
+  .layer{position:relative;z-index:1}
+  a{color:inherit;text-decoration:none}
+  svg{display:block}
+  .wrap{width:min(1200px,92%);margin:0 auto}
+  h1,h2,h3{font-weight:800;letter-spacing:-.03em;line-height:1.05}
+  .mono{font-family:'JetBrains Mono',monospace}
+  :focus-visible{outline:2px solid var(--neon-2);outline-offset:3px;border-radius:6px}
+
+  .btn{font-family:'Sora';font-weight:600;border:none;cursor:pointer;border-radius:12px;padding:13px 24px;font-size:.96rem;transition:.22s;display:inline-flex;align-items:center;gap:9px}
+  .btn-primary{background:linear-gradient(135deg,var(--neon),#9d7bff);color:#fff;box-shadow:0 0 0 1px rgba(124,92,255,.4),0 14px 40px -12px var(--neon-glow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(124,92,255,.6),0 18px 50px -10px var(--neon-glow)}
+  .btn-ghost{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line-2)}
+  .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,10,15,.7);border-bottom:1px solid var(--line)}
+  .navbar{display:flex;align-items:center;gap:30px;padding:16px 0;position:relative}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.22rem;letter-spacing:-.02em}
+  .brand .mark{width:32px;height:32px;border-radius:9px;background:radial-gradient(circle at 35% 30%,#a78bff,#7c5cff 60%,#4c2fd6);box-shadow:0 0 16px var(--neon-glow);display:grid;place-items:center}
+  .nav-links{display:flex;gap:4px;margin-left:6px}
+  .nav-links a{padding:8px 14px;border-radius:9px;color:var(--muted);font-size:.94rem;font-weight:500;transition:.18s}
+  .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+  .nav-cta{margin-left:auto;display:flex;gap:12px;align-items:center}
+  .menu-toggle{display:none;background:transparent;border:none;cursor:pointer;margin-left:auto;padding:8px}
+  .menu-toggle span{display:block;width:22px;height:2px;background:var(--text);margin:5px 0;border-radius:2px}
+
+  /* HERO */
+  .hero{padding:90px 0 60px;text-align:center;position:relative}
+  .tag{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);background:rgba(255,255,255,.03);padding:7px 16px;border-radius:999px;font-size:.83rem;color:var(--muted);font-weight:500}
+  .tag b{color:var(--neon-2);font-weight:700}
+  .tag .live{width:7px;height:7px;border-radius:50%;background:var(--neon-2);box-shadow:0 0 10px var(--green-glow)}
+  .hero h1{font-size:clamp(2.7rem,7.5vw,5.6rem);margin:26px auto 22px;max-width:15ch}
+  .hero h1 .glow{background:linear-gradient(120deg,#fff 10%,#b9a6ff 50%,#00e5a0);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(124,92,255,.4))}
+  .hero p.sub{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--muted);max-width:56ch;margin:0 auto 36px}
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .hero-meta{margin-top:24px;font-size:.84rem;color:var(--dim);display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
+  .hero-meta span{display:inline-flex;align-items:center;gap:7px}
+
+  /* ORB */
+  .orb-wrap{margin:64px auto 0;width:min(560px,90%);position:relative}
+  .orb-wrap svg{width:100%;height:auto;overflow:visible}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .ring-a{transform-origin:280px 240px;animation:spin 26s linear infinite}
+  .ring-b{transform-origin:280px 240px;animation:spin 18s linear infinite reverse}
+  .ring-c{transform-origin:280px 240px;animation:spin 34s linear infinite}
+  .orb-core{animation:pulse 4s ease-in-out infinite}
+
+  /* GENERIC SECTION */
+  section{padding:92px 0;position:relative}
+  .sec-head{max-width:62ch;margin:0 auto 56px;text-align:center}
+  .eyebrow{font-family:'JetBrains Mono';font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--neon-2)}
+  .sec-head h2{font-size:clamp(2rem,4.4vw,3.2rem);margin:14px 0}
+  .sec-head p{color:var(--muted);font-size:1.06rem}
+
+  /* CAPABILITIES */
+  .cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .cap{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;padding:28px;transition:.26s;position:relative;overflow:hidden}
+  .cap::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(135deg,rgba(124,92,255,.5),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.26s}
+  .cap:hover{transform:translateY(-5px);border-color:var(--line-2)}
+  .cap:hover::before{opacity:1}
+  .cap .ci{width:48px;height:48px;border-radius:12px;background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.3);display:grid;place-items:center;margin-bottom:18px;box-shadow:0 0 22px -6px var(--neon-glow)}
+  .cap h3{font-size:1.18rem;margin-bottom:8px;font-weight:700}
+  .cap p{color:var(--muted);font-size:.95rem}
+
+  /* HOW IT WORKS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px 26px;position:relative}
+  .step .n{font-family:'JetBrains Mono';font-size:.82rem;color:var(--neon-2);letter-spacing:.1em}
+  .step .num{font-size:2.6rem;font-weight:800;background:linear-gradient(135deg,var(--neon),#bba6ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0 12px;line-height:1}
+  .step h3{font-size:1.2rem;margin-bottom:8px}
+  .step p{color:var(--muted);font-size:.95rem}
+
+  /* BENCHMARKS */
+  .bench{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;background:linear-gradient(160deg,var(--panel-2),var(--bg-2));border:1px solid var(--line);border-radius:24px;padding:46px}
+  .bench .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;margin-top:8px}
+  .bstat .v{font-size:clamp(2.2rem,4vw,3rem);font-weight:800;letter-spacing:-.02em}
+  .bstat .v .u{font-size:1.1rem;color:var(--neon-2);font-weight:600}
+  .bstat .l{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .bars{display:flex;flex-direction:column;gap:16px}
+  .bar-row{display:flex;align-items:center;gap:14px}
+  .bar-row .name{width:96px;font-size:.86rem;color:var(--muted);flex:none}
+  .bar-track{flex:1;height:12px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--neon),var(--neon-2));box-shadow:0 0 14px -2px var(--neon-glow)}
+  .bar-row .pct{width:42px;text-align:right;font-family:'JetBrains Mono';font-size:.82rem;color:var(--text)}
+  .bar-row.muted .bar-fill{background:rgba(255,255,255,.22);box-shadow:none}
+  .bar-row.muted .pct{color:var(--dim)}
+
+  /* INTEGRATIONS */
+  .int-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+  .int{aspect-ratio:1.6;background:var(--panel);border:1px solid var(--line);border-radius:14px;display:grid;place-items:center;transition:.22s}
+  .int:hover{border-color:rgba(124,92,255,.4);background:var(--panel-2);box-shadow:0 0 26px -10px var(--neon-glow)}
+  .int svg{height:30px;width:auto;opacity:.82}
+
+  /* CTA */
+  .cta{position:relative;border:1px solid var(--line-2);border-radius:28px;padding:70px 40px;text-align:center;overflow:hidden;background:linear-gradient(160deg,#15102e,#0b0b14)}
+  .cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(124,92,255,.35),transparent 60%),radial-gradient(circle at 85% 100%,rgba(0,229,160,.18),transparent 55%)}
+  .cta>*{position:relative}
+  .cta h2{font-size:clamp(2.1rem,4.6vw,3.4rem);margin-bottom:16px}
+  .cta p{color:var(--muted);font-size:1.1rem;max-width:50ch;margin:0 auto 30px}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:64px 0 36px;position:relative}
+  .foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:34px;margin-bottom:42px}
+  .foot-brand p{color:var(--muted);font-size:.92rem;margin-top:14px;max-width:32ch}
+  .foot-col h5{font-size:.92rem;margin-bottom:14px;color:var(--text)}
+  .foot-col a{display:block;color:var(--muted);font-size:.9rem;padding:5px 0;transition:.16s}
+  .foot-col a:hover{color:var(--neon-2)}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--dim);font-size:.86rem}
+  .socials{display:flex;gap:10px}
+  .socials a{width:36px;height:36px;border-radius:10px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;transition:.2s}
+  .socials a:hover{border-color:rgba(124,92,255,.4);transform:translateY(-2px)}
+
+  @media(max-width:900px){
+    .nav-links,.nav-cta .btn-ghost{display:none}
+    .menu-toggle{display:block}
+    .navbar.open .nav-links{display:flex;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;z-index:60}
+    .cap-grid,.steps,.int-grid,.bench,.foot-grid{grid-template-columns:1fr}
+    .int-grid{grid-template-columns:repeat(3,1fr)}
+    .bench .stat-row{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<div class="layer">
+
+<header class="nav">
+  <div class="wrap">
+    <nav class="navbar" id="navbar">
+      <a href="#" class="brand"><span class="mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="#fff"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/></svg></span>Nebula</a>
+      <div class="nav-links">
+        <a href="#capabilities">Capabilities</a>
+        <a href="#how">How it works</a>
+        <a href="#bench">Benchmarks</a>
+        <a href="#integrations">Integrations</a>
+      </div>
+      <div class="nav-cta">
+        <a href="#" class="btn btn-ghost">Docs</a>
+        <a href="#cta" class="btn btn-primary">Get API key</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="tag"><span class="live"></span>Introducing Nebula&nbsp;<b>v3</b>&nbsp;— now 40% faster</span>
+      <h1>The reasoning engine for <span class="glow">real work</span></h1>
+      <p class="sub">Nebula is a frontier model built to plan, research, and act across your tools — turning ambiguous goals into finished work, not just answers.</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-primary">Start building free</a>
+        <a href="#how" class="btn btn-ghost">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M10 8l6 4-6 4V8z" fill="currentColor"/></svg>
+          See it think
+        </a>
+      </div>
+      <div class="hero-meta">
+        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#00e5a0" stroke-width="1.4"/></svg>SOC 2 Type II</span>
+        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 4.4-3 7.4-8 9-5-1.6-8-4.6-8-9V7z" stroke="#00e5a0" stroke-width="1.6" stroke-linejoin="round"/></svg>Zero data retention</span>
+        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h7l-1 8 10-12h-7z" stroke="#00e5a0" stroke-width="1.6" stroke-linejoin="round"/></svg>120ms first token</span>
+      </div>
+
+      <div class="orb-wrap" aria-hidden="true">
+        <svg viewBox="0 0 560 480" role="img" aria-label="Abstract glowing AI orb">
+          <defs>
+            <radialGradient id="core" cx="50%" cy="42%" r="60%">
+              <stop offset="0%" stop-color="#e9e0ff"/>
+              <stop offset="35%" stop-color="#9d7bff"/>
+              <stop offset="75%" stop-color="#5a36d6"/>
+              <stop offset="100%" stop-color="#1c1140"/>
+            </radialGradient>
+            <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#7c5cff" stop-opacity=".55"/>
+              <stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="ringg" x1="0" x2="1">
+              <stop offset="0" stop-color="#7c5cff"/>
+              <stop offset="1" stop-color="#00e5a0"/>
+            </linearGradient>
+          </defs>
+          <circle cx="280" cy="240" r="220" fill="url(#halo)"/>
+          <g class="ring-a" fill="none" stroke="url(#ringg)" stroke-width="1.5" opacity=".7">
+            <ellipse cx="280" cy="240" rx="210" ry="78"/>
+          </g>
+          <g class="ring-c" fill="none" stroke="url(#ringg)" stroke-width="1.2" opacity=".5">
+            <ellipse cx="280" cy="240" rx="180" ry="180"/>
+          </g>
+          <g class="ring-b" fill="none" stroke="#00e5a0" stroke-width="1.2" opacity=".45">
+            <ellipse cx="280" cy="240" rx="200" ry="120" transform="rotate(32 280 240)"/>
+          </g>
+          <circle class="orb-core" cx="280" cy="240" r="96" fill="url(#core)"/>
+          <circle cx="280" cy="240" r="96" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="1"/>
+          <circle cx="248" cy="206" r="22" fill="#fff" opacity=".18"/>
+          <g class="ring-a">
+            <circle cx="490" cy="240" r="5" fill="#00e5a0"/>
+            <circle cx="70" cy="240" r="4" fill="#7c5cff"/>
+          </g>
+          <g class="ring-c">
+            <circle cx="280" cy="60" r="4" fill="#bba6ff"/>
+            <circle cx="280" cy="420" r="3" fill="#00e5a0"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="capabilities">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Capabilities</span>
+        <h2>Built to do, not just to chat</h2>
+        <p>Nebula combines long-horizon reasoning with native tool use, so it can carry a task from intent to outcome.</p>
+      </div>
+      <div class="cap-grid">
+        <div class="cap">
+          <div class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="#9d7bff" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <h3>Long-horizon planning</h3>
+          <p>Breaks fuzzy goals into ordered subtasks, tracks its own progress, and recovers gracefully when a step fails.</p>
+        </div>
+        <div class="cap">
+          <div class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#9d7bff" stroke-width="2"/><path d="M7 9l3 3-3 3M13 15h4" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Native tool use</h3>
+          <p>Calls APIs, runs code, queries databases, and browses the web — all within a single, governed execution loop.</p>
+        </div>
+        <div class="cap">
+          <div class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18" stroke="#9d7bff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="#00e5a0" stroke-width="2"/></svg></div>
+          <h3>2M token context</h3>
+          <p>Hold an entire codebase, deal room, or research corpus in working memory without lossy chunking or retrieval gaps.</p>
+        </div>
+        <div class="cap">
+          <div class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 4.4-3 7.4-8 10-5-2.6-8-5.6-8-10V6z" stroke="#9d7bff" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Guardrails built in</h3>
+          <p>Policy-aware reasoning with audit trails, content filtering, and configurable approval steps for sensitive actions.</p>
+        </div>
+        <div class="cap">
+          <div class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#9d7bff" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#00e5a0" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <h3>Streaming latency</h3>
+          <p>First token in under 120ms and sustained high throughput, tuned for interactive agents and live experiences.</p>
+        </div>
+        <div class="cap">
+          <div class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 0118 0M3 12a9 9 0 0018 0" stroke="#9d7bff" stroke-width="2"/><path d="M12 3v18" stroke="#00e5a0" stroke-width="2"/></svg></div>
+          <h3>Multimodal in & out</h3>
+          <p>Reason over text, images, audio, and structured data in a single prompt, then return whichever format fits the job.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" style="padding-top:30px">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How it works</span>
+        <h2>From prompt to outcome in three moves</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="n">// 01</div>
+          <div class="num">01</div>
+          <h3>Describe the goal</h3>
+          <p>Hand Nebula an objective in plain language and connect the tools and data it's allowed to touch.</p>
+        </div>
+        <div class="step">
+          <div class="n">// 02</div>
+          <div class="num">02</div>
+          <h3>It reasons & acts</h3>
+          <p>Nebula plans, calls tools, checks its work, and iterates — streaming every step so you can watch it think.</p>
+        </div>
+        <div class="step">
+          <div class="n">// 03</div>
+          <div class="num">03</div>
+          <h3>Ship the result</h3>
+          <p>You get finished output plus a full trace: every decision, source, and action, ready to review or automate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="bench">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Benchmarks</span>
+        <h2>State of the art, where it counts</h2>
+        <p>Evaluated on agentic, real-world tasks — not just trivia. Higher is better.</p>
+      </div>
+      <div class="bench">
+        <div>
+          <h3 style="font-size:1.3rem;margin-bottom:6px">Agentic task completion</h3>
+          <p style="color:var(--muted);font-size:.94rem;margin-bottom:24px">Pass rate on the AgentBench-Pro suite of multi-step tool-use tasks.</p>
+          <div class="bars">
+            <div class="bar-row"><span class="name">Nebula v3</span><span class="bar-track"><span class="bar-fill" style="width:94%"></span></span><span class="pct">94%</span></div>
+            <div class="bar-row muted"><span class="name">Model A</span><span class="bar-track"><span class="bar-fill" style="width:81%"></span></span><span class="pct">81%</span></div>
+            <div class="bar-row muted"><span class="name">Model B</span><span class="bar-track"><span class="bar-fill" style="width:76%"></span></span><span class="pct">76%</span></div>
+            <div class="bar-row muted"><span class="name">Model C</span><span class="bar-track"><span class="bar-fill" style="width:68%"></span></span><span class="pct">68%</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="stat-row">
+            <div class="bstat"><div class="v">94<span class="u">%</span></div><div class="l">Task completion</div></div>
+            <div class="bstat"><div class="v">2<span class="u">M</span></div><div class="l">Context window</div></div>
+            <div class="bstat"><div class="v">118<span class="u">ms</span></div><div class="l">First-token latency</div></div>
+            <div class="bstat"><div class="v">40<span class="u">%</span></div><div class="l">Faster than v2</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="integrations" style="padding-top:30px">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Integrations</span>
+        <h2>Drops into your stack</h2>
+        <p>One API, native SDKs, and first-class connectors for the tools your team already runs on.</p>
+      </div>
+      <div class="int-grid">
+        <div class="int"><svg viewBox="0 0 90 30"><rect x="2" y="6" width="16" height="16" rx="4" fill="#7c5cff"/><text x="24" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Vault</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><circle cx="11" cy="15" r="9" fill="#00e5a0"/><text x="24" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Pulse</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><path d="M10 4l8 11H2z" fill="#9d7bff"/><text x="24" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Apex</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><rect x="3" y="7" width="14" height="14" rx="3" fill="none" stroke="#7c5cff" stroke-width="2.4"/><text x="24" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Forge</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><circle cx="11" cy="15" r="8" fill="none" stroke="#00e5a0" stroke-width="2.6"/><text x="24" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Loop</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><path d="M11 5l6 10-6 10-6-10z" fill="#bba6ff"/><text x="22" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Relay</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><rect x="3" y="8" width="16" height="12" rx="6" fill="#7c5cff"/><text x="26" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Cobalt</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><path d="M11 5v20M3 15h16" stroke="#00e5a0" stroke-width="3" stroke-linecap="round"/><text x="26" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Grid</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><circle cx="11" cy="15" r="9" fill="none" stroke="#9d7bff" stroke-width="2.4"/><circle cx="11" cy="15" r="3" fill="#00e5a0"/><text x="26" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Orbit</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><rect x="3" y="7" width="14" height="14" rx="3" fill="#00e5a0" transform="rotate(45 10 14)"/><text x="26" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Flux</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><path d="M4 20l6-14 6 14" fill="none" stroke="#7c5cff" stroke-width="2.6" stroke-linejoin="round"/><text x="24" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Peak</text></svg></div>
+        <div class="int"><svg viewBox="0 0 90 30"><circle cx="8" cy="15" r="5" fill="#9d7bff"/><circle cx="16" cy="15" r="5" fill="#00e5a0"/><text x="28" y="20" font-family="Sora" font-size="13" font-weight="700" fill="#eef0f7">Sync</text></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="wrap">
+      <div class="cta">
+        <h2>Build with the model that finishes the job</h2>
+        <p>Generous free tier, transparent pricing, and an SDK you can ship today. Your first 10M tokens are on us.</p>
+        <div class="hero-actions">
+          <a href="#" class="btn btn-primary">Get your API key</a>
+          <a href="#" class="btn btn-ghost">Read the docs</a>
+        </div>
+        <div class="mono" style="margin-top:30px;display:inline-block;background:rgba(0,0,0,.45);border:1px solid var(--line);border-radius:12px;padding:14px 20px;font-size:.85rem;color:var(--muted)">
+          <span style="color:var(--neon-2)">$</span> npm i <span style="color:#bba6ff">@nebula/sdk</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="brand"><span class="mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="#fff"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/></svg></span>Nebula</a>
+        <p>A frontier reasoning engine for teams who'd rather ship outcomes than babysit prompts.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Product</h5>
+        <a href="#capabilities">Capabilities</a><a href="#bench">Benchmarks</a><a href="#">Pricing</a><a href="#">Changelog</a>
+      </div>
+      <div class="foot-col">
+        <h5>Developers</h5>
+        <a href="#">Documentation</a><a href="#">API reference</a><a href="#">SDKs</a><a href="#">Status</a>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="#">About</a><a href="#">Research</a><a href="#">Careers</a><a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Nebula AI. All rights reserved.</span>
+      <div class="socials">
+        <a href="#" aria-label="Twitter"><svg width="17" height="17" viewBox="0 0 24 24" fill="#9a9bb2"><path d="M22 5.8c-.7.3-1.5.5-2.3.6.8-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1a4 4 0 00-6.8 3.6A11.3 11.3 0 013 4.8a4 4 0 001.2 5.3c-.6 0-1.2-.2-1.8-.5a4 4 0 003.2 3.9c-.5.2-1.1.2-1.7.1a4 4 0 003.7 2.8A8 8 0 012 18.3a11.3 11.3 0 006.1 1.8c7.4 0 11.4-6.1 11.4-11.4v-.5c.8-.6 1.5-1.3 2-2.1z"/></svg></a>
+        <a href="#" aria-label="GitHub"><svg width="17" height="17" viewBox="0 0 24 24" fill="#9a9bb2"><path d="M12 2a10 10 0 00-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5a4 4 0 011-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7a4 4 0 011 2.7c0 3.9-2.3 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3.2.6.7.5A10 10 0 0012 2z"/></svg></a>
+        <a href="#" aria-label="Discord"><svg width="17" height="17" viewBox="0 0 24 24" fill="#9a9bb2"><path d="M19 5a16 16 0 00-4-1l-.3.5a12 12 0 014 2 13 13 0 00-13 0 12 12 0 014-2L9 4a16 16 0 00-4 1C2 9 1.5 13 2 17a16 16 0 005 2l1-1.5a10 10 0 01-2-1l.5-.4a11 11 0 009 0l.5.4a10 10 0 01-2 1L15 19a16 16 0 005-2c.5-4.7-.7-8.6-1-12zM9 14c-.8 0-1.4-.7-1.4-1.6S8.2 11 9 11s1.4.7 1.4 1.6S9.8 14 9 14zm6 0c-.8 0-1.4-.7-1.4-1.6S14.2 11 15 11s1.4.7 1.4 1.6S15.8 14 15 14z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+<script>
+  (function(){
+    var t=document.getElementById('menuToggle'),n=document.getElementById('navbar');
+    t.addEventListener('click',function(){var o=n.classList.toggle('open');t.setAttribute('aria-expanded',o)});
+    n.querySelectorAll('.nav-links a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');t.setAttribute('aria-expanded',false)})});
+  })();
+</script>
+</body>
+</html>

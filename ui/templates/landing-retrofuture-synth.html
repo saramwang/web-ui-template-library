@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OUTRUN-12 — Polyphonic Analog Synthesizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --night:#120a26;
+    --night2:#1a0d36;
+    --deep:#0c0720;
+    --pink:#ff45c8;
+    --orange:#ff9d2f;
+    --gold:#ffd76a;
+    --cyan:#37e6ff;
+    --purple:#8b5cf6;
+    --text:#f3ecff;
+    --muted:#b6a7d8;
+    --disp:'Audiowide',sans-serif;
+    --body:'Outfit',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--deep);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.65;
+    overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--pink);color:#1a0625}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .chrome-text{
+    background:linear-gradient(180deg,#fff 0%,#ffe9b0 28%,#ff9d2f 50%,#ff45c8 78%,#8b5cf6 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  }
+  .eyebrow{font-family:var(--disp);font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--cyan);text-shadow:0 0 12px rgba(55,230,255,.5)}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;letter-spacing:.02em;
+    padding:14px 26px;border-radius:40px;cursor:pointer;border:none;transition:.25s;font-family:var(--body)}
+  .btn-primary{color:#1a0625;background:linear-gradient(120deg,var(--gold),var(--orange) 50%,var(--pink));
+    box-shadow:0 8px 30px rgba(255,69,200,.4)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(255,69,200,.6)}
+  .btn-ghost{background:rgba(255,255,255,.04);color:var(--text);border:1px solid rgba(255,157,47,.5)}
+  .btn-ghost:hover{border-color:var(--pink);background:rgba(255,69,200,.08);transform:translateY(-2px)}
+
+  /* ---------- NAV ---------- */
+  header{position:sticky;top:0;z-index:200;backdrop-filter:blur(14px);
+    background:linear-gradient(180deg,rgba(12,7,32,.9),rgba(12,7,32,.55));
+    border-bottom:1px solid rgba(255,157,47,.18)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-size:18px;letter-spacing:.06em}
+  .navlinks{display:flex;gap:32px;align-items:center}
+  .navlinks a{font-weight:500;font-size:15px;color:var(--muted);transition:.2s}
+  .navlinks a:hover{color:var(--gold);text-shadow:0 0 14px rgba(255,215,106,.5)}
+  .menu-btn{display:none;background:none;border:1px solid rgba(255,157,47,.4);border-radius:10px;width:44px;height:44px;cursor:pointer;color:var(--gold)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:90px 0 0;overflow:hidden;text-align:center}
+  .hero-bg{position:absolute;inset:0;z-index:0;
+    background:linear-gradient(180deg,#1a0a3a 0%,#2a0f4d 30%,#4a1357 52%,#a3265f 70%,#ff7a3d 88%,#ffb24d 100%)}
+  /* sun */
+  .sun{position:absolute;left:50%;top:230px;transform:translateX(-50%);width:340px;height:340px;border-radius:50%;z-index:1;
+    background:linear-gradient(180deg,#ffe066,#ff9d2f 45%,#ff45c8);
+    box-shadow:0 0 120px 30px rgba(255,120,90,.55)}
+  .sun::after{content:"";position:absolute;inset:0;border-radius:50%;
+    background:repeating-linear-gradient(180deg,transparent 0 46px,var(--deep) 46px 54px);
+    -webkit-mask:linear-gradient(180deg,transparent 52%,#000 52%);mask:linear-gradient(180deg,transparent 52%,#000 52%);opacity:.85}
+  /* grid floor */
+  .floor{position:absolute;left:-20%;right:-20%;bottom:0;height:340px;z-index:2;
+    background:linear-gradient(180deg,transparent,rgba(12,7,32,.2));
+    perspective:300px}
+  .floor::before{content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(55,230,255,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(55,230,255,.45) 2px,transparent 2px);
+    background-size:64px 48px;transform:rotateX(72deg);transform-origin:bottom;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 35%);mask:linear-gradient(180deg,transparent,#000 35%)}
+  .stars{position:absolute;inset:0 0 60% 0;z-index:1}
+  .star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.8}
+  .hero-inner{position:relative;z-index:5;padding-bottom:160px}
+  .hero h1{font-family:var(--disp);font-size:clamp(40px,7vw,84px);line-height:1.02;margin:22px 0 18px;
+    text-shadow:0 0 40px rgba(255,69,200,.4)}
+  .hero p.lead{max-width:560px;margin:0 auto 30px;font-size:19px;color:#ffe9d6}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .hero-note{margin-top:22px;font-size:13px;letter-spacing:.05em;color:#ffe9d6;opacity:.85}
+
+  /* ---------- SECTIONS ---------- */
+  section{position:relative;padding:100px 0}
+  .head{max-width:680px;margin:0 auto 60px;text-align:center}
+  .head h2{font-family:var(--disp);font-size:clamp(28px,4vw,44px);line-height:1.1;margin:16px 0 14px}
+  .head p{color:var(--muted);font-size:17px}
+
+  .features{background:linear-gradient(180deg,var(--deep),#150a30)}
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .feat{position:relative;padding:34px 28px;border-radius:20px;
+    background:linear-gradient(160deg,rgba(255,157,47,.07),rgba(139,92,246,.06));
+    border:1px solid rgba(255,157,47,.2);transition:.28s;overflow:hidden}
+  .feat::before{content:"";position:absolute;inset:0;border-radius:20px;padding:1px;
+    background:linear-gradient(135deg,var(--gold),var(--pink),var(--cyan));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.28s}
+  .feat:hover{transform:translateY(-6px)}
+  .feat:hover::before{opacity:1}
+  .feat .ic{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;margin-bottom:20px;
+    background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,69,200,.18));border:1px solid rgba(255,157,47,.3)}
+  .feat h3{font-size:20px;font-weight:700;margin-bottom:10px}
+  .feat p{color:var(--muted);font-size:15.5px}
+
+  /* product / specs split */
+  .product{background:radial-gradient(800px 500px at 80% 20%,rgba(139,92,246,.18),transparent),var(--deep)}
+  .prod-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .synth-render{position:relative}
+  .specs-list{display:grid;gap:2px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,157,47,.22)}
+  .specs-list .row{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;
+    background:rgba(255,255,255,.02)}
+  .specs-list .row .k{color:var(--muted);font-size:14px;letter-spacing:.04em}
+  .specs-list .row .v{font-weight:600;color:#fff}
+  .pill{display:inline-flex;gap:8px;align-items:center;font-family:var(--disp);font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);padding:7px 14px;border-radius:30px;border:1px solid rgba(255,215,106,.35);
+    background:rgba(255,215,106,.06)}
+
+  /* testimonial */
+  .quote-sec{text-align:center;background:linear-gradient(180deg,#150a30,var(--deep))}
+  .quote{max-width:780px;margin:0 auto}
+  .quote blockquote{font-size:clamp(22px,3.4vw,34px);line-height:1.35;font-weight:500;letter-spacing:-.01em;margin-bottom:26px}
+  .quote .who{display:flex;align-items:center;gap:14px;justify-content:center}
+  .avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--pink));display:grid;place-items:center;font-family:var(--disp);font-size:18px;color:#1a0625}
+  .quote .who b{display:block}
+  .quote .who span{color:var(--muted);font-size:14px}
+
+  /* CTA */
+  .cta-sec{position:relative;overflow:hidden}
+  .cta-box{position:relative;border-radius:28px;padding:70px 48px;text-align:center;overflow:hidden;
+    background:linear-gradient(135deg,#2a0f4d,#4a1357 45%,#a3265f 80%,#ff7a3d)}
+  .cta-box::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-40px;height:240px;
+    background-image:linear-gradient(rgba(255,255,255,.35) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.3) 2px,transparent 2px);
+    background-size:60px 44px;transform:rotateX(72deg);transform-origin:bottom;opacity:.5;
+    -webkit-mask:linear-gradient(180deg,transparent,#000);mask:linear-gradient(180deg,transparent,#000)}
+  .cta-box h2{position:relative;z-index:2;font-family:var(--disp);font-size:clamp(28px,4.6vw,52px);line-height:1.05;margin-bottom:16px;
+    color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.3)}
+  .cta-box p{position:relative;z-index:2;max-width:520px;margin:0 auto 28px;color:#ffe9d6}
+  .cta-box .hero-cta{position:relative;z-index:2}
+
+  /* footer */
+  footer{background:#08051a;border-top:1px solid rgba(255,157,47,.18);padding:62px 0 28px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px}
+  .foot-grid h5{font-family:var(--disp);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .foot-grid a{display:block;color:var(--muted);padding:5px 0;font-size:15px;transition:.2s}
+  .foot-grid a:hover{color:var(--text)}
+  .foot-grid p{color:var(--muted);font-size:15px;max-width:280px;margin-top:14px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:46px;padding-top:24px;
+    border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:14px}
+  .foot-bottom span{color:var(--muted);font-size:14px}
+  .socials{display:flex;gap:10px}
+  .socials a{width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,157,47,.3);display:grid;place-items:center;color:var(--muted);transition:.2s}
+  .socials a:hover{color:var(--gold);border-color:var(--gold)}
+
+  @media(max-width:920px){
+    .feat-grid{grid-template-columns:1fr}
+    .prod-grid{grid-template-columns:1fr;gap:36px}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .navlinks{display:none}
+    .navlinks.open{display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;gap:0;
+      background:#0e0826;border-bottom:1px solid rgba(255,157,47,.2);padding:8px 24px 18px}
+    .navlinks.open a{padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .menu-btn{display:grid;place-items:center}
+    .nav-cta{display:none}
+    .sun{width:240px;height:240px;top:200px}
+  }
+  @media(max-width:540px){.foot-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top" aria-label="OUTRUN-12 home">
+        <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd76a"/><stop offset=".5" stop-color="#ff45c8"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+          <circle cx="17" cy="17" r="15" fill="none" stroke="url(#lg)" stroke-width="2"/>
+          <path d="M9 22h16M11 18h12M13 14h8" stroke="url(#lg)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="chrome-text">OUTRUN-12</span>
+      </a>
+      <div class="navlinks" id="nav">
+        <a href="#features">Sound</a>
+        <a href="#product">The Machine</a>
+        <a href="#specs">Specs</a>
+        <a href="#voices">Voices</a>
+      </div>
+      <a href="#order" class="btn btn-primary nav-cta">Reserve Yours</a>
+      <button class="menu-btn" id="mbtn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <div class="floor" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <span class="eyebrow">Analog Polysynth · 8 Voices</span>
+      <h1 class="chrome-text">SOUND FROM<br />A BRIGHTER PAST</h1>
+      <p class="lead">OUTRUN-12 is a true-analog polyphonic synthesizer with a chrome-warm character you can feel. Patch it, sequence it, and watch the horizon light up.</p>
+      <div class="hero-cta">
+        <a href="#order" class="btn btn-primary">Reserve — $1,299</a>
+        <a href="#features" class="btn btn-ghost">Hear a Demo
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M3 2l9 5-9 5z"/></svg>
+        </a>
+      </div>
+      <p class="hero-note">Free worldwide shipping · 3-year warranty · Ships Q3 2026</p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="features">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Why OUTRUN-12</span>
+        <h2 class="chrome-text">Built for the glow</h2>
+        <p>Every circuit, knob, and slider was tuned to put nostalgia and modern playability in the same enclosure.</p>
+      </div>
+      <div class="feat-grid">
+        <article class="feat">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffd76a" stroke-width="2"><path d="M2 12h3l2-7 4 18 3-14 2 6 3-3h3"/></svg></div>
+          <h3>True Analog Voices</h3>
+          <p>Eight discrete VCO voices with through-zero FM and a state-variable filter that self-oscillates into pure neon screams.</p>
+        </article>
+        <article class="feat">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff45c8" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16M14 4v16"/></svg></div>
+          <h3>Semi-Modular Patchbay</h3>
+          <p>Thirty-two patch points let you rewire signal flow without menus. Normalled connections keep it instant when you just want to play.</p>
+        </article>
+        <article class="feat">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#37e6ff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <h3>64-Step Sequencer</h3>
+          <p>Polymetric tracks, per-step probability, ratcheting, and motion recording. Lock in a groove and let it ride forever.</p>
+        </article>
+        <article class="feat">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff9d2f" stroke-width="2"><path d="M4 14a4 4 0 0 1 4-4h2l3-5 3 5h2a4 4 0 0 1 0 8H4z"/></svg></div>
+          <h3>Sunset Reverb Engine</h3>
+          <p>A studio-grade DSP tail bolted onto analog guts: lush plate, shimmer, and a tape-warble delay that drips with warmth.</p>
+        </article>
+        <article class="feat">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8v8H8z"/></svg></div>
+          <h3>Chrome Build</h3>
+          <p>Anodized aluminum chassis, walnut end-cheeks, and weighted metal knobs with a satisfying detent. It looks like it sounds.</p>
+        </article>
+        <article class="feat">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffd76a" stroke-width="2"><path d="M12 2v20M2 7h20M2 17h20"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>USB-C &amp; MIDI</h3>
+          <p>Class-compliant USB-C, full DIN MIDI, and CV/Gate I/O. Drop it into any rig — DAW, Eurorack, or a stack of vintage gear.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT / SPECS -->
+  <section id="product" class="product">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">The Machine</span>
+        <h2 class="chrome-text">Form follows frequency</h2>
+        <p>A control surface that begs to be touched — and a spec sheet that earns the price.</p>
+      </div>
+      <div class="prod-grid">
+        <div class="synth-render">
+          <svg viewBox="0 0 560 360" preserveAspectRatio="xMidYMid meet" aria-label="OUTRUN-12 synthesizer hardware render" style="width:100%;height:auto">
+            <defs>
+              <linearGradient id="case" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1c3e"/><stop offset="1" stop-color="#150d28"/></linearGradient>
+              <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#241834"/><stop offset="1" stop-color="#1a1028"/></linearGradient>
+              <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#ffb24d"/><stop offset="1" stop-color="#ff45c8"/></linearGradient>
+              <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a86a3c"/><stop offset="1" stop-color="#6e3f1f"/></linearGradient>
+              <radialGradient id="led" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#37e6ff"/><stop offset="1" stop-color="#0a4a5a"/></radialGradient>
+            </defs>
+            <!-- glow -->
+            <ellipse cx="280" cy="320" rx="240" ry="26" fill="#ff45c8" opacity=".25"/>
+            <!-- body -->
+            <rect x="20" y="40" width="520" height="250" rx="18" fill="url(#wood)"/>
+            <rect x="34" y="40" width="492" height="250" rx="14" fill="url(#case)"/>
+            <rect x="46" y="54" width="468" height="222" rx="10" fill="url(#panel)" stroke="#3a2a52" stroke-width="1.5"/>
+            <!-- brand strip -->
+            <rect x="60" y="66" width="160" height="22" rx="5" fill="#120a22"/>
+            <text x="70" y="82" font-family="'Audiowide',sans-serif" font-size="13" fill="url(#chrome)">OUTRUN-12</text>
+            <!-- LED meter -->
+            <g>
+              <rect x="380" y="66" width="120" height="22" rx="4" fill="#0c0718"/>
+              <rect x="386" y="71" width="8" height="12" rx="1" fill="#37e6ff"/><rect x="398" y="71" width="8" height="12" rx="1" fill="#37e6ff"/>
+              <rect x="410" y="71" width="8" height="12" rx="1" fill="#ffd76a"/><rect x="422" y="71" width="8" height="12" rx="1" fill="#ffd76a"/>
+              <rect x="434" y="71" width="8" height="12" rx="1" fill="#ff9d2f"/><rect x="446" y="71" width="8" height="12" rx="1" fill="#ff45c8"/>
+              <rect x="458" y="71" width="8" height="12" rx="1" fill="#3a2a52"/><rect x="470" y="71" width="8" height="12" rx="1" fill="#3a2a52"/>
+              <rect x="482" y="71" width="8" height="12" rx="1" fill="#3a2a52"/>
+            </g>
+            <!-- knob rows -->
+            <g>
+              <!-- row 1 -->
+              <g>
+                <circle cx="90" cy="130" r="20" fill="#161024" stroke="#4a3568" stroke-width="2"/><circle cx="90" cy="130" r="13" fill="url(#chrome)"/><rect x="89" y="114" width="2" height="9" fill="#1a0e22"/>
+                <circle cx="160" cy="130" r="20" fill="#161024" stroke="#4a3568" stroke-width="2"/><circle cx="160" cy="130" r="13" fill="url(#chrome)"/><rect x="159" y="118" width="2" height="9" fill="#1a0e22" transform="rotate(40 160 130)"/>
+                <circle cx="230" cy="130" r="20" fill="#161024" stroke="#4a3568" stroke-width="2"/><circle cx="230" cy="130" r="13" fill="url(#chrome)"/><rect x="229" y="114" width="2" height="9" fill="#1a0e22" transform="rotate(-30 230 130)"/>
+                <circle cx="300" cy="130" r="20" fill="#161024" stroke="#4a3568" stroke-width="2"/><circle cx="300" cy="130" r="13" fill="url(#chrome)"/><rect x="299" y="114" width="2" height="9" fill="#1a0e22" transform="rotate(60 300 130)"/>
+              </g>
+            </g>
+            <!-- patch points -->
+            <g fill="#0c0718" stroke="#ff9d2f" stroke-width="1.4">
+              <circle cx="380" cy="124" r="7"/><circle cx="404" cy="124" r="7"/><circle cx="428" cy="124" r="7"/><circle cx="452" cy="124" r="7"/><circle cx="476" cy="124" r="7"/><circle cx="500" cy="124" r="7"/>
+              <circle cx="380" cy="148" r="7"/><circle cx="404" cy="148" r="7"/><circle cx="428" cy="148" r="7"/><circle cx="452" cy="148" r="7"/><circle cx="476" cy="148" r="7"/><circle cx="500" cy="148" r="7"/>
+            </g>
+            <!-- patch cable -->
+            <path d="M404 124 C 420 100, 470 100, 500 148" fill="none" stroke="#37e6ff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+            <path d="M380 148 C 360 170, 440 175, 452 124" fill="none" stroke="#ff45c8" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+            <!-- sliders -->
+            <g>
+              <rect x="80" y="170" width="6" height="64" rx="3" fill="#0c0718"/><rect x="74" y="196" width="18" height="9" rx="3" fill="url(#chrome)"/>
+              <rect x="118" y="170" width="6" height="64" rx="3" fill="#0c0718"/><rect x="112" y="182" width="18" height="9" rx="3" fill="url(#chrome)"/>
+              <rect x="156" y="170" width="6" height="64" rx="3" fill="#0c0718"/><rect x="150" y="210" width="18" height="9" rx="3" fill="url(#chrome)"/>
+              <rect x="194" y="170" width="6" height="64" rx="3" fill="#0c0718"/><rect x="188" y="190" width="18" height="9" rx="3" fill="url(#chrome)"/>
+            </g>
+            <!-- keyboard -->
+            <rect x="50" y="250" width="460" height="24" rx="4" fill="#0e0820"/>
+            <g fill="#f3ecff">
+              <rect x="58" y="252" width="20" height="20" rx="2"/><rect x="82" y="252" width="20" height="20" rx="2"/><rect x="106" y="252" width="20" height="20" rx="2"/>
+              <rect x="130" y="252" width="20" height="20" rx="2"/><rect x="154" y="252" width="20" height="20" rx="2"/><rect x="178" y="252" width="20" height="20" rx="2"/>
+              <rect x="202" y="252" width="20" height="20" rx="2"/><rect x="226" y="252" width="20" height="20" rx="2"/><rect x="250" y="252" width="20" height="20" rx="2"/>
+              <rect x="274" y="252" width="20" height="20" rx="2"/><rect x="298" y="252" width="20" height="20" rx="2"/><rect x="322" y="252" width="20" height="20" rx="2"/>
+              <rect x="346" y="252" width="20" height="20" rx="2"/><rect x="370" y="252" width="20" height="20" rx="2"/><rect x="394" y="252" width="20" height="20" rx="2"/>
+              <rect x="418" y="252" width="20" height="20" rx="2"/><rect x="442" y="252" width="20" height="20" rx="2"/><rect x="466" y="252" width="20" height="20" rx="2"/>
+            </g>
+            <g fill="#120a22">
+              <rect x="74" y="252" width="12" height="13" rx="1.5"/><rect x="98" y="252" width="12" height="13" rx="1.5"/>
+              <rect x="146" y="252" width="12" height="13" rx="1.5"/><rect x="170" y="252" width="12" height="13" rx="1.5"/><rect x="194" y="252" width="12" height="13" rx="1.5"/>
+              <rect x="266" y="252" width="12" height="13" rx="1.5"/><rect x="290" y="252" width="12" height="13" rx="1.5"/>
+              <rect x="338" y="252" width="12" height="13" rx="1.5"/><rect x="362" y="252" width="12" height="13" rx="1.5"/><rect x="386" y="252" width="12" height="13" rx="1.5"/>
+              <rect x="458" y="252" width="12" height="13" rx="1.5"/>
+            </g>
+            <circle cx="500" cy="64" r="5" fill="url(#led)"/>
+          </svg>
+        </div>
+        <div>
+          <span class="pill">Limited First Run · 500 units</span>
+          <h3 style="font-family:var(--disp);font-size:24px;margin:18px 0 14px">Eight voices. Endless patches.</h3>
+          <p style="color:var(--muted);margin-bottom:22px">Hand-calibrated at the factory and individually serialized. The OUTRUN-12 holds tuning across a full set without a single cold-start drift.</p>
+          <div class="specs-list" id="specs">
+            <div class="row"><span class="k">Voice Architecture</span><span class="v">8-voice analog poly</span></div>
+            <div class="row"><span class="k">Oscillators</span><span class="v">2 VCO + sub per voice</span></div>
+            <div class="row"><span class="k">Filter</span><span class="v">24 dB state-variable</span></div>
+            <div class="row"><span class="k">Patch Points</span><span class="v">32 (3.5 mm)</span></div>
+            <div class="row"><span class="k">Sequencer</span><span class="v">64-step polymetric</span></div>
+            <div class="row"><span class="k">Connectivity</span><span class="v">USB-C · MIDI · CV/Gate</span></div>
+            <div class="row"><span class="k">Keys</span><span class="v">37 semi-weighted</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section id="voices" class="quote-sec">
+    <div class="wrap">
+      <div class="quote">
+        <span class="eyebrow">From the Studio</span>
+        <blockquote style="margin-top:20px">"I plugged in the OUTRUN-12 and scored an entire title sequence in one sitting. It has that <span class="chrome-text">sunset shimmer</span> I usually spend hours faking in the box."</blockquote>
+        <div class="who">
+          <div class="avatar">NV</div>
+          <div style="text-align:left">
+            <b>Nova Vale</b>
+            <span>Composer · "Midnight Circuit" OST</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="order" class="cta-sec">
+    <div class="wrap">
+      <div class="cta-box">
+        <h2>Reserve a piece of the future</h2>
+        <p>The first run is limited to 500 serialized units. Place a fully-refundable deposit today and lock your spot in the queue.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a href="#top" class="btn btn-primary">Reserve for $99 Deposit</a>
+          <a href="#features" class="btn btn-ghost" style="border-color:rgba(255,255,255,.5);color:#fff">Download the Brochure</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="OUTRUN-12">
+          <svg width="32" height="32" viewBox="0 0 34 34" aria-hidden="true">
+            <circle cx="17" cy="17" r="15" fill="none" stroke="url(#lg)" stroke-width="2"/>
+            <path d="M9 22h16M11 18h12M13 14h8" stroke="url(#lg)" stroke-width="2" stroke-linecap="round"/>
+          </svg><span class="chrome-text">OUTRUN-12</span>
+        </a>
+        <p>Analog instruments for the synthwave generation. Designed and assembled in California.</p>
+      </div>
+      <div>
+        <h5>Product</h5>
+        <a href="#features">Features</a><a href="#specs">Specs</a><a href="#order">Pricing</a><a href="#product">Patches</a>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="#top">About</a><a href="#top">Press Kit</a><a href="#top">Dealers</a><a href="#top">Careers</a>
+      </div>
+      <div>
+        <h5>Support</h5>
+        <a href="#top">Manuals</a><a href="#top">Firmware</a><a href="#top">Warranty</a><a href="#top">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 OUTRUN Audio Labs. All rights reserved.</span>
+      <div class="socials">
+        <a href="#top" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#top" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.6-.5-5.3a2.7 2.7 0 0 0-1.9-1.9C18.9 4.3 12 4.3 12 4.3s-6.9 0-8.6.5A2.7 2.7 0 0 0 1.5 6.7C1 8.4 1 12 1 12s0 3.6.5 5.3a2.7 2.7 0 0 0 1.9 1.9c1.7.5 8.6.5 8.6.5s6.9 0 8.6-.5a2.7 2.7 0 0 0 1.9-1.9C23 15.6 23 12 23 12zM9.8 15.3V8.7l5.7 3.3z"/></svg></a>
+        <a href="#top" aria-label="SoundCloud"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 16v-4M5.5 16v-6M8 16v-8M10.5 16V7M13 16V6a4 4 0 0 1 7.9 1A3 3 0 0 1 20 16z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var b=document.getElementById('mbtn'),n=document.getElementById('nav');
+    b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});
+    n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');b.setAttribute('aria-expanded','false');});});
+    // sprinkle stars
+    var s=document.getElementById('stars');
+    for(var i=0;i<70;i++){var d=document.createElement('span');d.className='star';
+      d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';
+      d.style.opacity=(Math.random()*.6+.3).toFixed(2);
+      d.style.transform='scale('+(Math.random()*1.4+.4).toFixed(2)+')';s.appendChild(d);}
+  })();
+</script>
+</body>
+</html>

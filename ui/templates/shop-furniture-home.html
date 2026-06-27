@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Norrland — Scandinavian Furniture &amp; Home Decor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --sand:#f3ede3; --sand-2:#e7ddcd; --clay:#c08a5a; --clay-deep:#a06b3e;
+    --olive:#7c7a55; --ink:#2c2722; --muted:#7a7066; --line:#ddd1bf;
+    --wood:#b88a5c; --terra:#bd6a4d; --white:#fffdf9; --sage:#9aa68a;
+    --radius:14px; --shadow:0 22px 50px -26px rgba(70,55,40,.4); --maxw:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--sand);line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;font-weight:500;line-height:1.08;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:500;font-size:.94rem;padding:.85rem 1.7rem;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:.25s;background:var(--ink);color:var(--sand)}
+  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .btn.ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:var(--sand)}
+  .eyebrow{font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--clay-deep);font-weight:600}
+  :focus-visible{outline:3px solid var(--clay);outline-offset:3px;border-radius:4px}
+  /* header */
+  header.site{position:sticky;top:0;z-index:50;background:rgba(243,237,227,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600;letter-spacing:.5px;display:flex;align-items:center;gap:.55rem}
+  .nav ul{display:flex;gap:2rem;list-style:none}
+  .nav ul a{font-size:.92rem;position:relative;padding:.25rem 0}
+  .nav ul a::after{content:"";position:absolute;left:0;bottom:-3px;width:0;height:1.5px;background:var(--clay);transition:.25s}
+  .nav ul a:hover::after{width:100%}
+  .nav-actions{display:flex;align-items:center;gap:1.1rem}
+  .iconbtn{background:none;border:none;cursor:pointer;color:var(--ink);display:grid;place-items:center;position:relative}
+  .cart-count{position:absolute;top:-7px;right:-9px;background:var(--clay);color:#fff;font-size:.62rem;font-weight:600;min-width:17px;height:17px;border-radius:999px;display:grid;place-items:center;padding:0 4px}
+  .menu-toggle{display:none}
+  /* hero */
+  .hero{background:linear-gradient(180deg,var(--sand) 0%,var(--sand-2) 100%)}
+  .hero-inner{display:grid;grid-template-columns:.95fr 1.05fr;gap:48px;align-items:center;padding:64px 0 76px}
+  .hero h1{font-size:clamp(2.7rem,6vw,4.7rem);margin:16px 0 20px}
+  .hero p.lede{color:var(--muted);font-size:1.08rem;max-width:38ch;margin-bottom:30px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-stats{display:flex;gap:30px;margin-top:38px;flex-wrap:wrap}
+  .hero-stats b{font-family:'Fraunces';font-size:1.6rem;display:block;line-height:1}
+  .hero-stats span{font-size:.78rem;color:var(--muted)}
+  /* room scene CSS art */
+  .room{position:relative;border-radius:var(--radius);overflow:hidden;min-height:440px;background:linear-gradient(180deg,#efe6d6 0%,#e7ddcd 58%,#d8c9b0 58%,#d3c2a6 100%);box-shadow:var(--shadow)}
+  .room .sun{position:absolute;top:34px;right:48px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,#f5e2bf,#e9c98c);opacity:.85}
+  .room .window{position:absolute;top:40px;left:46px;width:120px;height:150px;border-radius:6px;background:linear-gradient(180deg,#cfe0e2,#e8ede4);border:6px solid #fffdf9;box-shadow:0 8px 20px -10px rgba(0,0,0,.25)}
+  .room .window::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 48%,#fffdf9 48%,#fffdf9 52%,transparent 52%),linear-gradient(180deg,transparent 48%,#fffdf9 48%,#fffdf9 52%,transparent 52%)}
+  .room .plant{position:absolute;bottom:42%;left:38px;width:46px;height:90px}
+  .room .lamp{position:absolute;bottom:42%;right:60px}
+  .room .sofa{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);width:60%}
+  .room .rug{position:absolute;bottom:5%;left:50%;transform:translateX(-50%);width:74%;height:26px;border-radius:50%;background:radial-gradient(ellipse,#c9a877,transparent 72%);opacity:.55}
+  /* categories */
+  section{padding:88px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:42px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(1.9rem,4vw,2.8rem)}
+  .sec-head p{color:var(--muted);max-width:42ch;margin-top:8px}
+  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .cat-tile{position:relative;border-radius:var(--radius);overflow:hidden;min-height:300px;display:flex;align-items:flex-end;padding:26px;color:#fff;transition:.3s;cursor:pointer}
+  .cat-tile:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .cat-tile::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(40,30,20,.55));z-index:1}
+  .cat-tile .art{position:absolute;inset:0;display:grid;place-items:center}
+  .cat-tile .label{position:relative;z-index:2}
+  .cat-tile .label h3{font-family:'Fraunces';font-size:1.7rem;margin-bottom:2px}
+  .cat-tile .label span{font-size:.84rem;opacity:.9}
+  /* products */
+  .prod-section{background:var(--white)}
+  .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .card{display:flex;flex-direction:column;gap:12px;cursor:pointer}
+  .card-media{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;display:grid;place-items:center;border:1px solid var(--line)}
+  .badge{position:absolute;top:12px;left:12px;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;background:var(--ink);color:var(--sand);padding:.3rem .6rem;border-radius:6px;z-index:2}
+  .badge.sale{background:var(--terra)}
+  .quick{position:absolute;bottom:12px;left:12px;right:12px;background:var(--ink);color:var(--sand);border:none;border-radius:8px;padding:.7rem;font-family:inherit;font-size:.85rem;font-weight:500;cursor:pointer;opacity:0;transform:translateY(8px);transition:.25s}
+  .card:hover .quick{opacity:1;transform:translateY(0)}
+  .card-info{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .card-info h3{font-family:'Fraunces';font-size:1.18rem;font-weight:500}
+  .card-info .cat{font-size:.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .price{font-family:'Fraunces';font-size:1.18rem;white-space:nowrap}
+  .price s{font-size:.85rem;color:var(--muted);font-family:'Inter';margin-right:4px}
+  .rating{font-size:.78rem;color:var(--muted)}
+  .stars{color:var(--clay)}
+  /* shop the look */
+  .look{background:linear-gradient(180deg,var(--sand-2),var(--sand))}
+  .look-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+  .look-scene{position:relative;border-radius:var(--radius);min-height:440px;background:linear-gradient(180deg,#ece2d0,#ddceb4 60%,#d2c0a0 60%);overflow:hidden;box-shadow:var(--shadow)}
+  .look-scene .tag{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--white);border:2px solid var(--clay);display:grid;place-items:center;font-weight:600;font-size:.82rem;color:var(--clay-deep);box-shadow:0 4px 12px -4px rgba(0,0,0,.3);cursor:pointer;animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,138,90,.5)}50%{box-shadow:0 0 0 8px rgba(192,138,90,0)}}
+  .look-list{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+  .look-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--white);transition:.2s}
+  .look-row:hover{border-color:var(--clay)}
+  .look-num{width:26px;height:26px;border-radius:50%;background:var(--sand-2);display:grid;place-items:center;font-size:.8rem;font-weight:600;color:var(--clay-deep);flex:0 0 auto}
+  .look-row b{font-family:'Fraunces';font-weight:500;font-size:1rem}
+  .look-row span{font-size:.8rem;color:var(--muted);display:block}
+  .look-row .p{margin-left:auto;font-family:'Fraunces';font-size:1.05rem}
+  /* sustainability */
+  .sust{background:var(--olive);color:#f7f4ea;text-align:center}
+  .sust .wrap{max-width:760px}
+  .sust .leaf{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;margin:0 auto 22px}
+  .sust h2{font-size:clamp(1.9rem,4vw,2.8rem);margin-bottom:18px;color:#fff}
+  .sust p{font-size:1.05rem;opacity:.92;max-width:56ch;margin:0 auto 30px}
+  .sust-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+  .sust-stats b{font-family:'Fraunces';font-size:2.2rem;display:block;color:#fff}
+  .sust-stats span{font-size:.85rem;opacity:.9}
+  /* newsletter strip */
+  .strip{background:var(--white);text-align:center}
+  .strip h2{font-size:clamp(1.7rem,3.5vw,2.4rem);margin-bottom:10px}
+  .strip p{color:var(--muted);margin-bottom:24px}
+  .strip form{display:flex;gap:10px;max-width:460px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+  .strip input{flex:1;min-width:220px;padding:.85rem 1.2rem;border-radius:8px;border:1px solid var(--line);background:var(--sand);font-family:inherit;font-size:.95rem}
+  /* footer */
+  footer{background:var(--ink);color:#d8cdbf;padding:64px 0 28px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px}
+  .foot-grid .logo{color:var(--sand)}
+  footer p.about{font-size:.9rem;color:#b3a795;max-width:30ch;margin-top:14px}
+  .foot-col h4{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--wood);margin-bottom:15px;font-weight:600}
+  .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .foot-col a{font-size:.9rem;color:#c3b7a6}
+  .foot-col a:hover{color:var(--sand)}
+  .foot-bottom{border-top:1px solid #4a423a;margin-top:46px;padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.8rem;color:#9b8f7e}
+  /* cart drawer */
+  .overlay{position:fixed;inset:0;background:rgba(44,39,34,.45);opacity:0;visibility:hidden;transition:.3s;z-index:90}
+  .overlay.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:90vw;background:var(--sand);z-index:100;transform:translateX(100%);transition:.35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px -20px rgba(0,0,0,.3)}
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:24px;border-bottom:1px solid var(--line)}
+  .drawer-head h3{font-size:1.5rem;font-family:'Fraunces'}
+  .drawer-items{flex:1;overflow:auto;padding:8px 24px}
+  .ci{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center}
+  .ci-thumb{width:58px;height:58px;border-radius:10px;flex:0 0 auto;border:1px solid var(--line)}
+  .ci-info{flex:1}
+  .ci-info b{font-size:1rem;font-family:'Fraunces';font-weight:500}
+  .ci-info span{display:block;font-size:.8rem;color:var(--muted)}
+  .ci-price{font-family:'Fraunces'}
+  .drawer-foot{padding:22px 24px;border-top:1px solid var(--line)}
+  .drawer-foot .row{display:flex;justify-content:space-between;margin-bottom:16px;font-size:1.05rem}
+  .drawer-foot .row b{font-family:'Fraunces';font-size:1.4rem}
+  .drawer-foot .btn{width:100%;justify-content:center}
+  .closebtn{background:none;border:none;cursor:pointer;color:var(--ink);font-size:1.5rem;line-height:1}
+  @media(max-width:980px){
+    .hero-inner,.look-inner{grid-template-columns:1fr}
+    .room{order:-1;min-height:340px}
+    .cat-grid{grid-template-columns:1fr}
+    .product-grid{grid-template-columns:repeat(2,1fr)}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:640px){
+    .nav ul{display:none;position:absolute;top:76px;left:0;right:0;background:var(--sand);flex-direction:column;padding:18px 28px;gap:14px;border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+    .nav ul.show{display:flex}
+    .menu-toggle{display:grid}
+    .product-grid{grid-template-columns:1fr 1fr}
+    .sust-stats{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="#" aria-label="Norrland home">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11 12 4l9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8Z" fill="#c08a5a"/></svg>
+      Norrland
+    </a>
+    <nav aria-label="Primary">
+      <ul id="navmenu">
+        <li><a href="#categories">Shop</a></li>
+        <li><a href="#products">New In</a></li>
+        <li><a href="#look">Shop the Look</a></li>
+        <li><a href="#sustainability">Sustainability</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="iconbtn" aria-label="Search"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button class="iconbtn" id="cartBtn" aria-label="Open cart"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="cart-count" id="cartCount">2</span></button>
+      <button class="iconbtn menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero" style="padding-top:0">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow">Made to last · By design</span>
+      <h1>A calmer home,<br>naturally.</h1>
+      <p class="lede">Honest, hand-finished furniture in natural materials — crafted to bring warmth and quiet to everyday living.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#products">Shop new arrivals</a>
+        <a class="btn ghost" href="#categories">Browse rooms</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>FSC</b><span>Certified timber</span></div>
+        <div><b>10 yr</b><span>Craft warranty</span></div>
+        <div><b>4.8★</b><span>9,200 reviews</span></div>
+      </div>
+    </div>
+    <!-- Editorial room scene -->
+    <div class="room" role="img" aria-label="Sunlit living room with a sofa, plant, floor lamp and rug">
+      <span class="sun"></span>
+      <span class="window"></span>
+      <svg class="plant" viewBox="0 0 46 90" aria-hidden="true"><path d="M23 90V50" stroke="#8a6a44" stroke-width="3"/><path d="M23 56C10 50 6 36 8 26c10 4 16 16 15 30Z" fill="#7c9166"/><path d="M23 60c13-6 17-22 15-32-10 4-16 18-15 32Z" fill="#9aa68a"/><path d="M14 88h18l-3-26H17l-3 26Z" fill="#bd6a4d"/></svg>
+      <svg class="lamp" width="60" height="150" viewBox="0 0 60 150" aria-hidden="true"><path d="M30 150V40" stroke="#7a6a52" stroke-width="3"/><path d="M14 8h32l8 32H6L14 8Z" fill="#e9d8b5"/><ellipse cx="30" cy="146" rx="20" ry="5" fill="#8a7a60"/></svg>
+      <svg class="sofa" viewBox="0 0 320 150" aria-hidden="true"><rect x="20" y="50" width="280" height="70" rx="16" fill="#c98f60"/><rect x="30" y="30" width="120" height="60" rx="14" fill="#d8a877"/><rect x="170" y="30" width="120" height="60" rx="14" fill="#d8a877"/><rect x="6" y="44" width="34" height="70" rx="14" fill="#b87f50"/><rect x="280" y="44" width="34" height="70" rx="14" fill="#b87f50"/><rect x="40" y="118" width="14" height="24" rx="4" fill="#7a5a3a"/><rect x="266" y="118" width="14" height="24" rx="4" fill="#7a5a3a"/></svg>
+      <span class="rug"></span>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Shop by room</span><h2>Find your corner</h2></div>
+      <p>From the living room to the reading nook — pieces designed to work together.</p>
+    </div>
+    <div class="cat-grid">
+      <article class="cat-tile" style="background:linear-gradient(160deg,#d8a877,#b87f50)">
+        <div class="art" aria-hidden="true"><svg width="150" height="120" viewBox="0 0 150 120"><rect x="20" y="50" width="110" height="40" rx="10" fill="#fffdf9" opacity=".85"/><rect x="26" y="34" width="48" height="34" rx="8" fill="#fffdf9" opacity=".6"/><rect x="80" y="34" width="48" height="34" rx="8" fill="#fffdf9" opacity=".6"/><rect x="34" y="88" width="8" height="18" fill="#fffdf9" opacity=".7"/><rect x="110" y="88" width="8" height="18" fill="#fffdf9" opacity=".7"/></svg></div>
+        <div class="label"><h3>Sofas &amp; Seating</h3><span>42 pieces</span></div>
+      </article>
+      <article class="cat-tile" style="background:linear-gradient(160deg,#9aa68a,#7c7a55)">
+        <div class="art" aria-hidden="true"><svg width="120" height="130" viewBox="0 0 120 130"><path d="M60 130V44" stroke="#fffdf9" stroke-width="4" opacity=".8"/><path d="M30 12h60l14 36H16L30 12Z" fill="#fffdf9" opacity=".85"/><ellipse cx="60" cy="126" rx="24" ry="5" fill="#fffdf9" opacity=".5"/></svg></div>
+        <div class="label"><h3>Lighting</h3><span>28 pieces</span></div>
+      </article>
+      <article class="cat-tile" style="background:linear-gradient(160deg,#c08a5a,#a06b3e)">
+        <div class="art" aria-hidden="true"><svg width="120" height="120" viewBox="0 0 120 120"><circle cx="40" cy="64" r="24" fill="#fffdf9" opacity=".8"/><path d="M40 40V20" stroke="#fffdf9" stroke-width="3" opacity=".7"/><path d="M30 20c10-6 20 0 20 0" stroke="#fffdf9" stroke-width="3" opacity=".7" fill="none"/><rect x="74" y="44" width="34" height="46" rx="6" fill="#fffdf9" opacity=".7"/><rect x="80" y="30" width="22" height="16" rx="4" fill="#fffdf9" opacity=".55"/></svg></div>
+        <div class="label"><h3>Decor &amp; Objects</h3><span>61 pieces</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="prod-section" id="products">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Just landed</span><h2>New arrivals</h2></div>
+      <a class="btn ghost" href="#">View all</a>
+    </div>
+    <div class="product-grid">
+      <article class="card">
+        <div class="card-media" style="background:linear-gradient(160deg,#efe4d2,#ddceb4)">
+          <span class="badge">New</span>
+          <svg width="160" height="120" viewBox="0 0 160 120" aria-hidden="true"><rect x="24" y="56" width="112" height="36" rx="10" fill="#c98f60"/><rect x="30" y="40" width="48" height="30" rx="7" fill="#d8a877"/><rect x="82" y="40" width="48" height="30" rx="7" fill="#d8a877"/><rect x="12" y="50" width="20" height="44" rx="9" fill="#b87f50"/><rect x="128" y="50" width="20" height="44" rx="9" fill="#b87f50"/><rect x="40" y="90" width="8" height="16" fill="#7a5a3a"/><rect x="112" y="90" width="8" height="16" fill="#7a5a3a"/></svg>
+          <button class="quick" data-name="Oslo 3-Seat Sofa" data-price="1290">Add to cart</button>
+        </div>
+        <div class="card-info">
+          <div><span class="cat">Sofa</span><h3>Oslo 3-Seat Sofa</h3><div class="rating"><span class="stars">★★★★★</span> 4.9 (214)</div></div>
+          <span class="price">$1,290</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media" style="background:linear-gradient(160deg,#e9ddc9,#d3c0a0)">
+          <span class="badge sale">Sale</span>
+          <svg width="120" height="150" viewBox="0 0 120 150" aria-hidden="true"><path d="M60 150V46" stroke="#7a6a52" stroke-width="4"/><path d="M30 14h60l12 34H18L30 14Z" fill="#e9d8b5"/><ellipse cx="60" cy="146" rx="22" ry="5" fill="#8a7a60"/></svg>
+          <button class="quick" data-name="Birch Floor Lamp" data-price="180">Add to cart</button>
+        </div>
+        <div class="card-info">
+          <div><span class="cat">Lighting</span><h3>Birch Floor Lamp</h3><div class="rating"><span class="stars">★★★★☆</span> 4.6 (88)</div></div>
+          <span class="price"><s>$240</s>$180</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media" style="background:linear-gradient(160deg,#dfe5d6,#c4cdb2)">
+          <span class="badge">New</span>
+          <svg width="120" height="130" viewBox="0 0 120 130" aria-hidden="true"><path d="M60 120V60" stroke="#8a6a44" stroke-width="3"/><path d="M60 64C42 56 36 38 38 26c14 4 24 20 22 38Z" fill="#7c9166"/><path d="M60 66c18-8 24-26 22-40-14 6-24 22-22 40Z" fill="#9aa68a"/><path d="M44 118h32l-5-30H49l-5 30Z" fill="#bd6a4d"/></svg>
+          <button class="quick" data-name="Terracotta Planter" data-price="64">Add to cart</button>
+        </div>
+        <div class="card-info">
+          <div><span class="cat">Decor</span><h3>Terracotta Planter</h3><div class="rating"><span class="stars">★★★★★</span> 4.8 (302)</div></div>
+          <span class="price">$64</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media" style="background:linear-gradient(160deg,#efe4d2,#d8c4a4)">
+          <span class="badge">New</span>
+          <svg width="150" height="120" viewBox="0 0 150 120" aria-hidden="true"><rect x="20" y="46" width="110" height="14" rx="4" fill="#c98f60"/><rect x="28" y="60" width="10" height="44" fill="#b87f50"/><rect x="112" y="60" width="10" height="44" fill="#b87f50"/><rect x="36" y="30" width="78" height="18" rx="4" fill="#d8a877"/></svg>
+          <button class="quick" data-name="Ash Coffee Table" data-price="420">Add to cart</button>
+        </div>
+        <div class="card-info">
+          <div><span class="cat">Tables</span><h3>Ash Coffee Table</h3><div class="rating"><span class="stars">★★★★★</span> 4.9 (147)</div></div>
+          <span class="price">$420</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP THE LOOK -->
+<section class="look" id="look">
+  <div class="wrap look-inner">
+    <div class="look-scene" role="img" aria-label="Styled living room with numbered shoppable items">
+      <svg width="100%" height="100%" viewBox="0 0 480 440" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="480" height="440" fill="none"/>
+        <rect x="60" y="280" width="320" height="80" rx="18" fill="#c98f60"/>
+        <rect x="74" y="248" width="140" height="56" rx="12" fill="#d8a877"/>
+        <rect x="226" y="248" width="140" height="56" rx="12" fill="#d8a877"/>
+        <rect x="40" y="270" width="30" height="80" rx="12" fill="#b87f50"/>
+        <rect x="370" y="270" width="30" height="80" rx="12" fill="#b87f50"/>
+        <path d="M410 360V210" stroke="#7a6a52" stroke-width="5"/>
+        <path d="M388 176h44l10 30h-64l10-30Z" fill="#e9d8b5"/>
+        <path d="M58 360V300" stroke="#8a6a44" stroke-width="4"/>
+        <path d="M58 304C42 296 36 280 38 268c14 4 22 18 20 36Z" fill="#7c9166"/>
+        <path d="M44 358h28l-4-24H48l-4 24Z" fill="#bd6a4d"/>
+        <rect x="150" y="368" width="180" height="14" rx="4" fill="#c98f60"/>
+      </svg>
+      <button class="tag" style="top:60%;left:46%" aria-label="Sofa hotspot">1</button>
+      <button class="tag" style="top:42%;left:86%" aria-label="Lamp hotspot">2</button>
+      <button class="tag" style="top:66%;left:12%" aria-label="Plant hotspot">3</button>
+      <button class="tag" style="top:84%;left:50%" aria-label="Table hotspot">4</button>
+    </div>
+    <div>
+      <span class="eyebrow">Curated by our stylists</span>
+      <h2 style="font-size:clamp(1.9rem,4vw,2.6rem);margin:12px 0 6px">The Quiet Living Room</h2>
+      <p style="color:var(--muted)">Everything you need to recreate this calm, light-filled space.</p>
+      <div class="look-list">
+        <div class="look-row"><span class="look-num">1</span><div><b>Oslo 3-Seat Sofa</b><span>Oatmeal bouclé</span></div><span class="p">$1,290</span></div>
+        <div class="look-row"><span class="look-num">2</span><div><b>Birch Floor Lamp</b><span>Linen shade</span></div><span class="p">$180</span></div>
+        <div class="look-row"><span class="look-num">3</span><div><b>Terracotta Planter</b><span>Hand-thrown</span></div><span class="p">$64</span></div>
+        <div class="look-row"><span class="look-num">4</span><div><b>Ash Coffee Table</b><span>Solid timber</span></div><span class="p">$420</span></div>
+      </div>
+      <a class="btn" href="#" style="margin-top:22px">Shop the look · $1,954</a>
+    </div>
+  </div>
+</section>
+
+<!-- SUSTAINABILITY -->
+<section class="sust" id="sustainability">
+  <div class="wrap">
+    <div class="leaf" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14Z"/><path d="M5 19c4-6 8-8 12-9"/></svg></div>
+    <h2>Built to be passed down</h2>
+    <p>We work with FSC-certified timber, water-based finishes and local makers. Every piece is designed for repair, not replacement — so it stays in your home for decades, not seasons.</p>
+    <div class="sust-stats">
+      <div><b>100%</b><span>FSC-certified wood</span></div>
+      <div><b>1 tree</b><span>planted per order</span></div>
+      <div><b>0</b><span>single-use plastic</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="strip">
+  <div class="wrap">
+    <h2>Slow living, in your inbox</h2>
+    <p>Styling notes, early access and $25 off your first order over $200.</p>
+    <form onsubmit="event.preventDefault();this.reset();alert('Thanks for joining Norrland.');">
+      <label for="nl" style="position:absolute;left:-999px">Email</label>
+      <input id="nl" type="email" placeholder="your@email.com" required />
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11 12 4l9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8Z" fill="#b88a5c"/></svg> Norrland</a>
+        <p class="about">Honest, hand-finished furniture and home decor in natural materials. Designed in Stockholm, made to last.</p>
+      </div>
+      <div class="foot-col"><h4>Shop</h4><ul><li><a href="#">Sofas</a></li><li><a href="#">Lighting</a></li><li><a href="#">Tables</a></li><li><a href="#">Decor</a></li></ul></div>
+      <div class="foot-col"><h4>Support</h4><ul><li><a href="#">Delivery</a></li><li><a href="#">Returns</a></li><li><a href="#">Care guide</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div class="foot-col"><h4>About</h4><ul><li><a href="#">Our makers</a></li><li><a href="#">Materials</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Showrooms</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Norrland AB. Crafted with care.</span>
+      <span>Privacy · Terms · Accessibility</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="drawer-head">
+    <h3>Your cart</h3>
+    <button class="closebtn" id="closeCart" aria-label="Close cart">×</button>
+  </div>
+  <div class="drawer-items" id="cartItems"></div>
+  <div class="drawer-foot">
+    <div class="row"><span>Subtotal</span><b id="subtotal">$0</b></div>
+    <a class="btn" href="#">Checkout</a>
+  </div>
+</aside>
+
+<script>
+(function(){
+  var mt=document.getElementById('menuToggle'),nm=document.getElementById('navmenu');
+  mt.addEventListener('click',function(){var s=nm.classList.toggle('show');mt.setAttribute('aria-expanded',s);});
+  var drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay');
+  function openCart(){drawer.classList.add('open');overlay.classList.add('open');drawer.setAttribute('aria-hidden','false');}
+  function closeCart(){drawer.classList.remove('open');overlay.classList.remove('open');drawer.setAttribute('aria-hidden','true');}
+  document.getElementById('cartBtn').addEventListener('click',openCart);
+  document.getElementById('closeCart').addEventListener('click',closeCart);
+  overlay.addEventListener('click',closeCart);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCart();});
+  var items=[{n:'Oslo 3-Seat Sofa',s:'Oatmeal bouclé',p:1290,g:'linear-gradient(160deg,#efe4d2,#ddceb4)'},{n:'Terracotta Planter',s:'Hand-thrown',p:64,g:'linear-gradient(160deg,#dfe5d6,#c4cdb2)'}];
+  function render(){
+    var box=document.getElementById('cartItems');box.innerHTML='';var sub=0;
+    items.forEach(function(it){sub+=it.p;var d=document.createElement('div');d.className='ci';
+      d.innerHTML='<span class="ci-thumb" style="background:'+it.g+'"></span><div class="ci-info"><b>'+it.n+'</b><span>'+it.s+'</span></div><span class="ci-price">$'+it.p.toLocaleString()+'</span>';
+      box.appendChild(d);});
+    document.getElementById('subtotal').textContent='$'+sub.toLocaleString();
+    document.getElementById('cartCount').textContent=items.length;
+  }
+  document.querySelectorAll('.quick').forEach(function(b){
+    b.addEventListener('click',function(e){e.stopPropagation();
+      items.push({n:b.dataset.name,s:'Added just now',p:+b.dataset.price,g:'linear-gradient(160deg,#efe4d2,#d8c4a4)'});
+      render();openCart();});
+  });
+  render();
+})();
+</script>
+</body>
+</html>
